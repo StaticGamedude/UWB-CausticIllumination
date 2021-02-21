@@ -263,7 +263,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: ce8091063d945624eb053b8c52be383e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -403,6 +403,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ReplacementShader: {fileID: 4800000, guid: 8b92d75c695e17041bea8eec1aca3dcd, type: 3}
+  DepthMat: {fileID: 2100000, guid: 9f9253abdd288d14a95abf78029a719e, type: 2}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -415,6 +416,7 @@ GameObject:
   - component: {fileID: 963194227}
   - component: {fileID: 963194226}
   - component: {fileID: 963194229}
+  - component: {fileID: 963194230}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -500,6 +502,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ReplacementShader: {fileID: 4800000, guid: 8b92d75c695e17041bea8eec1aca3dcd, type: 3}
+  DepthMat: {fileID: 2100000, guid: 9f9253abdd288d14a95abf78029a719e, type: 2}
+--- !u!114 &963194230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963194225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07cc48acbd343e942bef3168c96bd134, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShadowShader: {fileID: 4800000, guid: 9f20085246e66fc45bc69df25a197c0d, type: 3}
 --- !u!1 &1126521433
 GameObject:
   m_ObjectHideFlags: 0

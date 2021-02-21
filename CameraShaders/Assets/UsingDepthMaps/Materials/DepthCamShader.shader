@@ -1,13 +1,12 @@
-﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
-
-Shader "Unlit/ShowDepth"
+﻿Shader "Unlit/DepthCamShader"
 {
     Properties
     {
+        _MainTex ("Texture", 2D) = "white" {}
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" "DrewShader"="Drew1" }
+        Tags { "RenderType"="Opaque" }
         LOD 100
 
         Pass
@@ -21,12 +20,13 @@ Shader "Unlit/ShowDepth"
             struct appdata
             {
                 float4 vertex : POSITION;
+                float2 uv : TEXCOORD0;
             };
 
             struct v2f
             {
+                float2 uv : TEXCOORD0;
                 float4 vertex : SV_POSITION;
-                float depth : DEPTH;
             };
 
             sampler2D _MainTex;
@@ -36,15 +36,16 @@ Shader "Unlit/ShowDepth"
             {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
-                //_ProjectionParams is a built in shader variable. _ProjectionParams.w is 1 / the camera's far plane
-                o.depth = -mul(UNITY_MATRIX_MV, v.vertex).z * _ProjectionParams.w; //Depth should be scaled from 0.0 to 1.0 here
+                o.uv = v.uv;
                 return o;
             }
 
             fixed4 frag(v2f i) : SV_Target
             {
-                float invert = 1 - i.depth; //The further away to fragment, the darker in color it should be
-                return fixed4(invert, invert, invert, 1);
+                // sample the texture
+                float4 col = tex2D(_MainTex, i.uv);
+                col *= float4(i.uv.x, i.uv.y, 0, 1);
+                return col;
             }
             ENDCG
         }

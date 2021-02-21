@@ -9,7 +9,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{5490D883-EEA8-8826-B568-D9527F841126}</ProjectGuid>
+    <ProjectGuid>{479EA8F5-C3EA-7E6D-3DFD-37B9D08A8B2F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -64,14 +64,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\ReplacementShader\Scripts\RenderShadows.cs" />
-    <Compile Include="Assets\ReplacementShader\Scripts\ReplacementShaderEffect.cs" />
-    <Compile Include="Assets\UsingDepthMaps\Scripts\CustomImageEffect.cs" />
-    <None Include="Assets\UsingDepthMaps\Materials\DepthCamShader.shader" />
-    <None Include="Assets\ReplacementShader\Materials\DrewShader.shader" />
-    <None Include="Assets\ReplacementShader\Materials\ShowDepth.shader" />
-    <None Include="Assets\ReplacementShader\Materials\ShadowShader.shader" />
-    <None Include="Assets\ReplacementShader\Materials\Test.shader" />
+    <Compile Include="Assets\Scripts\ShadowController.cs" />
+    <None Include="Assets\Materials\ShadowShader.shader" />
     <Reference Include="UnityEngine">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.4.11f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>
@@ -256,7 +250,7 @@
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.4.11f1/Editor/Data/Managed/UnityEditor.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
-      <HintPath>C:/dev/UWB-CausticIllumination/CameraShaders/Library/PackageCache/com.unity.ext.nunit@1.0.5/net35/unity-custom/nunit.framework.dll</HintPath>
+      <HintPath>C:/dev/UWB-CausticIllumination/CameraShaders/Assets/ThirdPartyShadows/ShadowMapping/Library/PackageCache/com.unity.ext.nunit@1.0.5/net35/unity-custom/nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="netstandard">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.4.11f1/Editor/Data/NetStandard/ref/2.0.0/netstandard.dll</HintPath>
@@ -604,31 +598,31 @@
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.4.11f1/Editor/Data/NetStandard/compat/2.0.0/shims/netfx/System.Xml.Serialization.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Timeline.Editor">
-      <HintPath>C:/dev/UWB-CausticIllumination/CameraShaders/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
+      <HintPath>C:/dev/UWB-CausticIllumination/CameraShaders/Assets/ThirdPartyShadows/ShadowMapping/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.VSCode.Editor">
-      <HintPath>C:/dev/UWB-CausticIllumination/CameraShaders/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
+      <HintPath>C:/dev/UWB-CausticIllumination/CameraShaders/Assets/ThirdPartyShadows/ShadowMapping/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
-      <HintPath>C:/dev/UWB-CausticIllumination/CameraShaders/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+      <HintPath>C:/dev/UWB-CausticIllumination/CameraShaders/Assets/ThirdPartyShadows/ShadowMapping/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>C:/dev/UWB-CausticIllumination/CameraShaders/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
+      <HintPath>C:/dev/UWB-CausticIllumination/CameraShaders/Assets/ThirdPartyShadows/ShadowMapping/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Timeline">
-      <HintPath>C:/dev/UWB-CausticIllumination/CameraShaders/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
+      <HintPath>C:/dev/UWB-CausticIllumination/CameraShaders/Assets/ThirdPartyShadows/ShadowMapping/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
     </Reference>
     <Reference Include="Unity.CollabProxy.Editor">
-      <HintPath>C:/dev/UWB-CausticIllumination/CameraShaders/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
+      <HintPath>C:/dev/UWB-CausticIllumination/CameraShaders/Assets/ThirdPartyShadows/ShadowMapping/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Rider.Editor">
-      <HintPath>C:/dev/UWB-CausticIllumination/CameraShaders/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
+      <HintPath>C:/dev/UWB-CausticIllumination/CameraShaders/Assets/ThirdPartyShadows/ShadowMapping/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
-      <HintPath>C:/dev/UWB-CausticIllumination/CameraShaders/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+      <HintPath>C:/dev/UWB-CausticIllumination/CameraShaders/Assets/ThirdPartyShadows/ShadowMapping/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.UI">
-      <HintPath>C:/dev/UWB-CausticIllumination/CameraShaders/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
+      <HintPath>C:/dev/UWB-CausticIllumination/CameraShaders/Assets/ThirdPartyShadows/ShadowMapping/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup></ItemGroup>
