@@ -1,4 +1,10 @@
-﻿using System.Collections;
+﻿/*
+ * This implementation was developed by anyone on the UWB Casutic 
+ * illumniation team. Rather this solution was developed by user Curious-George
+ * and made public available through the unity forums. The following page was 
+ * accessed 02/20/2021: https://forum.unity.com/threads/how-do-i-render-my-own-shadow-map.471293/
+ */
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
