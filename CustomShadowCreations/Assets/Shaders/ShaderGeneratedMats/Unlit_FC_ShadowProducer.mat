@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Unlit_ShadowReceiver
-  m_Shader: {fileID: 4800000, guid: 2b196c8395d1ff6479627f42d836a09d, type: 3}
+  m_Name: Unlit_FC_ShadowProducer
+  m_Shader: {fileID: 4800000, guid: cf4a2eb3c8f1dbf4e91ed42c9c508e6b, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -20,7 +20,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 824faf832ef9f1641ba8ab30dfe2ea27, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats: []

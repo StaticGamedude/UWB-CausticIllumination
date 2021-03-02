@@ -64,8 +64,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\ShadowCaster.cs" />
-    <None Include="Assets\Shaders\ShadowReceiver.shader" />
+    <Compile Include="Assets\Scripts\FC_ShadowCaster.cs" />
+    <Compile Include="Assets\Scripts\TP_ShadowCaster.cs" />
+    <Compile Include="Assets\Scripts\UI_Controller.cs" />
+    <Compile Include="Assets\Scripts\World.cs" />
+    <None Include="Assets\Shaders\FC_ShadowReceiver.shader" />
+    <None Include="Assets\Shaders\TP_ShadowReceiver.shader" />
+    <None Include="Assets\Shaders\FC_ShadowProducer.shader" />
+    <None Include="Assets\Shaders\FC_ReplacementShader.shader" />
     <Reference Include="UnityEngine">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.4.11f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>

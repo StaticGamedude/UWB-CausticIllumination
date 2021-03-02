@@ -1,4 +1,4 @@
-﻿Shader "Unlit/ShadowReceiver"
+﻿Shader "Unlit/TP_ShadowReceiver"
 {
     Properties
     {
@@ -14,7 +14,6 @@
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
-            #pragma enable_d3d11_debug_symbols
 
             #include "UnityCG.cginc"
 
@@ -27,8 +26,8 @@
             struct v2f
             {
                 float2 uv : TEXCOORD0;
-                float4 shadowCoords: TEXCOORD1;
                 float4 vertex : SV_POSITION;
+                float4 shadowCoords: TEXCOORD1;
             };
 
             sampler2D _MainTex;
@@ -36,7 +35,7 @@
             float4x4 _ShadowMatrix; //Set externally by shadow caster script
             sampler2D _ShadowTex; //Set externally by shadow caster script
             float _ShadowBias; //Set externally by shadow caster script
-            
+
             v2f vert (appdata v)
             {
                 v2f o;
@@ -48,14 +47,12 @@
                 return o;
             }
 
-            fixed4 frag(v2f i) : SV_Target
+            fixed4 frag (v2f i) : SV_Target
             {
-                //float lightDepth = 1 - tex2D(_ShadowTex, i.shadowCoords).r;
-                float lightDepth = 1 - tex2D(_ShadowTex, i.shadowCoords.xy / i.shadowCoords.w);
+                float lightDepth = 1 - tex2D(_ShadowTex, i.shadowCoords.xy / i.shadowCoords.w).r;
                 float shadow = (i.shadowCoords.z - _ShadowBias) < lightDepth ? 1.0 : 0.5;
                 fixed4 col = tex2D(_MainTex, i.uv);
                 col = col * shadow;
-                
                 return col;
             }
             ENDCG
