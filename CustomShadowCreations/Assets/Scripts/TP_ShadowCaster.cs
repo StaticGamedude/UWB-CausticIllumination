@@ -1,7 +1,14 @@
-﻿using System.Collections;
+﻿/* UWB Caustic Illumination Research, 2021
+ * Participants: Drew Nelson, Dr. Kelvin Sung
+ */
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Third-party shadow renderer. Renders depth camera view to a render texture. Render texture is specified for depth. Render texture,
+/// shadow matrix and shadow texture loaded to shaders globally on post render
+/// </summary>
 public class TP_ShadowCaster : MonoBehaviour
 {
     private const int DEPTH_TEXTURE_SIZE = 512;

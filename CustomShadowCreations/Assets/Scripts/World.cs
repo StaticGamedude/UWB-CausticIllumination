@@ -1,14 +1,24 @@
-﻿using System.Collections;
+﻿/* UWB Caustic Illumination Research, 2021
+ * Participants: Drew Nelson, Dr. Kelvin Sung
+ */
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Shadow generation options to support in the world
+/// </summary>
 public enum ShadowOptions
 {
-    UNITY = 0,
-    UNITY_DEPTH,
-    FULL_CUSTOM
+    UNITY = 0, //Built-in unity shadows. Uses default materials with shadows enabled
+    UNITY_DEPTH, //Follows the third-party implementation of shadows. Shaders used on receving objects and render texture created on camera script
+    FULL_CUSTOM //Full custom implementation. Utilizes replacement shaders and custom shaders
 }
 
+/// <summary>
+/// Behavior of the world. Controls which material each object uses to help create the desired shadow effect
+/// </summary>
 public class World : MonoBehaviour
 {
     public List<GameObject> ShadowCastingObjects;
@@ -35,12 +45,10 @@ public class World : MonoBehaviour
         SetShadowOption(_currentShadowOption);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+    /// <summary>
+    /// Request the world to change the shadow rendering type
+    /// </summary>
+    /// <param name="option">Desired shadow rendering option</param>
     public void SetShadowOption(ShadowOptions option)
     {
         if (_currentShadowOption != option)
@@ -60,6 +68,9 @@ public class World : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Setup the shadow and receiving objects to use Unity's default materials and lighting
+    /// </summary>
     private void ConfigureWorldForUnityShadows()
     {
         foreach(GameObject caster in ShadowCastingObjects)
@@ -77,6 +88,10 @@ public class World : MonoBehaviour
         _currentShadowOption = ShadowOptions.UNITY;
     }
 
+    /// <summary>
+    /// Setup the receiving objects to use the third party (TP) shaders. Shadow objects use Unity's default material with 
+    /// shadows turned off
+    /// </summary>
     private void ConfigureWorldForUnityDepthMap()
     {
         foreach (GameObject o in ShadowCastingObjects)
@@ -94,6 +109,9 @@ public class World : MonoBehaviour
         _currentShadowOption = ShadowOptions.UNITY_DEPTH;
     }
 
+    /// <summary>
+    /// Setup the shadow and receiving object to use fully custom (FP) shaders.
+    /// </summary>
     private void ConfigureWorldForFullCustom()
     {
         foreach (GameObject o in ShadowCastingObjects)
@@ -110,6 +128,10 @@ public class World : MonoBehaviour
         _currentShadowOption = ShadowOptions.FULL_CUSTOM;
     }
 
+    /// <summary>
+    /// Get the current shadow rendering type in the world.
+    /// </summary>
+    /// <returns></returns>
     public ShadowOptions GetCurrentShadowOption()
     {
         return _currentShadowOption;

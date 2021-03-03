@@ -48,19 +48,22 @@
 
             fixed4 frag(v2f i) : SV_Target
             {
-                //float lightDepth = tex2D(_FC_ShadowTex, i.shadowCoords.xy / i.shadowCoords.w).r; //Relying on color to get depth information. Only once channel needed
+                //float lightDepth = 1 - tex2D(_FC_ShadowTex, i.shadowCoords.xy / i.shadowCoords.w).r; //Relying on color to get depth information. Only once channel needed
                 //float shadow = (i.shadowCoords.z - _FC_ShadowBias) < lightDepth ? 1.0 : 0.5;
                 //fixed4 col = tex2D(_MainTex, i.uv);
                 //col = col * shadow;
                 //return col;
 
-                //Working!
-                //float lightDepth = 1 - tex2D(_FC_ShadowTex, i.shadowCoords.xy / i.shadowCoords.w).r; //Relying on color to get depth information. Only once channel needed
-                //return fixed4(lightDepth, lightDepth, lightDepth, 1);
+                /*float d = i.shadowCoords.z;
+                return fixed4(d, d, d, 1);*/
 
-                float lightDepth = 1 - tex2D(_FC_ShadowTex, i.shadowCoords.xy / i.shadowCoords.w).r; //Relying on color to get depth information. Only once channel needed
-                float shadow = lightDepth < 0.5 ? 0.5 : 1;
-                return fixed4(shadow, shadow, shadow, 1);
+                //Working!
+                float lightDepth = tex2D(_FC_ShadowTex, i.shadowCoords.xy / i.shadowCoords.w).r; //Relying on color to get depth information. Only once channel needed
+                return fixed4(lightDepth, lightDepth, lightDepth, 1);
+
+                //float lightDepth = 1 - tex2D(_FC_ShadowTex, i.shadowCoords.xy / i.shadowCoords.w).r; //Relying on color to get depth information. Only once channel needed
+                //float shadow = lightDepth < 0.5 ? 0.5 : 1;
+                //return fixed4(shadow, shadow, shadow, 1);
             }
             ENDCG
         }

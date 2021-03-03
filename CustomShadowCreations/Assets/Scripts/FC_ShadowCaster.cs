@@ -1,7 +1,15 @@
-﻿using System.Collections;
+﻿/* UWB Caustic Illumination Research, 2021
+ * Participants: Drew Nelson, Dr. Kelvin Sung
+ */
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Full custom shadow renderer. Utilizes a replacement shader on the depth camera which is rendered to a texture.
+/// Texture is loaded globally into shaders on post render. Shadow matrix and shadow bias also loaded in shaders on
+/// post render
+/// </summary>
 public class FC_ShadowCaster : MonoBehaviour
 {
     private const float SHADOW_BIAS = 0.005f;
@@ -26,7 +34,7 @@ public class FC_ShadowCaster : MonoBehaviour
         {
             m00 = 0.5f, m01 = 0,    m02 = 0,    m03 = 0.5f,
             m10 = 0,    m11 = 0.5f, m12 = 0,    m13 = 0.5f, 
-            m20 = 0,    m21 = 0,    m22 = 0.5f, m23 = 0.5f,
+            m20 = 0,    m21 = 0,    m22 = 1f,   m23 = 0f,
             m30 = 0,    m31 = 0,    m32 = 0,    m33 = 1,
         };
 

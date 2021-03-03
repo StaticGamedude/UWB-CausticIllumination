@@ -37,6 +37,7 @@
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.depth = -mul(UNITY_MATRIX_MV, v.vertex).z * _ProjectionParams.w;
+                //o.depth = o.vertex.z;
                 return o;
             }
 
