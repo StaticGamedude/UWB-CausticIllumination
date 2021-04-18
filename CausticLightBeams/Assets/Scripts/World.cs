@@ -107,13 +107,13 @@ public class World : MonoBehaviour
             for (int col = 0; col < captureTexture.height; col++)
             {
                 Color pixelColor = captureTexture.GetPixel(row, col);
-                Vector3 pos = new Vector3(pixelColor.r * 2, pixelColor.g * 2, pixelColor.b * 2);
+                Vector3 pos = new Vector3((pixelColor.r * 10) - 5, (pixelColor.g * 10) - 5, (pixelColor.b * 10) - 5);
 
                 if (pos.x != 0 || pos.y != 0 || pos.z != 0)
                 {
                     GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
                     sphere.transform.position = pos;
-                    sphere.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+                    sphere.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
                     sphere.name = $"Sphere: {count}";
                     testSpheres.Add(sphere);
                     count++;

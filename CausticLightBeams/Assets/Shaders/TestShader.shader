@@ -36,6 +36,10 @@
                 v2f o;
                 float3 worldPos = mul(UNITY_MATRIX_M, v.vertex);
 
+                worldPos.x = (worldPos.x + 5) / 10;
+                worldPos.y = (worldPos.y + 5) / 10;
+                worldPos.z = (worldPos.z + 5) / 10;
+
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.worldPos = worldPos;
                 return o;
