@@ -107,7 +107,7 @@ public class World : MonoBehaviour
             for (int col = 0; col < captureTexture.height; col++)
             {
                 Color pixelColor = captureTexture.GetPixel(row, col);
-                Vector3 pos = new Vector3(pixelColor.r, pixelColor.g, pixelColor.b);
+                Vector3 pos = new Vector3(pixelColor.r * 2, pixelColor.g * 2, pixelColor.b * 2);
 
                 if (pos.x != 0 || pos.y != 0 || pos.z != 0)
                 {
@@ -127,48 +127,5 @@ public class World : MonoBehaviour
         }
 
         Texture2D.DestroyImmediate(captureTexture, true);
-    }
-
-    /// <summary>
-    /// Attempt to create a sphere at every value found in the texture. Positions of (0, 0, 0) are skipped.
-    /// Color values are treated as position values. Because the process of generating the spheres can take awhile
-    /// we only attempt to render them once
-    /// </summary>
-    private void UpdateTestSpheres()
-    {
-        if (!spheresCreated)
-        {
-            Debug.Log("Updating test sphere positions");
-            foreach (GameObject testSphere in testSpheres)
-            {
-                Destroy(testSphere);
-            }
-
-            testSpheres = new List<GameObject>();
-            int count = 0;
-
-            foreach(Color32 color in textureColorPixels)
-            {
-                Color32 c = textureColorPixels[count];
-                Vector3 pos = new Vector3(c.r, c.g, c.b);
-
-                if (pos.x != 0 || pos.y != 0 || pos.z != 0)
-                {
-                    GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                    sphere.transform.position = pos;
-                    sphere.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
-                    sphere.name = $"Sphere: {count}";
-                    testSpheres.Add(sphere);
-                    count++;
-                }
-            }
-
-            if (testSpheres.Count == 0)
-            {
-                Debug.LogWarning("No valid positions spheres found");
-            }
-
-            spheresCreated = true;
-        }
     }
 }
