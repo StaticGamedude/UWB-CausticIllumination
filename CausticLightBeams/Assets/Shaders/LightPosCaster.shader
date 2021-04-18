@@ -51,7 +51,8 @@
             // I'm resorting back to return the value as fixed4.
             fixed4 frag(v2f i) : SV_Target
             {
-                return fixed4(i.worldPos.x, i.worldPos.y, i.worldPos.z, 1);
+                //return fixed4(i.worldPos.x, i.worldPos.y, i.worldPos.z, 1);
+                return fixed4(0, 0, 1, 1);
             }
             ENDCG
         }

@@ -1,12 +1,12 @@
-﻿Shader "Unlit/TestShader"
+﻿Shader "Unlit/LightPosCaster_2"
 {
     Properties
     {
-        _MainTex("Texture", 2D) = "white" {}
+        _MainTex ("Texture", 2D) = "white" {}
     }
-        SubShader
+    SubShader
     {
-        Tags { "SpecularObj" = "1" }
+        Tags { "RenderType"="Opaque" "SpecularObj" = "1" }
         LOD 100
 
         Pass
@@ -35,7 +35,7 @@
             sampler2D _MainTex;
             float4 _MainTex_ST;
 
-            v2f vert(appdata v)
+            v2f vert (appdata v)
             {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);

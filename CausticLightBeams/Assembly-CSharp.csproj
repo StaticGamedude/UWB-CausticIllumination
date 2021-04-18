@@ -64,11 +64,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\DefaultCameraTest.cs" />
     <Compile Include="Assets\Scripts\LightCaster.cs" />
     <Compile Include="Assets\Scripts\World.cs" />
     <None Include="Assets\Shaders\LightNormalCaster.shader" />
     <None Include="Assets\Shaders\SpecularObject.shader" />
     <None Include="Assets\Shaders\LightPosCaster.shader" />
+    <None Include="Assets\Shaders\LightPosCaster_2.shader" />
     <None Include="Assets\Shaders\TestShader.shader" />
     <Reference Include="UnityEngine">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.4.11f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
