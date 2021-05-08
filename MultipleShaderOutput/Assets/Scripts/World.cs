@@ -6,8 +6,11 @@ using UnityEngine;
 public class World : MonoBehaviour
 {
     public RenderTexture[] TestTextures;
-
     public Material TestMaterial;
+
+    public Material DepthMaterial;
+
+    public GameObject DepthCube;
 
     // Start is called before the first frame update
     void Start()
@@ -15,6 +18,7 @@ public class World : MonoBehaviour
         Debug.Assert(TestTextures != null);
         Debug.Assert(TestTextures.Length > 0);
         Debug.Assert(TestMaterial != null);
+        Debug.Assert(DepthMaterial != null);
     }
 
     private void OnPostRender()
@@ -42,6 +46,11 @@ public class World : MonoBehaviour
         {
             PrintFirstTextureValues(3);
         }
+
+        if (Input.GetKey(KeyCode.D))
+        {
+            this.PrintTestDepthTextureValues();
+        }
     }
 
     /// <summary>
@@ -60,6 +69,7 @@ public class World : MonoBehaviour
         // Set targets needs the color buffers so make a array from
         // each textures buffer.
         for (int i = 0; i < des.Length; i++)
+            //des[i].
             rb[i] = des[i].colorBuffer;
 
         //Set the targets to render into.
@@ -73,6 +83,32 @@ public class World : MonoBehaviour
         GL.LoadOrtho();
 
         mat.SetPass(pass);
+
+        GL.Begin(GL.QUADS);
+        GL.TexCoord2(0.0f, 0.0f); GL.Vertex3(0.0f, 0.0f, 0.1f);
+        GL.TexCoord2(1.0f, 0.0f); GL.Vertex3(1.0f, 0.0f, 0.1f);
+        GL.TexCoord2(1.0f, 1.0f); GL.Vertex3(1.0f, 1.0f, 0.1f);
+        GL.TexCoord2(0.0f, 1.0f); GL.Vertex3(0.0f, 1.0f, 0.1f);
+        GL.End();
+
+        GL.PopMatrix();
+    }
+
+    private void DepthTargetBlit(RenderTexture des, Material mat)
+    {
+        RenderBuffer rb = des.colorBuffer;
+
+        //Set the targets to render into.
+        //Will use the depth buffer of the
+        //first render texture provided.
+        Graphics.SetRenderTarget(rb, des.depthBuffer);
+
+        GL.Clear(true, true, Color.clear);
+
+        GL.PushMatrix();
+        GL.LoadOrtho();
+
+        mat.SetPass(0);
 
         GL.Begin(GL.QUADS);
         GL.TexCoord2(0.0f, 0.0f); GL.Vertex3(0.0f, 0.0f, 0.1f);
@@ -105,6 +141,40 @@ public class World : MonoBehaviour
         foreach (Color32 c in rawTextureData)
         {
             Debug.Log($"R: {c.r}, G:{c.g}, B:{c.b}, A:{c.a}");
+        }
+
+        Texture2D.DestroyImmediate(captureTexture, true);
+    }
+
+    private Texture2D TextureToTexture2D(Texture texture)
+    {
+        if (texture != null)
+        {
+            Texture2D texture2D = new Texture2D(texture.width, texture.height, TextureFormat.RFloat, false);
+
+            RenderTexture currentRT = RenderTexture.active;
+
+            RenderTexture renderTexture = new RenderTexture(texture.width, texture.height, 32);
+            Graphics.Blit(texture, renderTexture);
+
+            RenderTexture.active = renderTexture;
+            texture2D.ReadPixels(new Rect(0, 0, renderTexture.width, renderTexture.height), 0, 0);
+            texture2D.Apply();
+            return texture2D;
+        }
+        return null;
+    }
+
+    private void PrintTestDepthTextureValues()
+    {
+        Debug.Log($"Print texture depth values");
+
+        Texture2D captureTexture = TextureToTexture2D(DepthMaterial.mainTexture);
+        var rawTextureData = captureTexture.GetRawTextureData<float>();
+
+        foreach (float f in rawTextureData)
+        {
+            Debug.Log($"value: {f}");
         }
 
         Texture2D.DestroyImmediate(captureTexture, true);

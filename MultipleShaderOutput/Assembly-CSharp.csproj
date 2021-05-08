@@ -66,6 +66,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\World.cs" />
     <None Include="Assets\Shaders\MultiOutputShader.shader" />
+    <None Include="Assets\Shaders\DepthShaderOutput.shader" />
     <Reference Include="UnityEngine">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.4.11f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>
