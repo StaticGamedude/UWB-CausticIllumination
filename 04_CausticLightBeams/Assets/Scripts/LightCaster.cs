@@ -76,13 +76,48 @@ public class LightCaster : MonoBehaviour
         //Load the appropriate texture's into other shaders globally.
         if (PositionCamera)
         {
+            List<Vector4> positions = ConvertTextureToVectorArray(targetTexture as RenderTexture);
             Shader.SetGlobalTexture("_SpecularPosTexture", targetTexture);
+            Shader.SetGlobalVectorArray("_LightPositions", positions);
         }
         else
         {
+            List<Vector4> normals = ConvertTextureToVectorArray(targetTexture as RenderTexture);
             Shader.SetGlobalTexture("_SpecularNormalTexture", targetTexture);
+            Shader.SetGlobalVectorArray("_LightNormals", normals);
         }
 
         Shader.SetGlobalMatrix("_LightMatrix", lightMatrix);
+        Shader.SetGlobalMatrix("_LightCamMatrix", lightCamera.worldToCameraMatrix);
+        Shader.SetGlobalFloat("_LightCam_Far", 1.0f / lightCamera.farClipPlane);
+        
     }
+
+    private Texture2D TTexture2DGetRenderTexture(RenderTexture rt)
+    {
+        RenderTexture.active = rt;
+        Texture2D tempTexture = new Texture2D(rt.width, rt.height);
+        tempTexture.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0);
+        tempTexture.Apply();
+
+        return tempTexture;
+    }
+
+    private List<Vector4> ConvertTextureToVectorArray(RenderTexture rt)
+    {
+        List<Vector4> vectors = new List<Vector4>();
+
+        Texture2D captureTexture = TTexture2DGetRenderTexture(rt);
+        var rawTextureData = captureTexture.GetRawTextureData<Vector4>();
+
+        if (rawTextureData != null)
+        {
+            vectors = new List<Vector4>(rawTextureData.ToArray());
+        }
+
+        Texture2D.DestroyImmediate(captureTexture, true);
+
+        return vectors;
+    }
+
 }

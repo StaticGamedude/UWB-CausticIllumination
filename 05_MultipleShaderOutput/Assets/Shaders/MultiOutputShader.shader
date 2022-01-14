@@ -41,9 +41,9 @@
                 f2a OUT;
                 //OUT.col0 = float4(func1, func2, ...)
                 OUT.col0 = float4(1, 0, 0, 1);
-                OUT.col1 = float4(1, 0, 0, 1);
-                OUT.col2 = float4(1, 0, 0, 1);
-                OUT.col3 = float4(1, 0, 0, 1);
+                OUT.col1 = float4(0, 1, 0, 1);
+                OUT.col2 = float4(0, 0, 1, 1);
+                OUT.col3 = float4(1, 1, 0, 1);
                 //OUT.col3 = float4(94, 11, 97, 1);
                 //OUT.col3 = float4(0.5, 0.5, 0.5, 0.5);
 
