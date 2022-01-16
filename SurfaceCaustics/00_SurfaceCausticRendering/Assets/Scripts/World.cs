@@ -2,22 +2,56 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Handles the overall scene logic. Reads users input and renders debug spheres and cylinders
+/// at positions read from a render texture
+/// </summary>
 public class World : MonoBehaviour
 {
     public RenderTexture[] LightCameraTargetTextures;
 
+    /// <summary>
+    /// The render texture containing the world positions of the verticies that can be
+    /// seen from a light source
+    /// </summary>
     public RenderTexture LightCameraPositionTexture;
 
+    /// <summary>
+    /// The render texture containing the world normals of the verticies that can be
+    /// seen from a light source
+    /// </summary>
     public RenderTexture LightCameraNormalTexture;
 
+    /// <summary>
+    /// Material which uses the light camera position shader position
+    /// </summary>
     public Material LightSourceMaterial;
 
+    /// <summary>
+    /// Debug option - do not render points if the position read from the position render texture
+    /// is at the origin
+    /// </summary>
     public bool Debug_IgnorePositionsAtOrigin = true;
 
+    /// <summary>
+    /// Debug option - flag which determines whether to render all possible spheres when reading from
+    /// the positions texture
+    /// </summary>
+    public bool Debug_LimitNumberOfSpheresRendered = false;
+
+    /// <summary>
+    /// Debug option - Render a set number of position nodes and normals
+    /// </summary>
     public int Debug_NumberOfPositionsToRender = 1000;
 
+    /// <summary>
+    /// Interal list of spheres which represent the positions read from the position texture
+    /// </summary>
     private List<GameObject> debug_PositionSpheres;
 
+    /// <summary>
+    /// Interal list of cylinders which represents the normals ready from the normals texture
+    /// </summary>
     private List<GameObject> debug_NormalCylinder;
 
     // Start is called before the first frame update
@@ -34,14 +68,10 @@ public class World : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //var renderTextures = new RenderTexture[] { this.LightCameraRenderTexture };
-        
         this.MultiTargetBlit(this.LightCameraTargetTextures, this.LightSourceMaterial);
         if (Input.GetKey(KeyCode.R))
         {
             RenderTextureDetails(this.LightCameraPositionTexture, this.LightCameraNormalTexture);
-            //RenderTestSpheres(renderTextures[0]);
-            //RenderTestSpheres(this.LightCameraRenderTexture);
         }
     }
 
@@ -85,6 +115,13 @@ public class World : MonoBehaviour
         GL.PopMatrix(); // restores the current matrix stack
     }
 
+    /// <summary>
+    /// Given a position render texture and normal render texture, attempt to render objects to help show what was read from the
+    /// textures. A sphere is rendered at each position read from the positions texture, and a cylinder is rendered to represent the 
+    /// normal
+    /// </summary>
+    /// <param name="positionRenderTexture">Render texture containing world positions</param>
+    /// <param name="normalRenderTexture">Render texture containing world normals</param>
     private void RenderTextureDetails(RenderTexture positionRenderTexture, RenderTexture normalRenderTexture)
     {
         Texture2D positionTexture = this.ConvertRenderTextureTo2DTexture(positionRenderTexture);
@@ -99,26 +136,33 @@ public class World : MonoBehaviour
         {
             for (int col = 0; col < positionTexture.height; col++)
             {
-
                 Color positionPixelColor = positionTexture.GetPixel(row, col);
                 Color normalPixelColor = normalTexture.GetPixel(row, col);
                 Vector3 worldPos = new Vector3(positionPixelColor.r, positionPixelColor.g, positionPixelColor.b);
                 Vector3 normal = new Vector3(normalPixelColor.r, normalPixelColor.g, normalPixelColor.b);
-                
-                //if (this.Debug_IgnorePositionsAtOrigin && (worldPos.Equals(Vector3.zero) || normal.Equals(Vector3.zero)))
-                //{
 
-                //}
-
-                if (worldPos.x != 0 && worldPos.y != 0 && worldPos.z != 0 /*&& count < Debug_NumberOfPositionsToRender*/)
+                if (this.Debug_IgnorePositionsAtOrigin && (worldPos.Equals(Vector3.zero) || normal.Equals(Vector3.zero)))
                 {
-                    this.CreatePositionDebugObjects(worldPos, normal, count.ToString());
-                    count++;
+                    continue;
                 }
+
+                if (this.Debug_LimitNumberOfSpheresRendered && count < Debug_NumberOfPositionsToRender)
+                {
+                    break;
+                }
+
+                this.CreatePositionDebugObjects(worldPos, normal, count.ToString());
+                count++;
             }
         }
     }
 
+    /// <summary>
+    /// Render a sphere at the world position and a cylinder which represents the normal
+    /// </summary>
+    /// <param name="worldPosition">World position to render the sphere</param>
+    /// <param name="worldNormal">The world normal of the vertex</param>
+    /// <param name="name">Name used for debugging to help track the objects in the scene</param>
     private void CreatePositionDebugObjects(Vector3 worldPosition, Vector3 worldNormal, string name)
     {
         GameObject positionSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
@@ -140,6 +184,11 @@ public class World : MonoBehaviour
         debug_NormalCylinder.Add(normalDirectionCylinder);
     }
 
+    /// <summary>
+    /// Convert a render texture to a 2D texture
+    /// </summary>
+    /// <param name="rt"></param>
+    /// <returns></returns>
     private Texture2D ConvertRenderTextureTo2DTexture(RenderTexture rt)
     {
         RenderTexture.active = rt;

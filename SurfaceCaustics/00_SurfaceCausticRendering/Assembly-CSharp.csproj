@@ -57,6 +57,7 @@
     <Compile Include="Assets\Scripts\World.cs" />
     <Compile Include="Assets\Scripts\Globals.cs" />
     <Compile Include="Assets\Scripts\LightCamera.cs" />
+    <Compile Include="Assets\Scripts\DataPrint.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\LightNormalShader.shader" />
