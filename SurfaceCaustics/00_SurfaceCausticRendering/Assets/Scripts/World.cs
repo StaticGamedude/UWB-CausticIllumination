@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -21,11 +20,6 @@ public class World : MonoBehaviour
     /// seen from a light source
     /// </summary>
     public RenderTexture LightCameraNormalTexture;
-
-    /// <summary>
-    /// Material which uses the light camera position shader position
-    /// </summary>
-    public Material LightSourceMaterial;
 
     /// <summary>
     /// Debug option - do not render points if the position read from the position render texture
@@ -62,57 +56,19 @@ public class World : MonoBehaviour
 
         Debug.Assert(LightCameraPositionTexture != null);
         Debug.Assert(LightCameraNormalTexture != null);
-        Debug.Assert(LightSourceMaterial != null);
     }
 
     // Update is called once per frame
     void Update()
     {
-        this.MultiTargetBlit(this.LightCameraTargetTextures, this.LightSourceMaterial);
-        if (Input.GetKey(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.R))
         {
             RenderTextureDetails(this.LightCameraPositionTexture, this.LightCameraNormalTexture);
         }
-    }
-
-    /// <summary>
-    /// Renders into a array of render textures using multi-target blit.
-    /// Up to 4 render targets are supported in Unity but some GPU's can
-    /// support up to 8 so this may change in the future. You MUST set up
-    /// the materials shader correctly for multitarget blit for this to work.
-    /// </summary>
-    /// <param name="des">The destination render textures.</param>
-    /// <param name="mat">The material to use</param>
-    /// <param name="pass">Which pass of the materials shader to use.</param>
-    private void MultiTargetBlit(RenderTexture[] des, Material mat, int pass = 0)
-    {
-        RenderBuffer[] rb = new RenderBuffer[des.Length];
-
-        // Set targets needs the color buffers so make a array from
-        // each textures buffer.
-        for (int i = 0; i < des.Length; i++)
-            rb[i] = des[i].colorBuffer;
-
-        //Set the targets to render into.
-        //Will use the depth buffer of the
-        //first render texture provided.
-        Graphics.SetRenderTarget(rb, des[0].depthBuffer);
-
-        GL.Clear(true, true, Color.clear);
-
-        GL.PushMatrix(); // Saves the current matrix stack
-        GL.LoadOrtho(); // Saves the current matrix stack
-
-        mat.SetPass(pass); 
-
-        GL.Begin(GL.QUADS);
-        GL.TexCoord2(0.0f, 0.0f); GL.Vertex3(0.0f, 0.0f, 0.1f);
-        GL.TexCoord2(1.0f, 0.0f); GL.Vertex3(1.0f, 0.0f, 0.1f);
-        GL.TexCoord2(1.0f, 1.0f); GL.Vertex3(1.0f, 1.0f, 0.1f);
-        GL.TexCoord2(0.0f, 1.0f); GL.Vertex3(0.0f, 1.0f, 0.1f);
-        GL.End();
-
-        GL.PopMatrix(); // restores the current matrix stack
+        else if (Input.GetKeyDown(KeyCode.C))
+        {
+            this.DeleteDebugObjects();
+        }
     }
 
     /// <summary>
@@ -129,8 +85,7 @@ public class World : MonoBehaviour
 
         int count = 0;
 
-        debug_PositionSpheres.ForEach(sphere => Destroy(sphere));
-        debug_NormalCylinder.ForEach(sphere => Destroy(sphere));
+        this.DeleteDebugObjects();
 
         for (int row = 0; row < positionTexture.width; row++)
         {
@@ -155,6 +110,15 @@ public class World : MonoBehaviour
                 count++;
             }
         }
+    }
+
+    /// <summary>
+    /// Delete the debug spheres and cylinders in the scene
+    /// </summary>
+    private void DeleteDebugObjects()
+    {
+        this.debug_PositionSpheres.ForEach(sphere => Destroy(sphere));
+        this.debug_NormalCylinder.ForEach(sphere => Destroy(sphere));
     }
 
     /// <summary>
