@@ -54,7 +54,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\DataPrint.cs" />
-    <Compile Include="Assets\Scripts\LightCameraType.cs" />
     <Compile Include="Assets\Scripts\World.cs" />
     <Compile Include="Assets\Scripts\Globals.cs" />
     <Compile Include="Assets\Scripts\LightCamera.cs" />
@@ -63,6 +62,7 @@
   <ItemGroup>
     <None Include="Assets\Shaders\LightNormalShader.shader" />
     <None Include="Assets\Shaders\PositionShader.shader" />
+    <None Include="Assets\Shaders\SpecularReceivingObjectShader.shader" />
     <None Include="Assets\Shaders\MultiOutputShader.shader" />
     <None Include="Assets\Shaders\SpecularObjectShader.shader" />
   </ItemGroup>

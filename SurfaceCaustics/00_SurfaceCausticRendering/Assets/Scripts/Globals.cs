@@ -37,7 +37,17 @@ public class Globals
     /// Represents the parameter which stores the transformation to convert positions/normals into
     /// the light's space.
     /// </summary>
-    public readonly static string SHADER_PARAM_LIGHT_MATRIX = "LightMatrix";
+    public readonly static string SHADER_PARAM_LIGHT_MATRIX = "_LightMatrix";
+
+    /// <summary>
+    /// Represents the parameter which stores the world to camera matrix
+    /// </summary>
+    public readonly static string SHADER_PARAM_LIGHT_CAMERA_MATRIX = "_LightCamMatrix";
+
+    /// <summary>
+    /// Represents the parameter which stores the distance of how far the light camera can see
+    /// </summary>
+    public readonly static string SHADER_PARAM_LIGHT_CAMERA_FAR = "_LightCam_Far";
 
     #endregion
 }

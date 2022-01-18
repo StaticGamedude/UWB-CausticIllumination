@@ -24,9 +24,10 @@ public class LightCamera : MonoBehaviour
     public Texture DataTexture;
 
     /// <summary>
-    /// Indicates the <see cref="CameraType" /> of the attached camera. Expected to be set in the Unity editor
+    /// Flag which indiates whether this script is associated with a position camera or a normal camera.
+    /// True if position camera. False otherwise
     /// </summary>
-    public LightCameraType CamType;
+    public bool IsPositionCamera;
 
     #endregion
 
@@ -34,7 +35,6 @@ public class LightCamera : MonoBehaviour
     /// Camera in which this script is attached to
     /// </summary>
     private Camera lightCamera;
-
 
     // Start is called before the first frame update
     void Start()
@@ -54,9 +54,11 @@ public class LightCamera : MonoBehaviour
     private void OnPostRender()
     {
         Matrix4x4 lightMatrix = Globals.BIAS * this.lightCamera.projectionMatrix * lightCamera.worldToCameraMatrix;
-        string shaderTextureParameter = this.CamType == LightCameraType.NORMAL ? Globals.SHADER_PARAM_POSITION_TEXTURE : Globals.SHADER_PARAM_NORMAL_TEXTURE;
+        string shaderTextureParameter = this.IsPositionCamera ? Globals.SHADER_PARAM_POSITION_TEXTURE : Globals.SHADER_PARAM_NORMAL_TEXTURE;
 
         Shader.SetGlobalTexture(shaderTextureParameter, DataTexture);
         Shader.SetGlobalMatrix(Globals.SHADER_PARAM_LIGHT_MATRIX, lightMatrix);
+        Shader.SetGlobalMatrix(Globals.SHADER_PARAM_LIGHT_CAMERA_MATRIX, this.lightCamera.worldToCameraMatrix);
+        Shader.SetGlobalFloat(Globals.SHADER_PARAM_LIGHT_CAMERA_FAR, 1.0f / lightCamera.farClipPlane);
     }
 }

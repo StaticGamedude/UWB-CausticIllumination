@@ -22,21 +22,9 @@ public class World : MonoBehaviour
     public RenderTexture LightCameraNormalTexture;
 
     /// <summary>
-    /// Debug option - do not render points if the position read from the position render texture
-    /// is at the origin
+    /// Limits the number of objects created when rendering validation objects in the scene. Only every Xth item will be rendered.
     /// </summary>
-    public bool Debug_IgnorePositionsAtOrigin = true;
-
-    /// <summary>
-    /// Debug option - flag which determines whether to render all possible spheres when reading from
-    /// the positions texture
-    /// </summary>
-    public bool Debug_LimitNumberOfSpheresRendered = false;
-
-    /// <summary>
-    /// Debug option - Render a set number of position nodes and normals
-    /// </summary>
-    public int Debug_NumberOfPositionsToRender = 1000;
+    public int Debug_RenderEveryXElement = 20;
 
     /// <summary>
     /// Interal list of spheres which represent the positions read from the position texture
@@ -47,6 +35,11 @@ public class World : MonoBehaviour
     /// Interal list of cylinders which represents the normals ready from the normals texture
     /// </summary>
     private List<GameObject> debug_NormalCylinder;
+
+    /// <summary>
+    /// Flag indicating whether to render the validation objects in every frame
+    /// </summary>
+    private bool continousValidationRendering = false;
 
     // Start is called before the first frame update
     void Start()
@@ -61,13 +54,18 @@ public class World : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.S))
         {
-            RenderTextureDetails(this.LightCameraPositionTexture, this.LightCameraNormalTexture);
+            this.continousValidationRendering = !this.continousValidationRendering;
         }
-        else if (Input.GetKeyDown(KeyCode.C))
+        else if (Input.GetKeyDown(KeyCode.C)) // Clear any validation objects in the scene
         {
             this.DeleteDebugObjects();
+        }
+
+        if (this.continousValidationRendering || Input.GetKeyDown(KeyCode.R))
+        {
+            this.RenderTextureDetails(this.LightCameraPositionTexture, this.LightCameraNormalTexture);
         }
     }
 
@@ -95,18 +93,18 @@ public class World : MonoBehaviour
                 Color normalPixelColor = normalTexture.GetPixel(row, col);
                 Vector3 worldPos = new Vector3(positionPixelColor.r, positionPixelColor.g, positionPixelColor.b);
                 Vector3 normal = new Vector3(normalPixelColor.r, normalPixelColor.g, normalPixelColor.b);
+                bool isVisiblePosition = positionPixelColor.a > 0; //The alpha channel of the world position indicates whether the position is valid (i.e. seen by the light camera)
 
-                if (this.Debug_IgnorePositionsAtOrigin && (worldPos.Equals(Vector3.zero) || normal.Equals(Vector3.zero)))
+                if (!isVisiblePosition)
                 {
                     continue;
                 }
 
-                if (this.Debug_LimitNumberOfSpheresRendered && count < Debug_NumberOfPositionsToRender)
+                if (this.Debug_RenderEveryXElement <= 1 || (count + 1) % this.Debug_RenderEveryXElement == 0)
                 {
-                    break;
+                    this.CreatePositionDebugObjects(worldPos, normal, count.ToString());
                 }
 
-                this.CreatePositionDebugObjects(worldPos, normal, count.ToString());
                 count++;
             }
         }
