@@ -24,10 +24,9 @@ public class LightCamera : MonoBehaviour
     public Texture DataTexture;
 
     /// <summary>
-    /// Flag which indiates whether this script is associated with a position camera or a normal camera.
-    /// True if position camera. False otherwise
+    /// Represents the type of data that this camera is meant to capture
     /// </summary>
-    public bool IsPositionCamera;
+    public LightCameraType LightCamType;
 
     #endregion
 
@@ -39,13 +38,18 @@ public class LightCamera : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        
         this.lightCamera = this.GetComponent<Camera>();
 
         Debug.Assert(this.lightCamera != null);
         Debug.Assert(this.SpecularObjectShader != null);
         Debug.Assert(this.DataTexture != null);
 
-        this.lightCamera.SetReplacementShader(SpecularObjectShader, Globals.SPECULAR_OBJECT_SHADER_TAG);
+        string replacementShaderTag = 
+            this.LightCamType == LightCameraType.RECEIVING_POSITION 
+            ? Globals.RECEIVING_OBJECT_SHADER_TAG : Globals.SPECULAR_OBJECT_SHADER_TAG;
+
+        this.lightCamera.SetReplacementShader(SpecularObjectShader, replacementShaderTag);
     }
 
     /// <summary>
@@ -54,7 +58,19 @@ public class LightCamera : MonoBehaviour
     private void OnPostRender()
     {
         Matrix4x4 lightMatrix = Globals.BIAS * this.lightCamera.projectionMatrix * lightCamera.worldToCameraMatrix;
-        string shaderTextureParameter = this.IsPositionCamera ? Globals.SHADER_PARAM_POSITION_TEXTURE : Globals.SHADER_PARAM_NORMAL_TEXTURE;
+        string shaderTextureParameter = string.Empty;
+        switch(this.LightCamType)
+        {
+            case LightCameraType.REFRACTIVE_POSITION:
+                shaderTextureParameter = Globals.SHADER_PARAM_REFRACTION_POSITION_TEXTURE;
+                break;
+            case LightCameraType.REFRACTIVE_NORMAL:
+                shaderTextureParameter = Globals.SHADER_PARAM_REFRACTION_NORMAL_TEXTURE;
+                break;
+            case LightCameraType.RECEIVING_POSITION:
+                shaderTextureParameter = Globals.SHADER_PARAM_RECEIVING_POSITION_TEXTURE;
+                break;
+        }
 
         Shader.SetGlobalTexture(shaderTextureParameter, DataTexture);
         Shader.SetGlobalMatrix(Globals.SHADER_PARAM_LIGHT_MATRIX, lightMatrix);

@@ -6,7 +6,7 @@ Shader "Unlit/SpecularReceivingObject"
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" }
+        Tags { "RenderType"="Opaque" "SpecularReceiver"="1"}
         LOD 100
 
         Pass

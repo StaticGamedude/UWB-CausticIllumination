@@ -123,6 +123,101 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &97722753
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 97722754}
+  - component: {fileID: 97722757}
+  - component: {fileID: 97722756}
+  - component: {fileID: 97722755}
+  m_Layer: 0
+  m_Name: ValidationObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &97722754
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 97722753}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 2, z: -1.598}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &97722755
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 97722753}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &97722756
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 97722753}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 4fcd707fe736d7d4fb3606adf434932d, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &97722757
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 97722753}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &201986225
 GameObject:
   m_ObjectHideFlags: 0
@@ -263,16 +358,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb113ed9c2da1e24b9a6e2f93565de32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LightCameraTargetTextures:
-  - {fileID: 8400000, guid: af325fdedfe531f4a834fa294e917e26, type: 2}
-  - {fileID: 8400000, guid: 853b80b51e31cc24e801effeec8ff5d4, type: 2}
-  - {fileID: 8400000, guid: ef237e60b3ce80f4e8a0be34fd12396f, type: 2}
-  - {fileID: 8400000, guid: 0a43cdfb68254e74ba4f538f94cf56b9, type: 2}
-  LightCameraPositionTexture: {fileID: 8400000, guid: 11587199ba129574fbe23cf09d1f914e, type: 2}
-  LightCameraNormalTexture: {fileID: 8400000, guid: cca5af20753e2e440ac19faa67924a05, type: 2}
-  Debug_IgnorePositionsAtOrigin: 1
-  Debug_LimitNumberOfSpheresRendered: 0
-  Debug_NumberOfPositionsToRender: 1000
+  LightCameraRefractionPositionTexture: {fileID: 8400000, guid: 11587199ba129574fbe23cf09d1f914e, type: 2}
+  LightCameraRefractionNormalTexture: {fileID: 8400000, guid: cca5af20753e2e440ac19faa67924a05, type: 2}
+  LightCameraReceivingPositionTexture: {fileID: 8400000, guid: 9e2a29d58adfcd4479b52557b552b2f7, type: 2}
   Debug_RenderEveryXElement: 5
 --- !u!114 &286145854
 MonoBehaviour:
@@ -304,7 +392,7 @@ GameObject:
   - component: {fileID: 409843996}
   - component: {fileID: 409843994}
   m_Layer: 0
-  m_Name: LightPositionCamera
+  m_Name: LightRefractivePositionCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -338,7 +426,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SpecularObjectShader: {fileID: 4800000, guid: 5363dac15b27f5046af062cd3f840cd6, type: 3}
   DataTexture: {fileID: 8400000, guid: 11587199ba129574fbe23cf09d1f914e, type: 2}
-  IsPositionCamera: 0
+  LightCamType: 0
 --- !u!20 &409843996
 Camera:
   m_ObjectHideFlags: 0
@@ -373,6 +461,96 @@ Camera:
     m_Bits: 4294967295
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8400000, guid: 11587199ba129574fbe23cf09d1f914e, type: 2}
+  m_TargetDisplay: 0
+  m_TargetEye: 3
+  m_HDR: 1
+  m_AllowMSAA: 1
+  m_AllowDynamicResolution: 0
+  m_ForceIntoRT: 0
+  m_OcclusionCulling: 1
+  m_StereoConvergence: 10
+  m_StereoSeparation: 0.022
+--- !u!1 &412874440
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 412874441}
+  - component: {fileID: 412874444}
+  - component: {fileID: 412874442}
+  m_Layer: 0
+  m_Name: LightReceivingPositionCamera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &412874441
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 412874440}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1561308275}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &412874442
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 412874440}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67734355e276117439697d3d9fa50533, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SpecularObjectShader: {fileID: 4800000, guid: b360039c364c78846ad0358bc50c9b50, type: 3}
+  DataTexture: {fileID: 8400000, guid: 9e2a29d58adfcd4479b52557b552b2f7, type: 2}
+  LightCamType: 2
+--- !u!20 &412874444
+Camera:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 412874440}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
+  m_projectionMatrixMode: 1
+  m_GateFitMode: 2
+  m_FOVAxisMode: 0
+  m_SensorSize: {x: 36, y: 24}
+  m_LensShift: {x: 0, y: 0}
+  m_FocalLength: 50
+  m_NormalizedViewPortRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  near clip plane: 0.3
+  far clip plane: 1000
+  field of view: 60
+  orthographic: 0
+  orthographic size: 5
+  m_Depth: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingPath: -1
+  m_TargetTexture: {fileID: 8400000, guid: 9e2a29d58adfcd4479b52557b552b2f7, type: 2}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
@@ -1193,6 +1371,7 @@ Transform:
   - {fileID: 2127868068}
   - {fileID: 409843993}
   - {fileID: 1957115655}
+  - {fileID: 412874441}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
@@ -1524,7 +1703,7 @@ GameObject:
   - component: {fileID: 1957115656}
   - component: {fileID: 1957115657}
   m_Layer: 0
-  m_Name: LightNormalCamera
+  m_Name: LightRefractiveNormalCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1601,7 +1780,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SpecularObjectShader: {fileID: 4800000, guid: 503dff78da6c0934888bbc8ea91ad9b4, type: 3}
   DataTexture: {fileID: 8400000, guid: cca5af20753e2e440ac19faa67924a05, type: 2}
-  IsPositionCamera: 0
+  LightCamType: 1
 --- !u!1 &2127868067
 GameObject:
   m_ObjectHideFlags: 0

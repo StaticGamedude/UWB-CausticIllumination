@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Globals
@@ -20,18 +18,27 @@ public class Globals
     /// </summary>
     public readonly static string SPECULAR_OBJECT_SHADER_TAG = "SpecularObj";
 
+    /// <summary>
+    /// Tag used for objects which are to receiving caustic effects on them
+    /// </summary>
+    public readonly static string RECEIVING_OBJECT_SHADER_TAG = "SpecularReceiver";
 
     #region Shader parameter names
 
     /// <summary>
-    /// Represents the parameter which stores vertex positions as seen from a light source
+    /// Represents the parameter which stores vertex positions of a specular object as seen from a light source
     /// </summary>
-    public readonly static string SHADER_PARAM_POSITION_TEXTURE = "_SpecularPosTexture";
+    public readonly static string SHADER_PARAM_REFRACTION_POSITION_TEXTURE = "_SpecularPosTexture";
 
     /// <summary>
-    /// Represents the parameter which stores vertex normals as seen from a light source
+    /// Represents the parameter which stores vertex normals of a specular object as seen from a light source
     /// </summary>
-    public readonly static string SHADER_PARAM_NORMAL_TEXTURE = "_SpecularNormTexture";
+    public readonly static string SHADER_PARAM_REFRACTION_NORMAL_TEXTURE = "_SpecularNormTexture";
+
+    /// <summary>
+    /// Represents the parameter which stores vertex positions of a receiving object seen from a light source
+    /// </summary>
+    public readonly static string SHADER_PARAM_RECEIVING_POSITION_TEXTURE = "_ReceivingPosTexture";
 
     /// <summary>
     /// Represents the parameter which stores the transformation to convert positions/normals into
