@@ -92,22 +92,23 @@ Shader "Unlit/SpecularReceivingObject"
                 float angleNeededForIncreasedIllumination = radians(50);
 
                 // If the angle between is with the desired number of degrees, increase the illumination of the fragment
-                if (angleBetween < angleNeededForIncreasedIllumination)
-                {
-                    float lightIlluminationIncreaseAmount = 0.15;
-                    fixed4 col = tex2D(_MainTex, i.uv);
-                    col.r = col.r + lightIlluminationIncreaseAmount;
-                    col.g = col.g + lightIlluminationIncreaseAmount;
-                    col.b = col.b + lightIlluminationIncreaseAmount;
-                    return col;
-                }
-                else
-                {
-                    // sample the texture
-                    fixed4 col = tex2D(_MainTex, i.uv);
-                    return col;
-                }
+                //if (angleBetween < angleNeededForIncreasedIllumination)
+                //{
+                //    float lightIlluminationIncreaseAmount = 0.15;
+                //    fixed4 col = tex2D(_MainTex, i.uv);
+                //    col.r = col.r + lightIlluminationIncreaseAmount;
+                //    col.g = col.g + lightIlluminationIncreaseAmount;
+                //    col.b = col.b + lightIlluminationIncreaseAmount;
+                //    return col;
+                //}
+                //else
+                //{
+                //    // sample the texture
+                //    fixed4 col = tex2D(_MainTex, i.uv);
+                //    return col;
+                //}
 
+                return fixed4(1, 1, 1, 1);
             }
             ENDCG
         }

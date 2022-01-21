@@ -61,134 +61,64 @@ public class World : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.S))
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            this.DeleteValidationObjects();
+        }
+
+        if (Input.GetKeyDown(KeyCode.C))
         {
             this.continousValidationRendering = !this.continousValidationRendering;
         }
-        else if (Input.GetKeyDown(KeyCode.C)) // Clear any validation objects in the scene
+
+        if (this.continousValidationRendering || Input.GetKeyDown(KeyCode.S))
         {
-            this.DeleteDebugObjects();
+            this.Validation_RenderTextureDetails(this.LightCameraRefractionPositionTexture, this.debug_PositionSpheres, this.LightCameraRefractionNormalTexture, this.debug_NormalCylinder);
         }
 
         if (this.continousValidationRendering || Input.GetKeyDown(KeyCode.R))
         {
-            this.RenderSpecularTextureDetails(this.LightCameraRefractionPositionTexture, this.LightCameraRefractionNormalTexture);
-        }
-
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            this.RenderReceivingTextureDetails(this.LightCameraReceivingPositionTexture);
+            this.Validation_RenderTextureDetails(this.LightCameraReceivingPositionTexture, this.debug_ReceivingPositionSpheres);
         }
     }
 
     /// <summary>
-    /// Given a position render texture and normal render texture, attempt to render objects to help show what was read from the
-    /// textures. A sphere is rendered at each position read from the positions texture, and a cylinder is rendered to represent the 
-    /// normal
+    /// Delete the validation spheres and cylinders in the scene
     /// </summary>
-    /// <param name="positionRenderTexture">Render texture containing world positions</param>
-    /// <param name="normalRenderTexture">Render texture containing world normals</param>
-    private void RenderSpecularTextureDetails(RenderTexture positionRenderTexture, RenderTexture normalRenderTexture)
+    private void DeleteValidationObjects()
     {
-        Texture2D positionTexture = this.ConvertRenderTextureTo2DTexture(positionRenderTexture);
-        Texture2D normalTexture = this.ConvertRenderTextureTo2DTexture(normalRenderTexture);
-
-        int count = 0;
-
-        this.DeleteDebugObjects();
-
-        for (int row = 0; row < positionTexture.width; row++)
-        {
-            for (int col = 0; col < positionTexture.height; col++)
-            {
-                Color positionPixelColor = positionTexture.GetPixel(row, col);
-                Color normalPixelColor = normalTexture.GetPixel(row, col);
-                Vector3 worldPos = new Vector3(positionPixelColor.r, positionPixelColor.g, positionPixelColor.b);
-                Vector3 normal = new Vector3(normalPixelColor.r, normalPixelColor.g, normalPixelColor.b);
-                bool isVisiblePosition = positionPixelColor.a > 0; //The alpha channel of the world position indicates whether the position is valid (i.e. seen by the light camera)
-
-                if (!isVisiblePosition)
-                {
-                    continue;
-                }
-
-                if (this.Debug_RenderEveryXElement <= 1 || (count + 1) % this.Debug_RenderEveryXElement == 0)
-                {
-                    this.CreatePositionDebugObjects(worldPos, normal, count.ToString(), this.debug_PositionSpheres, this.debug_NormalCylinder);
-                }
-
-                count++;
-            }
-        }
-    }
-
-    /// <summary>
-    /// Given a texture, attempt to render the position data in the texture and render debug game objects at the read locations
-    /// </summary>
-    /// <param name="receiverPositionTexture">Render texture containing</param>
-    private void RenderReceivingTextureDetails(RenderTexture receiverPositionTexture)
-    {
-        Texture2D positionTexture = this.ConvertRenderTextureTo2DTexture(receiverPositionTexture);
-        int count = 0;
-
-        this.debug_ReceivingPositionSpheres.ForEach(s => Destroy(s));
-        for (int row = 0; row < positionTexture.width; row++)
-        {
-            for (int col = 0; col < positionTexture.height; col++)
-            {
-                Color positionPixelColor = positionTexture.GetPixel(row, col);
-                Vector3 worldPos = new Vector3(positionPixelColor.r, positionPixelColor.g, positionPixelColor.b);
-                bool isVisiblePosition = positionPixelColor.a > 0; //The alpha indicates whether the position is valid (i.e. seen by the light camera)
-
-                if (!isVisiblePosition)
-                {
-                    continue;
-                }
-
-                if (this.Debug_RenderEveryXElement <= 1 || (count + 1) % this.Debug_RenderEveryXElement == 0)
-                {
-                    this.CreatePositionDebugObjects(worldPos, null, count.ToString(), this.debug_ReceivingPositionSpheres, null);
-                }
-
-                count++;
-            }
-        }
-    }
-
-    /// <summary>
-    /// Delete the debug spheres and cylinders in the scene
-    /// </summary>
-    private void DeleteDebugObjects()
-    {
-        this.debug_PositionSpheres.ForEach(sphere => Destroy(sphere));
-        this.debug_NormalCylinder.ForEach(sphere => Destroy(sphere));
+        this.debug_PositionSpheres.ForEach(gameObject => Destroy(gameObject));
+        this.debug_NormalCylinder.ForEach(gameObject => Destroy(gameObject));
+        this.debug_ReceivingPositionSpheres.ForEach(gameObject => Destroy(gameObject));
     }
 
     /// <summary>
     /// Render a sphere at the world position and a cylinder which represents the normal
     /// </summary>
-    /// <param name="worldPosition">World position to render the sphere</param>
-    /// <param name="worldNormal">The world normal of the vertex</param>
     /// <param name="name">Name used for debugging to help track the objects in the scene</param>
-    private void CreatePositionDebugObjects(Vector3 worldPosition, Vector3? worldNormal, string name, List<GameObject> debugSpheresList, List<GameObject> debugCylindersList = null)
+    /// <param name="worldPosition">World position to render the sphere</param>
+    /// <param name="validationCylindersList">List of game objects that the newly created position sphere should be added to</param>
+    /// <param name="worldNormal">[Optional] The world normal of the vertex</param>
+    /// <param name="validationCylindersList">[Optional] List of game objects that the newly created position normal cylinder should be added to</param>
+    private void CreatePositionValidationObjects(string name, Vector3 worldPosition, List<GameObject> validationSpheresList, Vector3? worldNormal = null, List<GameObject> validationCylindersList = null)
     {
         GameObject positionSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         positionSphere.transform.position = worldPosition;
         positionSphere.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
         positionSphere.name = $"Position Sphere: {name}";
-        debugSpheresList?.Add(positionSphere);
+        validationSpheresList?.Add(positionSphere);
 
         if (worldNormal != null)
         {
             Vector3 normal = (Vector3)worldNormal;
             GameObject normalDirectionCylinder = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-            
+
             normalDirectionCylinder.transform.position = worldPosition + (normal * 0.02f);
             normalDirectionCylinder.transform.rotation = Quaternion.FromToRotation(Vector3.up, normal);
             normalDirectionCylinder.transform.localScale = new Vector3(0.003f, 0.02f, 0.0003f);
             normalDirectionCylinder.name = $"Normal cylinder: {name}";
             normalDirectionCylinder.transform.SetParent(positionSphere.transform);
-            debugCylindersList?.Add(normalDirectionCylinder);
+            validationCylindersList?.Add(normalDirectionCylinder);
         }
     }
 
@@ -205,5 +135,50 @@ public class World : MonoBehaviour
         texture.Apply();
 
         return texture;
+    }
+
+    /// <summary>
+    /// Given a position render texture and normal render texture, attempt to render objects to help show what was read from the
+    /// textures. A sphere is rendered at each position read from the positions texture, and a cylinder is rendered to represent the 
+    /// normal
+    /// </summary>
+    /// <param name="positionRenderTexture">Render texture containing world positions</param>
+    /// <param name="validationPositionSpheres">List of game objects in which the created valitation spheres are added to</param>
+    /// <param name="normalRenderTexture">[Optional] Render texture containing world normals</param>
+    /// <param name="validationNormalCylinders">[Optional] List of game objects in which the created validation cylinders are added to</param>
+    private void Validation_RenderTextureDetails(RenderTexture positionRenderTexture, List<GameObject> validationPositionSpheres, RenderTexture normalRenderTexture = null , List<GameObject> validationNormalCylinders = null)
+    {
+        Texture2D positionTexture = this.ConvertRenderTextureTo2DTexture(positionRenderTexture);
+        Texture2D normalTexture = normalRenderTexture != null ? this.ConvertRenderTextureTo2DTexture(normalRenderTexture) : null;
+
+        int count = 0;
+
+        // Delete the previously created game objects (if any)
+        validationPositionSpheres.ForEach(sphere => Destroy(sphere));
+        validationNormalCylinders?.ForEach(sphere => Destroy(sphere));
+
+        for (int row = 0; row < positionTexture.width; row++)
+        {
+            for (int col = 0; col < positionTexture.height; col++)
+            {
+                Color positionPixelColor = positionTexture.GetPixel(row, col);
+                Vector3 worldPos = new Vector3(positionPixelColor.r, positionPixelColor.g, positionPixelColor.b);
+                bool isVisiblePosition = positionPixelColor.a > 0; //The alpha channel of the pixel indicates whether the position is valid (i.e. seen by the light camera)
+                Color? normalPixelColor = normalTexture != null ? (Color?)normalTexture.GetPixel(row, col) : null;
+                Vector3? normal = normalPixelColor != null ? (Vector3?)(new Vector3(((Color)normalPixelColor).r, ((Color)normalPixelColor).g, ((Color)normalPixelColor).b)) : null;
+
+                if (!isVisiblePosition)
+                {
+                    continue;
+                }
+
+                if (this.Debug_RenderEveryXElement <= 1 || (count + 1) % this.Debug_RenderEveryXElement == 0)
+                {
+                    this.CreatePositionValidationObjects(count.ToString(), worldPos, validationPositionSpheres, normal, validationNormalCylinders);
+                }
+
+                count++;
+            }
+        }
     }
 }
