@@ -54,17 +54,19 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\DataPrint.cs" />
+    <Compile Include="Assets\Scripts\LightCameraType.cs" />
     <Compile Include="Assets\Scripts\MultiOutput.cs" />
     <Compile Include="Assets\Scripts\World.cs" />
     <Compile Include="Assets\Scripts\Globals.cs" />
     <Compile Include="Assets\Scripts\LightCamera.cs" />
-    <Compile Include="Assets\Scripts\LightCameraType.cs" />
+    <Compile Include="Assets\Scripts\RenderingPass.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\LightNormalShader.shader" />
     <None Include="Assets\Shaders\PositionShader.shader" />
     <None Include="Assets\Shaders\ReceivingObjectShader.shader" />
     <None Include="Assets\Shaders\SpecularReceivingObjectShader.shader" />
+    <None Include="Assets\Shaders\CausticMapShader.shader" />
     <None Include="Assets\Shaders\MultiOutputShader.shader" />
     <None Include="Assets\Shaders\ValidationShader.shader" />
     <None Include="Assets\Shaders\SpecularObjectShader.shader" />

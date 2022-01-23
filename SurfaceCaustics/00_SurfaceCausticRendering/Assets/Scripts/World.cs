@@ -23,6 +23,11 @@ public class World : MonoBehaviour
     public RenderTexture LightCameraReceivingPositionTexture;
 
     /// <summary>
+    /// The render texture containing the world position of "splatted" points which make up the caustic map
+    /// </summary>
+    public RenderTexture LightCameraCausticTexture;
+
+    /// <summary>
     /// Limits the number of objects created when rendering validation objects in the scene. Only every Xth item will be rendered.
     /// </summary>
     public int Debug_RenderEveryXElement = 20;
@@ -31,6 +36,11 @@ public class World : MonoBehaviour
     /// Interal list of spheres which represent the positions read from the position texture
     /// </summary>
     private List<GameObject> debug_PositionSpheres;
+
+    /// <summary>
+    /// Defines the rendering pass that we want to investigate
+    /// </summary>
+    public RenderingPass PassToInspect = RenderingPass.PASS_1;
 
     /// <summary>
     /// Interal list of cylinders which represents the normals ready from the normals texture
@@ -61,6 +71,30 @@ public class World : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        RenderTexture specularPositionsTexture = null;
+        RenderTexture specularNormalTexture = null;
+        RenderTexture receiverPositionsTexture = null;
+        List<GameObject> debugSpecularPositionObjects = null;
+        List<GameObject> debugSpecularNormalObjects = null;
+        List<GameObject> debugReceiverPositionObjects = null;
+
+        switch (this.PassToInspect)
+        {
+            case RenderingPass.PASS_2:
+                specularPositionsTexture = this.LightCameraCausticTexture;
+                debugSpecularPositionObjects = this.debug_PositionSpheres;
+                break;
+            case RenderingPass.PASS_1:
+            default:
+                specularPositionsTexture = this.LightCameraRefractionPositionTexture;
+                specularNormalTexture = this.LightCameraRefractionNormalTexture;
+                receiverPositionsTexture = this.LightCameraReceivingPositionTexture;
+                debugSpecularPositionObjects = this.debug_PositionSpheres;
+                debugSpecularNormalObjects = this.debug_NormalCylinder;
+                debugReceiverPositionObjects = this.debug_ReceivingPositionSpheres;
+                break;
+        }
+
         if (Input.GetKeyDown(KeyCode.D))
         {
             this.DeleteValidationObjects();
@@ -73,12 +107,13 @@ public class World : MonoBehaviour
 
         if (this.continousValidationRendering || Input.GetKeyDown(KeyCode.S))
         {
-            this.Validation_RenderTextureDetails(this.LightCameraRefractionPositionTexture, this.debug_PositionSpheres, this.LightCameraRefractionNormalTexture, this.debug_NormalCylinder);
+            this.Validation_RenderTextureDetails(specularPositionsTexture, debugSpecularPositionObjects, specularNormalTexture, debugSpecularNormalObjects);
         }
 
-        if (this.continousValidationRendering || Input.GetKeyDown(KeyCode.R))
+        // Receiving object validation should only occur when validating the first pass
+        if (this.PassToInspect == RenderingPass.PASS_1 && (this.continousValidationRendering || Input.GetKeyDown(KeyCode.R)))
         {
-            this.Validation_RenderTextureDetails(this.LightCameraReceivingPositionTexture, this.debug_ReceivingPositionSpheres);
+            this.Validation_RenderTextureDetails(receiverPositionsTexture, debugReceiverPositionObjects);
         }
     }
 
@@ -108,6 +143,9 @@ public class World : MonoBehaviour
         positionSphere.name = $"Position Sphere: {name}";
         validationSpheresList?.Add(positionSphere);
 
+
+        var sphereRenderer = positionSphere.GetComponent<Renderer>();
+        sphereRenderer.material.SetColor("_Color", Color.yellow);
         if (worldNormal != null)
         {
             Vector3 normal = (Vector3)worldNormal;
@@ -119,6 +157,9 @@ public class World : MonoBehaviour
             normalDirectionCylinder.name = $"Normal cylinder: {name}";
             normalDirectionCylinder.transform.SetParent(positionSphere.transform);
             validationCylindersList?.Add(normalDirectionCylinder);
+
+            var cylinderRenderer = normalDirectionCylinder.GetComponent<Renderer>();
+            cylinderRenderer.material.SetColor("_Color", Color.yellow);
         }
     }
 

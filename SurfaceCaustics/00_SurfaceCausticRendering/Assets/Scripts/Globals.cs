@@ -41,6 +41,11 @@ public class Globals
     public readonly static string SHADER_PARAM_RECEIVING_POSITION_TEXTURE = "_ReceivingPosTexture";
 
     /// <summary>
+    /// Represents the parameter which stores the caustic map details
+    /// </summary>
+    public readonly static string SHADER_PARAM_CAUSTIC_MAP_TEXTURE = "_CausticMapTexture";
+
+    /// <summary>
     /// Represents the parameter which stores the transformation to convert positions/normals into
     /// the light's space.
     /// </summary>
@@ -50,6 +55,11 @@ public class Globals
     /// Represents the parameter which stores the world to camera matrix
     /// </summary>
     public readonly static string SHADER_PARAM_LIGHT_CAMERA_MATRIX = "_LightCamMatrix";
+
+    /// <summary>
+    /// Represents the parameter which stores the light camera's view project matrix;
+    /// </summary>
+    public readonly static string SHADER_PARAM_LIGHT_VIEW_PROJECTION_MATRIX = "_LightViewProjectionMatrix";
 
     /// <summary>
     /// Represents the parameter which stores the distance of how far the light camera can see

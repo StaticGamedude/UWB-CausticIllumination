@@ -70,11 +70,15 @@ public class LightCamera : MonoBehaviour
             case LightCameraType.RECEIVING_POSITION:
                 shaderTextureParameter = Globals.SHADER_PARAM_RECEIVING_POSITION_TEXTURE;
                 break;
+            case LightCameraType.CAUSTIC:
+                shaderTextureParameter = Globals.SHADER_PARAM_CAUSTIC_MAP_TEXTURE;
+                break;
         }
 
         Shader.SetGlobalTexture(shaderTextureParameter, DataTexture);
         Shader.SetGlobalMatrix(Globals.SHADER_PARAM_LIGHT_MATRIX, lightMatrix);
         Shader.SetGlobalMatrix(Globals.SHADER_PARAM_LIGHT_CAMERA_MATRIX, this.lightCamera.worldToCameraMatrix);
-        Shader.SetGlobalFloat(Globals.SHADER_PARAM_LIGHT_CAMERA_FAR, 1.0f / lightCamera.farClipPlane);
+        Shader.SetGlobalMatrix(Globals.SHADER_PARAM_LIGHT_VIEW_PROJECTION_MATRIX, this.lightCamera.projectionMatrix * lightCamera.worldToCameraMatrix);
+        Shader.SetGlobalFloat(Globals.SHADER_PARAM_LIGHT_CAMERA_FAR, 1.0f / lightCamera.farClipPlane);        
     }
 }

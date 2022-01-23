@@ -17,4 +17,9 @@ public enum LightCameraType
     /// Value indicates that the camera is expected to store the world positions of the receiving objects
     /// </summary>
     RECEIVING_POSITION,
+
+    /// <summary>
+    /// Value indicates that the camera is expected to store caustic position information
+    /// </summary>
+    CAUSTIC,
 }
