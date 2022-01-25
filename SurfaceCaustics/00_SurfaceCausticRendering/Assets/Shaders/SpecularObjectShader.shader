@@ -11,7 +11,7 @@ Shader "Unlit/SpecularObjectShader"
     }
     SubShader
     {
-        Tags { "SpecularObj" = "1" }
+        Tags { "RenderType" = "Opaque" "SpecularObj" = "1" }
         LOD 100
 
         Pass

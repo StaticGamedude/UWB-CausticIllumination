@@ -33,6 +33,21 @@ public class World : MonoBehaviour
     public int Debug_RenderEveryXElement = 20;
 
     /// <summary>
+    /// Determines the size of the position spheres rendered in the scene
+    /// </summary>
+    public Vector3 Debug_SpherePositionSize = new Vector3(0.01f, 0.01f, 0.01f);
+
+    /// <summary>
+    /// Determines the size of the normal cylinders rendered in the scene
+    /// </summary>
+    public Vector3 Debug_CylinderNormalSize = new Vector3(0.003f, 0.02f, 0.0003f);
+
+    /// <summary>
+    /// Determines the color of the debug objects rendered in the scene
+    /// </summary>
+    public Color Debug_ObjectColor = Color.green;
+
+    /// <summary>
     /// Interal list of spheres which represent the positions read from the position texture
     /// </summary>
     private List<GameObject> debug_PositionSpheres;
@@ -139,27 +154,27 @@ public class World : MonoBehaviour
     {
         GameObject positionSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         positionSphere.transform.position = worldPosition;
-        positionSphere.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
+        positionSphere.transform.localScale = this.Debug_SpherePositionSize;
         positionSphere.name = $"Position Sphere: {name}";
         validationSpheresList?.Add(positionSphere);
 
 
         var sphereRenderer = positionSphere.GetComponent<Renderer>();
-        sphereRenderer.material.SetColor("_Color", Color.yellow);
+        sphereRenderer.material.SetColor("_Color", this.Debug_ObjectColor);
         if (worldNormal != null)
         {
             Vector3 normal = (Vector3)worldNormal;
             GameObject normalDirectionCylinder = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
 
-            normalDirectionCylinder.transform.position = worldPosition + (normal * 0.02f);
+            normalDirectionCylinder.transform.position = worldPosition + (normal * this.Debug_CylinderNormalSize.y);
             normalDirectionCylinder.transform.rotation = Quaternion.FromToRotation(Vector3.up, normal);
-            normalDirectionCylinder.transform.localScale = new Vector3(0.003f, 0.02f, 0.0003f);
+            normalDirectionCylinder.transform.localScale = this.Debug_CylinderNormalSize;
             normalDirectionCylinder.name = $"Normal cylinder: {name}";
             normalDirectionCylinder.transform.SetParent(positionSphere.transform);
             validationCylindersList?.Add(normalDirectionCylinder);
 
             var cylinderRenderer = normalDirectionCylinder.GetComponent<Renderer>();
-            cylinderRenderer.material.SetColor("_Color", Color.yellow);
+            cylinderRenderer.material.SetColor("_Color", this.Debug_ObjectColor);
         }
     }
 
