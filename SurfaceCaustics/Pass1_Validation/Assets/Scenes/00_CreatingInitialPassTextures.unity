@@ -712,6 +712,14 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 44e5b4bbd201eaa4185c437518d69731, type: 2}
+    - target: {fileID: 7667900892133954093, guid: 6a3952c5eb23216459424da930d08002, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7667900892514237255, guid: 6a3952c5eb23216459424da930d08002, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7667900892729430794, guid: 6a3952c5eb23216459424da930d08002, type: 3}
       propertyPath: m_Name
       value: SpecularObject
