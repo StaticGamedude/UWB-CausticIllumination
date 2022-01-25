@@ -416,6 +416,9 @@ MonoBehaviour:
   LightCameraReceivingPositionTexture: {fileID: 8400000, guid: 9e2a29d58adfcd4479b52557b552b2f7, type: 2}
   LightCameraCausticTexture: {fileID: 8400000, guid: 51f27b732fe7ee84d912807bcae5288a, type: 2}
   Debug_RenderEveryXElement: 5
+  Debug_SpherePositionSize: {x: 0.05, y: 0.05, z: 0.05}
+  Debug_CylinderNormalSize: {x: 0.01, y: 0.05, z: 0.01}
+  Debug_ObjectColor: {r: 0, g: 1, b: 0, a: 1}
   PassToInspect: 1
 --- !u!114 &286145854
 MonoBehaviour:
