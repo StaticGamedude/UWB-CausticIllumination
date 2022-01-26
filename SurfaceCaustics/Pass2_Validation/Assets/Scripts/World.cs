@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// Handles the overall scene logic. Reads users input and renders debug spheres and cylinders
@@ -48,14 +49,19 @@ public class World : MonoBehaviour
     public Color Debug_ObjectColor = Color.green;
 
     /// <summary>
+    /// Sets a flag in the caustic map creation shader to determine what part of the estimation to investigate
+    /// </summary>
+    public int Debug_EstimationIntersectionStage = 0;
+
+    /// <summary>
+    /// The Text block on the UI to help show the user what stage we're rendering (for the estimation intersection)
+    /// </summary>
+    public Text VertexStageText;
+
+    /// <summary>
     /// Interal list of spheres which represent the positions read from the position texture
     /// </summary>
     private List<GameObject> debug_PositionSpheres;
-
-    /// <summary>
-    /// Defines the rendering pass that we want to investigate
-    /// </summary>
-    public RenderingPass PassToInspect = RenderingPass.PASS_1;
 
     /// <summary>
     /// Interal list of cylinders which represents the normals ready from the normals texture
@@ -86,30 +92,12 @@ public class World : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        RenderTexture specularPositionsTexture = null;
-        RenderTexture specularNormalTexture = null;
-        RenderTexture receiverPositionsTexture = null;
-        List<GameObject> debugSpecularPositionObjects = null;
-        List<GameObject> debugSpecularNormalObjects = null;
-        List<GameObject> debugReceiverPositionObjects = null;
+        RenderTexture specularPositionsTexture = this.LightCameraCausticTexture;
+        List<GameObject> debugSpecularPositionObjects = this.debug_PositionSpheres;
 
-        switch (this.PassToInspect)
-        {
-            case RenderingPass.PASS_2:
-                specularPositionsTexture = this.LightCameraCausticTexture;
-                debugSpecularPositionObjects = this.debug_PositionSpheres;
-                break;
-            case RenderingPass.PASS_1:
-            default:
-                specularPositionsTexture = this.LightCameraRefractionPositionTexture;
-                specularNormalTexture = this.LightCameraRefractionNormalTexture;
-                receiverPositionsTexture = this.LightCameraReceivingPositionTexture;
-                debugSpecularPositionObjects = this.debug_PositionSpheres;
-                debugSpecularNormalObjects = this.debug_NormalCylinder;
-                debugReceiverPositionObjects = this.debug_ReceivingPositionSpheres;
-                break;
-        }
+        Shader.SetGlobalInt("_EstimateIntersectionLevel", this.Debug_EstimationIntersectionStage);
 
+        this.VertexStageText.text = $"Vertex stage: {this.GetEstimationIntersectionStageText(this.Debug_EstimationIntersectionStage)}";
         if (Input.GetKeyDown(KeyCode.D))
         {
             this.DeleteValidationObjects();
@@ -122,13 +110,7 @@ public class World : MonoBehaviour
 
         if (this.continousValidationRendering || Input.GetKeyDown(KeyCode.S))
         {
-            this.Validation_RenderTextureDetails(specularPositionsTexture, debugSpecularPositionObjects, specularNormalTexture, debugSpecularNormalObjects);
-        }
-
-        // Receiving object validation should only occur when validating the first pass
-        if (this.PassToInspect == RenderingPass.PASS_1 && (this.continousValidationRendering || Input.GetKeyDown(KeyCode.R)))
-        {
-            this.Validation_RenderTextureDetails(receiverPositionsTexture, debugReceiverPositionObjects);
+            this.Validation_RenderTextureDetails(specularPositionsTexture, debugSpecularPositionObjects);
         }
     }
 
@@ -191,6 +173,31 @@ public class World : MonoBehaviour
         texture.Apply();
 
         return texture;
+    }
+
+    private string GetEstimationIntersectionStageText(int stage)
+    {
+        if (stage <= 0)
+        {
+            return "vertex pos + (1 * vertex normal)";
+        }
+
+        if (stage == 1)
+        {
+            return "Inverse normal as refracted direction: vertex pos + (1 * (-1* vertex normal))";
+        }
+
+        if (stage == 2)
+        {
+            return "P1";
+        }
+
+        if (stage >= 3)
+        {
+            return "P2";
+        }
+
+        return string.Empty;
     }
 
     /// <summary>

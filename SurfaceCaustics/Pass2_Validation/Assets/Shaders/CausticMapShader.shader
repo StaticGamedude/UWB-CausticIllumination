@@ -38,47 +38,49 @@ Shader "Unlit/CausticMapShader"
             float4 _MainTex_ST;
             sampler2D _ReceivingPosTexture;
             float4x4 _LightViewProjectionMatrix;
+            int _EstimateIntersectionLevel;
 
             // This method is working, but it has to be run in the fragment shader so we can run tex2D for sampling the texture
-            float3 EstimateIntersection(float3 specularVertexWorldPos, float3 refractedLightRayDirection, sampler2D positionTexture)
+            float3 EstimateIntersection(float3 specularVertexWorldPos, float3 specularVertexWorldNorm, sampler2D positionTexture)
             {
-                float3 p1 = specularVertexWorldPos + (1.0 * refractedLightRayDirection);
-                /*float4 texPt = mul(float4(p1, 1), _LightViewProjectionMatrix);
-                float2 tc = 0.5 * texPt.xy / texPt.w + float2(0.5, 0.5);
-                tc.y = 1 - tc.y;
-                float4 recPos = tex2D(_ReceivingPosTexture, tc);*/
+                float3 refractedLightRayDirection;
+                float3 p1;
+                float4 recPos;
+                float4 texPt;
+                float2 tc;
 
-                /*float3 p2 = specularVertexWorldPos + (distance(specularVertexWorldPos, recPos.xzy) * refractedLightRayDirection);
+                if (_EstimateIntersectionLevel == 0)
+                {
+                    // Simply return 1 off the vertex world position in the direction of the vertex normal
+                    return specularVertexWorldPos + (1.0 * specularVertexWorldNorm);
+                }
+                
+                if (_EstimateIntersectionLevel == 1)
+                {
+                    // Similar to the above, except we flip the normal direction.
+                    // This should ideally be a refracted ray direction through our object
+                    refractedLightRayDirection = -1 * specularVertexWorldNorm;
+                    p1 = specularVertexWorldPos + (1.0 * refractedLightRayDirection);
+                    return p1;
+                }
+
+                if (_EstimateIntersectionLevel == 2)
+                {
+                    texPt = mul(float4(p1, 1), _LightViewProjectionMatrix);
+                    tc = 0.5 * texPt.xy / texPt.w + float2(0.5, 0.5);
+                    tc.y = 1 - tc.y;
+                    recPos = tex2D(_ReceivingPosTexture, tc);
+                    return float3(recPos.x, recPos.y, recPos.z);
+                }
+
+                float3 p2 = specularVertexWorldPos + (distance(specularVertexWorldPos, recPos.xzy) * refractedLightRayDirection);
                 texPt = mul(float4(p2, 1), _LightViewProjectionMatrix);
                 tc = 0.5 * texPt.xy / texPt.w + float2(0.5, 0.5);
                 tc.y = 1 - tc.y;
-                recPos = tex2D(_ReceivingPosTexture, tc);*/
+                recPos = tex2D(_ReceivingPosTexture, tc);
 
-                //return float3(recPos.x, recPos.y, recPos.z);
-                return p1;
+                return float3(recPos.x, recPos.y, recPos.z);
             }
-
-            // Implementation for estimating the intersection entirely in the vertex shader. Doesn't seem that tex2Dlod work like we expected
-            // TODO: Investigate why exactly this method doesn't work
-            //float3 EstimateIntersection_2(float3 specularVertexWorldPos, float3 refractedLightRayDirection, sampler2D positionTexture)
-            //{
-            //    float3 p1 = specularVertexWorldPos + (1.0 * refractedLightRayDirection);
-            //    float4 texPt = mul(float4(p1, 1), _LightViewProjectionMatrix);
-            //    float2 tc = 0.5 * texPt.xy / texPt.w + float2(0.5, 0.5);
-            //    tc.y = 1 - tc.y;
-            //    float4 recPos = tex2Dlod(_MainTex, float4(tc, 0, 0));
-            //    //float4 recPos = tex2D(_ReceivingPosTexture, tc);
-
-            //    float3 p2 = specularVertexWorldPos + (distance(specularVertexWorldPos, recPos.xzy) * refractedLightRayDirection);
-            //    texPt = mul(float4(p2, 1), _LightViewProjectionMatrix);
-            //    tc = 0.5 * texPt.xy / texPt.w + float2(0.5, 0.5);
-            //    tc.y = 1 - tc.y;
-            //    recPos = tex2Dlod(_MainTex, float4(tc, 0, 0));
-            //    //recPos = tex2D(_ReceivingPosTexture, tc);
-
-            //    return float3(recPos.x, recPos.y, recPos.z);
-            //    return p1;
-            //}
 
             v2f vert (appdata v)
             {
@@ -90,7 +92,6 @@ Shader "Unlit/CausticMapShader"
 
                 o.specularVertexWorldPos = specularVertexWorldPos;
                 o.worldRefractedRayDirection = specularVertexWorldNormal; //TODO: We should refract the normal here. For now, we'll simply point it in the opposite direction
-                //o.splatPos = EstimateIntersection_2(specularVertexWorldPos, specularVertexWorldNormal * -1, _ReceivingPosTexture);
                 return o;
             }
 
