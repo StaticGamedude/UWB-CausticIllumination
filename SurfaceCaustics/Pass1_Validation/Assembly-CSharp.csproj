@@ -9,7 +9,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{CBED54DF-2E2E-D58C-2A3B-89531C514461}</ProjectGuid>
+    <ProjectGuid>{DF1CF903-8F19-3E23-542E-A9F71EB8B9B2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -68,7 +68,6 @@
     <None Include="Assets\Shaders\SpecularReceivingObjectShader.shader" />
     <None Include="Assets\Shaders\CausticMapShader.shader" />
     <None Include="Assets\Shaders\MultiOutputShader.shader" />
-    <None Include="Assets\Shaders\ValidationShader.shader" />
     <None Include="Assets\Shaders\SpecularObjectShader.shader" />
   </ItemGroup>
   <ItemGroup>
