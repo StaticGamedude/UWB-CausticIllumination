@@ -55,30 +55,38 @@ Shader "Unlit/CausticMapShader"
                     return specularVertexWorldPos + (1.0 * specularVertexWorldNorm);
                 }
                 
+                // We flip the normal direction which will act ours our refracted ray direction for now
+                refractedLightRayDirection = -1 * specularVertexWorldNorm;
+                p1 = specularVertexWorldPos + (1.0 * refractedLightRayDirection);
                 if (_EstimateIntersectionLevel == 1)
                 {
-                    // Similar to the above, except we flip the normal direction.
-                    // This should ideally be a refracted ray direction through our object
-                    refractedLightRayDirection = -1 * specularVertexWorldNorm;
-                    p1 = specularVertexWorldPos + (1.0 * refractedLightRayDirection);
                     return p1;
                 }
 
+                texPt = mul(float4(p1, 1), _LightViewProjectionMatrix);
+                tc = 0.5 * texPt.xy / texPt.w + float2(0.5, 0.5);
+                tc.y = 1 - tc.y;
+                recPos = tex2D(_ReceivingPosTexture, tc);
                 if (_EstimateIntersectionLevel == 2)
                 {
-                    texPt = mul(float4(p1, 1), _LightViewProjectionMatrix);
+                    return float3(recPos.x, recPos.y, recPos.z);
+                }
+
+                if (_EstimateIntersectionLevel == 3)
+                {
+                    float3 p2 = specularVertexWorldPos + (distance(specularVertexWorldPos, recPos.xzy) * refractedLightRayDirection);
+                    texPt = mul(float4(p2, 1), _LightViewProjectionMatrix);
                     tc = 0.5 * texPt.xy / texPt.w + float2(0.5, 0.5);
                     tc.y = 1 - tc.y;
                     recPos = tex2D(_ReceivingPosTexture, tc);
                     return float3(recPos.x, recPos.y, recPos.z);
                 }
 
-                float3 p2 = specularVertexWorldPos + (distance(specularVertexWorldPos, recPos.xzy) * refractedLightRayDirection);
-                texPt = mul(float4(p2, 1), _LightViewProjectionMatrix);
+                // The logic below was proposed by Dr. Sung as another way to help verify what we're doing
+                texPt = mul(float4(specularVertexWorldPos, 1), _LightViewProjectionMatrix);
                 tc = 0.5 * texPt.xy / texPt.w + float2(0.5, 0.5);
                 tc.y = 1 - tc.y;
                 recPos = tex2D(_ReceivingPosTexture, tc);
-
                 return float3(recPos.x, recPos.y, recPos.z);
             }
 
@@ -86,7 +94,7 @@ Shader "Unlit/CausticMapShader"
             {
                 v2f o;
                 float3 specularVertexWorldPos = mul(UNITY_MATRIX_M, v.vertex);
-                float3 specularVertexWorldNormal = mul(UNITY_MATRIX_M, v.normal);
+                float3 specularVertexWorldNormal = mul(transpose(unity_WorldToObject), v.normal); //mul(UNITY_MATRIX_M, v.normal);
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
 

@@ -43,7 +43,7 @@ Shader "Unlit/LightNormalShader"
                 float3 endPointWorldPos = mul(UNITY_MATRIX_M, endPoint);
                 float3 worldNormal = endPointWorldPos - startPointWorldPos;*/
                 //o.worldNormal = worldNormal;
-                o.worldNormal = mul(UNITY_MATRIX_M, v.normal);
+                o.worldNormal = mul(transpose(unity_WorldToObject), v.normal); //mul(UNITY_MATRIX_M, v.normal);
 
                 return o;
             }
