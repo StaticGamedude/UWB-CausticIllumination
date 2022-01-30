@@ -29,6 +29,11 @@ public class World : MonoBehaviour
     public RenderTexture LightCameraCausticTexture;
 
     /// <summary>
+    /// A render texture used for misc testing
+    /// </summary>
+    public RenderTexture ValidationTexture;
+
+    /// <summary>
     /// Limits the number of objects created when rendering validation objects in the scene. Only every Xth item will be rendered.
     /// </summary>
     public int Debug_RenderEveryXElement = 20;
@@ -111,6 +116,11 @@ public class World : MonoBehaviour
         if (this.continousValidationRendering || Input.GetKeyDown(KeyCode.S))
         {
             this.Validation_RenderTextureDetails(specularPositionsTexture, debugSpecularPositionObjects);
+        }
+
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            this.Validation_RenderTextureDetails(this.LightCameraReceivingPositionTexture, debugSpecularPositionObjects);
         }
     }
 

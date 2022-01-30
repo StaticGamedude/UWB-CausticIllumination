@@ -22,4 +22,9 @@ public enum LightCameraType
     /// Value indicates that the camera is expected to store caustic position information
     /// </summary>
     CAUSTIC,
+
+    /// <summary>
+    /// Value used when testing miscellaneous properties
+    /// </summary>
+    OTHER,
 }

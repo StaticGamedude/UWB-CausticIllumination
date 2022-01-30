@@ -63,7 +63,8 @@ Shader "Unlit/CausticMapShader"
                     return p1;
                 }
 
-                texPt = mul(float4(p1, 1), _LightViewProjectionMatrix);
+                //P1 projection into light image space
+                texPt = mul(_LightViewProjectionMatrix, float4(p1, 1));
                 tc = 0.5 * texPt.xy / texPt.w + float2(0.5, 0.5);
                 tc.y = 1 - tc.y;
                 recPos = tex2D(_ReceivingPosTexture, tc);
@@ -75,7 +76,7 @@ Shader "Unlit/CausticMapShader"
                 if (_EstimateIntersectionLevel == 3)
                 {
                     float3 p2 = specularVertexWorldPos + (distance(specularVertexWorldPos, recPos.xzy) * refractedLightRayDirection);
-                    texPt = mul(float4(p2, 1), _LightViewProjectionMatrix);
+                    texPt = mul(_LightViewProjectionMatrix, float4(p2, 1));
                     tc = 0.5 * texPt.xy / texPt.w + float2(0.5, 0.5);
                     tc.y = 1 - tc.y;
                     recPos = tex2D(_ReceivingPosTexture, tc);
@@ -83,7 +84,8 @@ Shader "Unlit/CausticMapShader"
                 }
 
                 // The logic below was proposed by Dr. Sung as another way to help verify what we're doing
-                texPt = mul(float4(specularVertexWorldPos, 1), _LightViewProjectionMatrix);
+                /*texPt = mul(float4(specularVertexWorldPos, 1), _LightViewProjectionMatrix);*/
+                texPt = mul(_LightViewProjectionMatrix, float4(specularVertexWorldPos, 1));
                 tc = 0.5 * texPt.xy / texPt.w + float2(0.5, 0.5);
                 tc.y = 1 - tc.y;
                 recPos = tex2D(_ReceivingPosTexture, tc);

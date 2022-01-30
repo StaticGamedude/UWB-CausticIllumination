@@ -66,6 +66,7 @@
     <None Include="Assets\Shaders\PositionShader.shader" />
     <None Include="Assets\Shaders\ReceivingObjectShader.shader" />
     <None Include="Assets\Shaders\SpecularReceivingObjectShader.shader" />
+    <None Include="Assets\Shaders\Tex2DValidationShader.shader" />
     <None Include="Assets\Shaders\CausticMapShader.shader" />
     <None Include="Assets\Shaders\MultiOutputShader.shader" />
     <None Include="Assets\Shaders\SpecularObjectShader.shader" />
