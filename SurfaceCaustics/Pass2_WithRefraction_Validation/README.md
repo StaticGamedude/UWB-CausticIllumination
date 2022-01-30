@@ -1,0 +1,2 @@
+# Pass 2
+Attempts to follow the algorithm as described in the article [Caustics Mapping: An Image-Space Technique for Real-Time Caustics](https://ieeexplore.ieee.org/document/4069236). Attempts to reproduce the results as described in the second pass of the algorithm which attempts to create the caustic map texture. The scene in this project reads from the caustic map texture renders geometry to validate the results.
