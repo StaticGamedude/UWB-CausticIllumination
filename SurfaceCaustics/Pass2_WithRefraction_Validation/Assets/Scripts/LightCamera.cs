@@ -45,6 +45,8 @@ public class LightCamera : MonoBehaviour
         Debug.Assert(this.SpecularObjectShader != null);
         Debug.Assert(this.DataTexture != null);
 
+        //this.lightCamera.orthographic = true;
+
         string replacementShaderTag = 
             this.LightCamType == LightCameraType.RECEIVING_POSITION || this.LightCamType == LightCameraType.OTHER
             ? Globals.RECEIVING_OBJECT_SHADER_TAG : Globals.SPECULAR_OBJECT_SHADER_TAG;

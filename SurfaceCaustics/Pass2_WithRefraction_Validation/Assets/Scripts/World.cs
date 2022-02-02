@@ -59,6 +59,11 @@ public class World : MonoBehaviour
     public float Debug_RefractionAngle = 10;
 
     /// <summary>
+    /// Sets the refraction index for specular object
+    /// </summary>
+    public float Debug_RefractionIndex = 1.33f;
+
+    /// <summary>
     /// Interal list of spheres which represent the positions read from the position texture
     /// </summary>
     private List<GameObject> debug_PositionSpheres;
@@ -96,6 +101,7 @@ public class World : MonoBehaviour
         List<GameObject> debugSpecularPositionObjects = this.debug_PositionSpheres;
 
         Shader.SetGlobalFloat("_DesiredRefractionAngle", this.Debug_RefractionAngle);
+        Shader.SetGlobalFloat("_RefractiveIndex", this.Debug_RefractionIndex);
         if (Input.GetKeyDown(KeyCode.D))
         {
             this.DeleteValidationObjects();

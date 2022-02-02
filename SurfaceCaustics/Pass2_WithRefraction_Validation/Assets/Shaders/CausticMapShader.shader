@@ -40,6 +40,7 @@ Shader "Unlit/CausticMapShader"
             int _EstimateIntersectionLevel;
             float3 _LightWorldPosition;
             float _DesiredRefractionAngle;
+            float _RefractiveIndex;
 
             float3 EstimateIntersection(float3 specularVertexWorldPos, float3 refractedLightRayDirection, sampler2D positionTexture)
             {
@@ -58,24 +59,43 @@ Shader "Unlit/CausticMapShader"
 
             float3 RefractRay(float3 specularVertexWorldPos, float3 specularVertexWorldNormal)
             {
-                float refractionAngle = radians(_DesiredRefractionAngle);
+                float3 lightToVertex = specularVertexWorldPos - _LightWorldPosition;
+                float3 normalizedLightToVertexDirection = normalize(specularVertexWorldPos - _LightWorldPosition);
+                float incidentAngle = dot(normalizedLightToVertexDirection, specularVertexWorldNormal);
+                float refractionAngle = asin(sin(incidentAngle) / _RefractiveIndex);
+                float3 refractedRay = -1 * (lightToVertex / _RefractiveIndex) + (cos(refractionAngle) - (cos(incidentAngle / _RefractiveIndex))) * specularVertexWorldNormal;
+                return refractedRay;
+
+                // Calculations when refractive angle is sepcified - the angle should probably be calculated based on the refraction index
+                /*float refractionAngle = radians(_DesiredRefractionAngle);
+                float3 lightToVertex = specularVertexWorldPos - _LightWorldPosition;
+                float3 normalizedLightToVertexDirection = normalize(specularVertexWorldPos - _LightWorldPosition);
+                float incidentAngle = dot(normalizedLightToVertexDirection, specularVertexWorldNormal);
+                float refractionIndex = sin(incidentAngle) / sin(refractionAngle);
+                float3 refractedRay = -1 * (lightToVertex / refractionIndex) + (cos(refractionAngle) - (cos(incidentAngle / refractionIndex))) * specularVertexWorldNormal;
+
+                return refractedRay;*/
+
+
+                //Following snell's law
+                /*float refractionAngle = radians(_DesiredRefractionAngle);
                 float3 lightToVertexDirection = normalize(specularVertexWorldPos - _LightWorldPosition);
                 float incidentAngle = dot(lightToVertexDirection, specularVertexWorldNormal);
 
                 float3 refractedRay = (lightToVertexDirection * sin(refractionAngle)) / incidentAngle;
-                return refractedRay;
+                return refractedRay;*/
             }
 
             v2f vert (appdata v)
             {
                 v2f o;
                 float3 specularVertexWorldPos = mul(UNITY_MATRIX_M, v.vertex);
-                float3 specularVertexWorldNormal = mul(transpose(unity_WorldToObject), v.normal); //mul(UNITY_MATRIX_M, v.normal);
+                float3 specularVertexWorldNormal = mul(transpose(unity_WorldToObject), v.normal);
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
 
                 o.specularVertexWorldPos = specularVertexWorldPos;
-                o.worldRefractedRayDirection = RefractRay(specularVertexWorldPos, specularVertexWorldNormal); //specularVertexWorldNormal * -1; //TODO: We should refract the normal here. For now, we'll simply point it in the opposite direction
+                o.worldRefractedRayDirection = RefractRay(specularVertexWorldPos, specularVertexWorldNormal);
                 return o;
             }
 
