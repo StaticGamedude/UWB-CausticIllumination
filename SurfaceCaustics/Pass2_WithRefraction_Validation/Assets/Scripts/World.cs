@@ -29,9 +29,16 @@ public class World : MonoBehaviour
     public RenderTexture LightCameraCausticTexture;
 
     /// <summary>
+    /// The render texture containing the color of the specular object
+    /// </summary>
+    public RenderTexture LightCameraCausticColorTexture;
+
+    /// <summary>
     /// A render texture used for misc testing
     /// </summary>
     public RenderTexture ValidationTexture;
+
+    public Text RenderStatusText;
 
     /// <summary>
     /// Limits the number of objects created when rendering validation objects in the scene. Only every Xth item will be rendered.
@@ -61,7 +68,7 @@ public class World : MonoBehaviour
     /// <summary>
     /// Sets the refraction index for specular object
     /// </summary>
-    public float Debug_RefractionIndex = 1.33f;
+    public float Debug_RefractionIndex = 1; // Defaulting to 1. Equivalent to the speed of light moving in a vacuum. 
 
     /// <summary>
     /// Interal list of spheres which represent the positions read from the position texture
@@ -98,7 +105,13 @@ public class World : MonoBehaviour
     void Update()
     {
         RenderTexture specularPositionsTexture = this.LightCameraCausticTexture;
+        RenderTexture colorTexture = this.LightCameraCausticColorTexture;
         List<GameObject> debugSpecularPositionObjects = this.debug_PositionSpheres;
+
+        if (this.Debug_RefractionIndex < 1)
+        {
+            this.Debug_RefractionIndex = 1;
+        }
 
         Shader.SetGlobalFloat("_DesiredRefractionAngle", this.Debug_RefractionAngle);
         Shader.SetGlobalFloat("_RefractiveIndex", this.Debug_RefractionIndex);
@@ -114,13 +127,15 @@ public class World : MonoBehaviour
 
         if (this.continousValidationRendering || Input.GetKeyDown(KeyCode.S))
         {
-            this.Validation_RenderTextureDetails(specularPositionsTexture, debugSpecularPositionObjects);
+            this.Validation_RenderTextureDetails(specularPositionsTexture, colorTexture, debugSpecularPositionObjects);
         }
 
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            this.Validation_RenderTextureDetails(this.LightCameraReceivingPositionTexture, debugSpecularPositionObjects);
-        }
+        //if (Input.GetKeyDown(KeyCode.P))
+        //{
+        //    this.Validation_RenderTextureDetails(this.LightCameraReceivingPositionTexture, debugSpecularPositionObjects);
+        //}
+
+        this.RenderStatusText.text = $"Continous rendering " + (this.continousValidationRendering ? "enabled" : "disabled");
     }
 
     /// <summary>
@@ -141,7 +156,7 @@ public class World : MonoBehaviour
     /// <param name="validationCylindersList">List of game objects that the newly created position sphere should be added to</param>
     /// <param name="worldNormal">[Optional] The world normal of the vertex</param>
     /// <param name="validationCylindersList">[Optional] List of game objects that the newly created position normal cylinder should be added to</param>
-    private void CreatePositionValidationObjects(string name, Vector3 worldPosition, List<GameObject> validationSpheresList, Vector3? worldNormal = null, List<GameObject> validationCylindersList = null)
+    private void CreatePositionValidationObjects(string name, Vector3 worldPosition, List<GameObject> validationSpheresList, Color color, Vector3? worldNormal = null, List<GameObject> validationCylindersList = null)
     {
         GameObject positionSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         positionSphere.transform.position = worldPosition;
@@ -151,7 +166,7 @@ public class World : MonoBehaviour
 
 
         var sphereRenderer = positionSphere.GetComponent<Renderer>();
-        sphereRenderer.material.SetColor("_Color", this.Debug_ObjectColor);
+        sphereRenderer.material.SetColor("_Color", color);
         if (worldNormal != null)
         {
             Vector3 normal = (Vector3)worldNormal;
@@ -165,7 +180,7 @@ public class World : MonoBehaviour
             validationCylindersList?.Add(normalDirectionCylinder);
 
             var cylinderRenderer = normalDirectionCylinder.GetComponent<Renderer>();
-            cylinderRenderer.material.SetColor("_Color", this.Debug_ObjectColor);
+            cylinderRenderer.material.SetColor("_Color", color);
         }
     }
 
@@ -215,12 +230,14 @@ public class World : MonoBehaviour
     /// normal
     /// </summary>
     /// <param name="positionRenderTexture">Render texture containing world positions</param>
+    /// <param name="colorRenderTexture">Render texture containing the specular object colors</param>
     /// <param name="validationPositionSpheres">List of game objects in which the created valitation spheres are added to</param>
     /// <param name="normalRenderTexture">[Optional] Render texture containing world normals</param>
     /// <param name="validationNormalCylinders">[Optional] List of game objects in which the created validation cylinders are added to</param>
-    private void Validation_RenderTextureDetails(RenderTexture positionRenderTexture, List<GameObject> validationPositionSpheres, RenderTexture normalRenderTexture = null , List<GameObject> validationNormalCylinders = null)
+    private void Validation_RenderTextureDetails(RenderTexture positionRenderTexture, RenderTexture colorRenderTexture, List<GameObject> validationPositionSpheres, RenderTexture normalRenderTexture = null , List<GameObject> validationNormalCylinders = null)
     {
         Texture2D positionTexture = this.ConvertRenderTextureTo2DTexture(positionRenderTexture);
+        Texture2D colorTexture = this.ConvertRenderTextureTo2DTexture(colorRenderTexture);
         Texture2D normalTexture = normalRenderTexture != null ? this.ConvertRenderTextureTo2DTexture(normalRenderTexture) : null;
 
         int count = 0;
@@ -234,6 +251,7 @@ public class World : MonoBehaviour
             for (int col = 0; col < positionTexture.height; col++)
             {
                 Color positionPixelColor = positionTexture.GetPixel(row, col);
+                Color positionColor = colorTexture.GetPixel(row, col);
                 Vector3 worldPos = new Vector3(positionPixelColor.r, positionPixelColor.g, positionPixelColor.b);
                 bool isVisiblePosition = positionPixelColor.a > 0; //The alpha channel of the pixel indicates whether the position is valid (i.e. seen by the light camera)
                 Color? normalPixelColor = normalTexture != null ? (Color?)normalTexture.GetPixel(row, col) : null;
@@ -246,7 +264,7 @@ public class World : MonoBehaviour
 
                 if (this.Debug_RenderEveryXElement <= 1 || (count + 1) % this.Debug_RenderEveryXElement == 0)
                 {
-                    this.CreatePositionValidationObjects(count.ToString(), worldPos, validationPositionSpheres, normal, validationNormalCylinders);
+                    this.CreatePositionValidationObjects(count.ToString(), worldPos, validationPositionSpheres, positionColor, normal, validationNormalCylinders);
                 }
 
                 count++;

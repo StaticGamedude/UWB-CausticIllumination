@@ -28,6 +28,11 @@ public class LightCamera : MonoBehaviour
     /// </summary>
     public LightCameraType LightCamType;
 
+    /// <summary>
+    /// Represents the type of objects that this camera can see
+    /// </summary>
+    public LightCameraVisibilityType LightCameraVisibilityType;
+
     #endregion
 
     /// <summary>
@@ -45,13 +50,17 @@ public class LightCamera : MonoBehaviour
         Debug.Assert(this.SpecularObjectShader != null);
         Debug.Assert(this.DataTexture != null);
 
-        //this.lightCamera.orthographic = true;
+        //this.lightCamera.fieldOfView = 5;
 
-        string replacementShaderTag = 
-            this.LightCamType == LightCameraType.RECEIVING_POSITION || this.LightCamType == LightCameraType.OTHER
-            ? Globals.RECEIVING_OBJECT_SHADER_TAG : Globals.SPECULAR_OBJECT_SHADER_TAG;
-
-        this.lightCamera.SetReplacementShader(SpecularObjectShader, replacementShaderTag);
+        switch(this.LightCameraVisibilityType)
+        {
+            case LightCameraVisibilityType.SPECULAR:
+                this.lightCamera.SetReplacementShader(SpecularObjectShader, Globals.SPECULAR_OBJECT_SHADER_TAG);
+                break;
+            case LightCameraVisibilityType.RECEIVER:
+                this.lightCamera.SetReplacementShader(SpecularObjectShader, Globals.RECEIVING_OBJECT_SHADER_TAG);
+                break;
+        }
     }
 
     /// <summary>
@@ -75,6 +84,9 @@ public class LightCamera : MonoBehaviour
             case LightCameraType.CAUSTIC:
                 shaderTextureParameter = Globals.SHADER_PARAM_CAUSTIC_MAP_TEXTURE;
                 break;
+            case LightCameraType.CAUSTIC_COLOR:
+                shaderTextureParameter = Globals.SHADER_PARAM_CAUSTIC_COLOR_MAP_TEXTURE;
+                break;
         }
 
         Shader.SetGlobalTexture(shaderTextureParameter, DataTexture);
@@ -82,6 +94,6 @@ public class LightCamera : MonoBehaviour
         Shader.SetGlobalMatrix(Globals.SHADER_PARAM_LIGHT_CAMERA_MATRIX, this.lightCamera.worldToCameraMatrix);
         Shader.SetGlobalMatrix(Globals.SHADER_PARAM_LIGHT_VIEW_PROJECTION_MATRIX, this.lightCamera.projectionMatrix * lightCamera.worldToCameraMatrix);
         Shader.SetGlobalFloat(Globals.SHADER_PARAM_LIGHT_CAMERA_FAR, 1.0f / lightCamera.farClipPlane);
-        Shader.SetGlobalVector("", lightCamera.transform.position);
+        Shader.SetGlobalVector(Globals.SHADER_PARAM_LIGHT_WORLD_POS, lightCamera.transform.position);
     }
 }

@@ -319,12 +319,15 @@ MonoBehaviour:
   LightCameraRefractionNormalTexture: {fileID: 8400000, guid: cca5af20753e2e440ac19faa67924a05, type: 2}
   LightCameraReceivingPositionTexture: {fileID: 8400000, guid: 9e2a29d58adfcd4479b52557b552b2f7, type: 2}
   LightCameraCausticTexture: {fileID: 8400000, guid: 51f27b732fe7ee84d912807bcae5288a, type: 2}
+  LightCameraCausticColorTexture: {fileID: 8400000, guid: 457bc1b0833402a44be74759abaec9ee, type: 2}
   ValidationTexture: {fileID: 8400000, guid: 74a8ca8d37dc7a4409183c3d02d2ccf7, type: 2}
+  RenderStatusText: {fileID: 765674893}
   Debug_RenderEveryXElement: 5
   Debug_SpherePositionSize: {x: 0.05, y: 0.05, z: 0.05}
   Debug_CylinderNormalSize: {x: 0.01, y: 0.05, z: 0.01}
   Debug_ObjectColor: {r: 0, g: 1, b: 0, a: 1}
   Debug_RefractionAngle: 10
+  Debug_RefractionIndex: 1
 --- !u!114 &286145854
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -390,6 +393,7 @@ MonoBehaviour:
   SpecularObjectShader: {fileID: 4800000, guid: 5363dac15b27f5046af062cd3f840cd6, type: 3}
   DataTexture: {fileID: 8400000, guid: 11587199ba129574fbe23cf09d1f914e, type: 2}
   LightCamType: 0
+  LightCameraVisibilityType: 0
 --- !u!20 &409843996
 Camera:
   m_ObjectHideFlags: 0
@@ -480,6 +484,7 @@ MonoBehaviour:
   SpecularObjectShader: {fileID: 4800000, guid: b360039c364c78846ad0358bc50c9b50, type: 3}
   DataTexture: {fileID: 8400000, guid: 9e2a29d58adfcd4479b52557b552b2f7, type: 2}
   LightCamType: 2
+  LightCameraVisibilityType: 1
 --- !u!20 &412874444
 Camera:
   m_ObjectHideFlags: 0
@@ -523,6 +528,97 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!1 &658379617
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 658379618}
+  - component: {fileID: 658379619}
+  - component: {fileID: 658379620}
+  m_Layer: 0
+  m_Name: LightCausticColorCamera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &658379618
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 658379617}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1561308275}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!20 &658379619
+Camera:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 658379617}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
+  m_projectionMatrixMode: 1
+  m_GateFitMode: 2
+  m_FOVAxisMode: 0
+  m_SensorSize: {x: 36, y: 24}
+  m_LensShift: {x: 0, y: 0}
+  m_FocalLength: 50
+  m_NormalizedViewPortRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  near clip plane: 0.3
+  far clip plane: 1000
+  field of view: 60
+  orthographic: 0
+  orthographic size: 5
+  m_Depth: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingPath: -1
+  m_TargetTexture: {fileID: 8400000, guid: 457bc1b0833402a44be74759abaec9ee, type: 2}
+  m_TargetDisplay: 0
+  m_TargetEye: 3
+  m_HDR: 1
+  m_AllowMSAA: 1
+  m_AllowDynamicResolution: 0
+  m_ForceIntoRT: 0
+  m_OcclusionCulling: 1
+  m_StereoConvergence: 10
+  m_StereoSeparation: 0.022
+--- !u!114 &658379620
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 658379617}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67734355e276117439697d3d9fa50533, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SpecularObjectShader: {fileID: 4800000, guid: 6f61ba4a7b1aa3a459c890f28a2157cb, type: 3}
+  DataTexture: {fileID: 8400000, guid: 457bc1b0833402a44be74759abaec9ee, type: 2}
+  LightCamType: 0
+  LightCameraVisibilityType: 0
 --- !u!1 &674828884
 GameObject:
   m_ObjectHideFlags: 0
@@ -553,7 +649,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1561308275}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &674828886
 MonoBehaviour:
@@ -570,6 +666,7 @@ MonoBehaviour:
   SpecularObjectShader: {fileID: 4800000, guid: c5b0de2cf68e32d4bb70f7ff44c35386, type: 3}
   DataTexture: {fileID: 8400000, guid: 74a8ca8d37dc7a4409183c3d02d2ccf7, type: 2}
   LightCamType: 4
+  LightCameraVisibilityType: 1
 --- !u!20 &674828887
 Camera:
   m_ObjectHideFlags: 0
@@ -613,6 +710,85 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!1 &765674891
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 765674892}
+  - component: {fileID: 765674894}
+  - component: {fileID: 765674893}
+  m_Layer: 5
+  m_Name: RenderingStatusText
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &765674892
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 765674891}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1885443634}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -204, y: -35}
+  m_SizeDelta: {x: 336.8, y: 28.9}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &765674893
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 765674891}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 14
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 10
+    m_MaxSize: 40
+    m_Alignment: 0
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: 
+--- !u!222 &765674894
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 765674891}
+  m_CullTransparentMesh: 1
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -728,6 +904,7 @@ Transform:
   - {fileID: 1957115655}
   - {fileID: 412874441}
   - {fileID: 2076733896}
+  - {fileID: 658379618}
   - {fileID: 674828885}
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -920,6 +1097,7 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 134292857}
+  - {fileID: 765674892}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1018,6 +1196,7 @@ MonoBehaviour:
   SpecularObjectShader: {fileID: 4800000, guid: 503dff78da6c0934888bbc8ea91ad9b4, type: 3}
   DataTexture: {fileID: 8400000, guid: cca5af20753e2e440ac19faa67924a05, type: 2}
   LightCamType: 1
+  LightCameraVisibilityType: 0
 --- !u!1 &2076733895
 GameObject:
   m_ObjectHideFlags: 0
@@ -1065,6 +1244,7 @@ MonoBehaviour:
   SpecularObjectShader: {fileID: 4800000, guid: c6f637ab5b2299d4ba481b162cfb8725, type: 3}
   DataTexture: {fileID: 8400000, guid: 51f27b732fe7ee84d912807bcae5288a, type: 2}
   LightCamType: 3
+  LightCameraVisibilityType: 0
 --- !u!20 &2076733898
 Camera:
   m_ObjectHideFlags: 0

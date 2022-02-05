@@ -46,6 +46,11 @@ public class Globals
     public readonly static string SHADER_PARAM_CAUSTIC_MAP_TEXTURE = "_CausticMapTexture";
 
     /// <summary>
+    /// Represents the parameter which stores the caustic map details
+    /// </summary>
+    public readonly static string SHADER_PARAM_CAUSTIC_COLOR_MAP_TEXTURE = "_CausticColorMapTexture";
+
+    /// <summary>
     /// Represents the parameter which stores the transformation to convert positions/normals into
     /// the light's space.
     /// </summary>

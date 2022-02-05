@@ -24,6 +24,11 @@ public enum LightCameraType
     CAUSTIC,
 
     /// <summary>
+    /// Value indicates that the camera is expected to store color information of the specular object
+    /// </summary>
+    CAUSTIC_COLOR,
+
+    /// <summary>
     /// Value used when testing miscellaneous properties
     /// </summary>
     OTHER,
