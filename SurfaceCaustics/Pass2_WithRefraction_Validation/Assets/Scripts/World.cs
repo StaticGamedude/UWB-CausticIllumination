@@ -33,11 +33,6 @@ public class World : MonoBehaviour
     /// </summary>
     public RenderTexture LightCameraCausticColorTexture;
 
-    /// <summary>
-    /// A render texture used for misc testing
-    /// </summary>
-    public RenderTexture ValidationTexture;
-
     public Text RenderStatusText;
 
     /// <summary>
@@ -54,16 +49,6 @@ public class World : MonoBehaviour
     /// Determines the size of the normal cylinders rendered in the scene
     /// </summary>
     public Vector3 Debug_CylinderNormalSize = new Vector3(0.003f, 0.02f, 0.0003f);
-
-    /// <summary>
-    /// Determines the color of the debug objects rendered in the scene
-    /// </summary>
-    public Color Debug_ObjectColor = Color.green;
-
-    /// <summary>
-    /// Sets a flag in the caustic map creation shader to determine what part of the estimation to investigate
-    /// </summary>
-    public float Debug_RefractionAngle = 10;
 
     /// <summary>
     /// Sets the refraction index for specular object
@@ -113,7 +98,6 @@ public class World : MonoBehaviour
             this.Debug_RefractionIndex = 1;
         }
 
-        Shader.SetGlobalFloat("_DesiredRefractionAngle", this.Debug_RefractionAngle);
         Shader.SetGlobalFloat("_RefractiveIndex", this.Debug_RefractionIndex);
         if (Input.GetKeyDown(KeyCode.D))
         {
