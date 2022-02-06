@@ -114,10 +114,6 @@ public class World : MonoBehaviour
             this.Validation_RenderTextureDetails(specularPositionsTexture, colorTexture, debugSpecularPositionObjects);
         }
 
-        //if (Input.GetKeyDown(KeyCode.P))
-        //{
-        //    this.Validation_RenderTextureDetails(this.LightCameraReceivingPositionTexture, debugSpecularPositionObjects);
-        //}
 
         this.RenderStatusText.text = $"Continous rendering " + (this.continousValidationRendering ? "enabled" : "disabled");
     }
