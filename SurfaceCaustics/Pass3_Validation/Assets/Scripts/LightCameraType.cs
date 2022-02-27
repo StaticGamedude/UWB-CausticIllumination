@@ -29,6 +29,16 @@ public enum LightCameraType
     CAUSTIC_COLOR,
 
     /// <summary>
+    /// Value indicates that the camera is expected to store caustic flux values
+    /// </summary>
+    CAUSTIC_FLUX,
+
+    /// <summary>
+    /// Value indicates that the camera is expected to store caustic intensity values
+    /// </summary>
+    CAUSTIC_INTENSITY,
+
+    /// <summary>
     /// Value indicates that the camera is expected to store the final caustic data needed to support resulting caustic effect
     /// </summary>
     CAUSTIC_FINAL,

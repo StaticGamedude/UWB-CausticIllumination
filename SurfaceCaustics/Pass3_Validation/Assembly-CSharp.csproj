@@ -82,11 +82,13 @@
     <None Include="Assets\Shaders\ReceivingObjectShader.shader" />
     <None Include="Assets\Shaders\SpecularReceivingObjectShader.shader" />
     <None Include="Assets\GroupResources\Liwen\Resources\WaveShader.shader" />
+    <None Include="Assets\Shaders\CausticFluxShader.shader" />
     <None Include="Assets\Shaders\Tex2DValidationShader.shader" />
     <None Include="Assets\Shaders\CausticMapShader.shader" />
     <None Include="Assets\Shaders\CausticFinalShader.shader" />
     <None Include="Assets\Shaders\MultiOutputShader.shader" />
     <None Include="Assets\Shaders\SpecularObjectShader.shader" />
+    <None Include="Assets\Shaders\CausticIntensityShader.shader" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

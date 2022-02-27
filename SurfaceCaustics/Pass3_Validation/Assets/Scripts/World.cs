@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+using System.Linq;
+
 /// <summary>
 /// Handles the overall scene logic. Reads users input and renders debug spheres and cylinders
 /// at positions read from a render texture
@@ -66,6 +68,10 @@ public class World : MonoBehaviour
 
     public float Debug_RefractionDistance = 1;
 
+    public int Debug_MinNumOfNeighbors = 1;
+
+    public float Debug_MinDistance = 1;
+
     /// <summary>
     /// Interal list of spheres which represent the positions read from the position texture
     /// </summary>
@@ -106,7 +112,7 @@ public class World : MonoBehaviour
         }
 
         Shader.SetGlobalFloat("_RefractiveIndex", this.Debug_RefractionIndex);
-        Shader.SetGlobalInt("_NumProjectedVerticies", this.CalculateNumberOfVisibleRefractedPoints(this.LightCameraCausticTexture));
+        Shader.SetGlobalInt("_NumProjectedVerticies", this.CalculateNumberOfVisibleRefractedPoints(this.LightCameraRefractionPositionTexture/*this.LightCameraCausticTexture*/));
         Shader.SetGlobalFloat("_AbsorptionCoefficient", this.Debug_AbsorbtionCoefficient);
         Shader.SetGlobalFloat("_LightIntensity", this.Debug_LightIntensity);
         Shader.SetGlobalFloat("_RefractionDistance", this.Debug_RefractionDistance);
@@ -279,6 +285,7 @@ public class World : MonoBehaviour
         RenderTexture specularPositionsTexture = this.LightCameraCausticTexture;
         RenderTexture colorTexture = this.LightCameraCausticColorTexture;
         List<GameObject> debugSpecularPositionObjects = this.debug_PositionSpheres;
+        bool runPointDiagnostic = false;
 
         if (Input.GetKeyDown(KeyCode.D))
         {
@@ -290,12 +297,74 @@ public class World : MonoBehaviour
             this.continousValidationRendering = !this.continousValidationRendering;
         }
 
-        if (this.continousValidationRendering || Input.GetKeyDown(KeyCode.S))
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            runPointDiagnostic = true;
+        }
+
+        if (this.continousValidationRendering || Input.GetKeyDown(KeyCode.S) || runPointDiagnostic)
         {
             this.Validation_RenderTextureDetails(specularPositionsTexture, colorTexture, debugSpecularPositionObjects);
         }
 
+        if (runPointDiagnostic)
+        {
+            this.RunTestDiagnostics(specularPositionsTexture, this.Debug_MinNumOfNeighbors, this.Debug_MinDistance);
+        }
+        //this.CheckForNearbyPoints(specularPositionsTexture);
 
         this.RenderStatusText.text = $"Continous rendering " + (this.continousValidationRendering ? "enabled" : "disabled");
+    }
+
+    private void RunTestDiagnostics(RenderTexture causticTexture, int minNumofNeighbors, float startingMinDistance)
+    {
+        float originalRefractionIndex = this.Debug_RefractionIndex;
+        float[] refractionIndexesToTest = new float[] { 1.0f, 1.33f, 1.5f, 1.66f, 1.8f, 2.0f, 2.3f, 2.5f };
+
+        Debug.Log($"Testing refraction index: {this.Debug_RefractionIndex}");
+        this.CheckForNearbyPoints(causticTexture, minNumofNeighbors, startingMinDistance);
+    }
+
+    private void CheckForNearbyPoints(RenderTexture causticTexture, int minNumOfNeighbors, float minDistance)
+    {
+        Texture2D positionTexture = this.ConvertRenderTextureTo2DTexture(causticTexture);
+        List<Vector3> splatPositions = new List<Vector3>();
+        int numOfPointsWithValidNumbers = 0;
+
+        for (int row = 0; row < positionTexture.width; row++)
+        {
+            for (int col = 0; col < positionTexture.height; col++)
+            {
+                Color positionPixelColor = positionTexture.GetPixel(row, col);
+
+                bool isVisiblePosition = positionPixelColor.a > 0; //The alpha channel of the pixel indicates whether the position is valid (i.e. seen by the light camera)
+                if (!isVisiblePosition)
+                {
+                    continue;
+                }
+
+                splatPositions.Add(new Vector3(positionPixelColor.r, positionPixelColor.g, positionPixelColor.b));
+            }
+        }
+
+        foreach(Vector3 splatPoint in splatPositions)
+        {
+            int numOfPointsNearby = splatPositions.Count(p => p != splatPoint && Vector3.Distance(splatPoint, p) < minDistance);
+            if (numOfPointsNearby >= minNumOfNeighbors)
+            {
+                numOfPointsWithValidNumbers++;
+            }
+        }
+
+        Debug.Log($"   Of the total {splatPositions.Count} positions, {numOfPointsWithValidNumbers} positions have at least {minNumOfNeighbors} neighbors within {minDistance} units");
+
+        if (minDistance / 2 > Mathf.Epsilon)
+        {
+            this.CheckForNearbyPoints(causticTexture, minNumOfNeighbors, minDistance / 2);
+        }
+        else if (minDistance != Mathf.Epsilon)
+        {
+            return;
+        }
     }
 }

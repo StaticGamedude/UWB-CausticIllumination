@@ -87,6 +87,9 @@ public class LightCamera : MonoBehaviour
             case LightCameraType.CAUSTIC_COLOR:
                 shaderTextureParameter = Globals.SHADER_PARAM_CAUSTIC_COLOR_MAP_TEXTURE;
                 break;
+            case LightCameraType.CAUSTIC_FLUX:
+                shaderTextureParameter = Globals.SHADER_PARAM_CAUSTIC_FLUX_TEXTURE;
+                break;
             case LightCameraType.CAUSTIC_FINAL:
                 shaderTextureParameter = Globals.SHADER_PARAM_CAUSTIC_FINAL_MAP_TEXTURE;
                 break;
