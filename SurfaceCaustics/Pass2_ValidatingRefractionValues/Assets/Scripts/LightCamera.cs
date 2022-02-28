@@ -51,8 +51,10 @@ public class LightCamera : MonoBehaviour
         Debug.Assert(this.DataTexture != null);
 
         //this.lightCamera.fieldOfView = 5;
+        this.DataTexture.width = 256;
+        this.DataTexture.height = 256;
 
-        switch(this.LightCameraVisibilityType)
+        switch (this.LightCameraVisibilityType)
         {
             case LightCameraVisibilityType.SPECULAR:
                 this.lightCamera.SetReplacementShader(SpecularObjectShader, Globals.SPECULAR_OBJECT_SHADER_TAG);
