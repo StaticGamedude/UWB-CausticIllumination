@@ -29,7 +29,6 @@ Shader "Unlit/CausticRefractionRayShader"
             {
                 float2 uv : TEXCOORD0;
                 float4 vertex : SV_POSITION;
-
                 float3 worldRefractedRayDirection : TEXCOORD2;
             };
 
@@ -39,21 +38,9 @@ Shader "Unlit/CausticRefractionRayShader"
             float4x4 _LightViewProjectionMatrix;
             float3 _LightWorldPosition;
             float _RefractiveIndex;
-            int _NumProjectedVerticies;
-
-            RWTexture2D<float> TotalFluxBuffer : register(u1);
 
             float3 RefractRay(float3 specularVertexWorldPos, float3 specularVertexWorldNormal)
             {
-                //Old - Original attempt which has a calculation error
-                /*float3 lightToVertex = specularVertexWorldPos - _LightWorldPosition;
-                float3 normalizedLightToVertexDirection = normalize(lightToVertex);
-                float incidentAngle = dot(normalizedLightToVertexDirection, specularVertexWorldNormal);
-                float refractionAngle = asin(sin(incidentAngle) / _RefractiveIndex);
-                float3 refractedRay = -1 * (lightToVertex / _RefractiveIndex) + (cos(refractionAngle) - (cos(incidentAngle / _RefractiveIndex))) * specularVertexWorldNormal;
-                return refractedRay;*/
-
-                //New
                 float3 vertexToLight = normalize(_LightWorldPosition - specularVertexWorldPos);
                 float incidentAngle = dot(vertexToLight, specularVertexWorldNormal);
                 float refractionAngle = asin(sin(incidentAngle) / _RefractiveIndex);

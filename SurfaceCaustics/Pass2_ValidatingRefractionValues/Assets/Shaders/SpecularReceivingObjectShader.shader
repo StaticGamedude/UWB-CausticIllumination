@@ -63,15 +63,16 @@ Shader "Unlit/SpecularReceivingObject"
                 fixed4 col = tex2D(_MainTex, i.uv);
                 float4 causticIntensity = GetCausticIntensity(i.worldPos);
 
-                if (causticIntensity.a > 0)
-                {
-                    //return col * causticIntensity.r;
-                    return fixed4(col.r + causticIntensity.r, col.g + causticIntensity.r, col.b + causticIntensity.r, col.a);
-                }
-                else
-                {
-                    return col;
-                }
+                return col;
+                //if (causticIntensity.a > 0)
+                //{
+                //    //return col * causticIntensity.r;
+                //    return fixed4(col.r + causticIntensity.r, col.g + causticIntensity.r, col.b + causticIntensity.r, col.a);
+                //}
+                //else
+                //{
+                //    return col;
+                //}
             }
             ENDCG
         }
