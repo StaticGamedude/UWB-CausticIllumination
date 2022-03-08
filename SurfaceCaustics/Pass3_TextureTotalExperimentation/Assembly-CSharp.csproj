@@ -53,16 +53,12 @@
     <UnityVersion>2020.3.25f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\World.cs" />
     <Compile Include="Assets\Scripts\LightCam.cs" />
-    <Compile Include="Assets\Scripts\ApplyShader.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\SpecularObjectShader.shader" />
     <None Include="Assets\Shaders\PlaneShader.shader" />
     <None Include="Assets\Shaders\BlendShader.shader" />
-    <None Include="Assets\Shaders\BlitShader.shader" />
-    <None Include="Assets\Shaders\StandardShader.shader" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

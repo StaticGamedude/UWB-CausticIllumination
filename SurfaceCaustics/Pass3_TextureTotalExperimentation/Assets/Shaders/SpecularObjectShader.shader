@@ -11,8 +11,6 @@ Shader "Unlit/SpecularObjectShader"
 
         Pass
         {
-            Blend One One
-
             CGPROGRAM
 
             #pragma vertex vert
@@ -51,17 +49,7 @@ Shader "Unlit/SpecularObjectShader"
             {
                 // sample the texture
                 fixed4 col = tex2D(_MainTex, i.uv);
-
-                if (col.b > 0.5)
-                {
-                    return fixed4(0, 0, 1- col.b, 1);
-                }
-                else
-                {
-                    return col;
-                }
-
-                //return col;
+                return col;
             }
             ENDCG
         }

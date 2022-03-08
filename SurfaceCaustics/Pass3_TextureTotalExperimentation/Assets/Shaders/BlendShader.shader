@@ -11,8 +11,8 @@ Shader "Unlit/BlendShader"
 
         Pass
         {
-            Blend One One
-            //Blend DstColor Zero
+            Blend One One //Additive 
+            //Blend DstColor Zero //Multiply
 
             CGPROGRAM
             #pragma vertex vert
