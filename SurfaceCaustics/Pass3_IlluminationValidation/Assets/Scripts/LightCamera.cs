@@ -51,8 +51,8 @@ public class LightCamera : MonoBehaviour
         Debug.Assert(this.DataTexture != null);
 
         //this.lightCamera.fieldOfView = 5;
-        this.DataTexture.width = 20;
-        this.DataTexture.height = 20;
+        this.DataTexture.width = 256;
+        this.DataTexture.height = 256;
 
         switch (this.LightCameraVisibilityType)
         {
@@ -97,6 +97,9 @@ public class LightCamera : MonoBehaviour
                 break;
             case LightCameraType.CAUSTIC_FINAL:
                 shaderTextureParameter = Globals.SHADER_PARAM_CAUSTIC_FINAL_MAP_TEXTURE;
+                break;
+            case LightCameraType.CAUSTIC_DISTANCE:
+                shaderTextureParameter = Globals.SHADER_PARAM_CAUSTIC_DISTANCE_TEXTURE;
                 break;
         }
 

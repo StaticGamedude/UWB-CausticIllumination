@@ -78,9 +78,16 @@ Shader "Unlit/CausticMapShader"
 
             float4 frag(v2f i) : SV_Target
             {
-                float3 splatPosition = EstimateIntersection(i.specularVertexWorldPos, i.worldRefractedRayDirection, _ReceivingPosTexture);
-                
-                return float4(splatPosition.xyz, 1);
+                fixed4 col = tex2D(_MainTex, i.uv);
+                float isVisible = 0;
+
+                if (col.r != 0 || col.g != 0 && col.b != 0)
+                {
+                    isVisible = 1;
+                }
+
+                float3 splatPosition = EstimateIntersection(i.specularVertexWorldPos, i.worldRefractedRayDirection, _ReceivingPosTexture);                
+                return float4(splatPosition.xyz, isVisible);
             }
             ENDCG
         }

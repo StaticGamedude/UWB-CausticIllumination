@@ -67,6 +67,8 @@ public class Globals
     /// </summary>
     public readonly static string SHADER_PARAM_CAUSTIC_FINAL_MAP_TEXTURE = "_CausticColorMapTexture";
 
+    public readonly static string SHADER_PARAM_CAUSTIC_DISTANCE_TEXTURE = "_CausticDistanceTexture";
+
     /// <summary>
     /// Represents the parameter which stores the transformation to convert positions/normals into
     /// the light's space.

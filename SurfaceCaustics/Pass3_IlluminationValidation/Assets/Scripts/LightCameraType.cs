@@ -46,6 +46,11 @@ public enum LightCameraType
     CAUSTIC_FINAL,
 
     /// <summary>
+    /// Value indicates the distance from the specular vertex position to the receiving object
+    /// </summary>
+    CAUSTIC_DISTANCE,
+
+    /// <summary>
     /// Value used when testing miscellaneous properties
     /// </summary>
     OTHER,

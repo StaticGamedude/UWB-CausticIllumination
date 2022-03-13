@@ -1,4 +1,4 @@
-Shader "Unlit/BlendShader"
+Shader "Unlit/RWShaderTest"
 {
     Properties
     {
@@ -6,19 +6,21 @@ Shader "Unlit/BlendShader"
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" "FrontData"="1" }
+        Tags { "RenderType"="Opaque" }
         LOD 100
 
         Pass
         {
-            Blend One One //Additive 
-            //Blend DstColor Zero //Multiply
+            CGINCLUDE
+            uniform RWTexture2D<half4> _MainTexInternal : register(u2);
+
+            sampler2D sp_MainTexInternal_Sampler2D;
+            float4 sp_MainTexInternal_Sampler2D_ST;
+            ENDCG
 
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
-            // make fog work
-            #pragma multi_compile_fog
 
             #include "UnityCG.cginc"
 
@@ -42,17 +44,16 @@ Shader "Unlit/BlendShader"
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-                
                 return o;
             }
 
-            fixed4 frag(v2f i) : SV_Target
+            fixed4 frag (v2f i) : SV_Target
             {
                 // sample the texture
-                fixed4 colorToBlendIn = fixed4(1, 0, 0, 1); //Red
-                //fixed4 col = tex2D(_MainTex, i.uv) + colorToBlendIn; //Should be a blue (cause the texture is almost completely blue)
-                //return col; 
-                return colorToBlendIn;
+                fixed4 col = tex2D(_MainTex, i.uv);
+                // apply fog
+                UNITY_APPLY_FOG(i.fogCoord, col);
+                return col;
             }
             ENDCG
         }

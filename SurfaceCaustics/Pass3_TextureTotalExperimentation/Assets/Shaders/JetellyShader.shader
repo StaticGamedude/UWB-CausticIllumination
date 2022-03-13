@@ -1,4 +1,4 @@
-Shader "Unlit/BlendShader"
+Shader "Unlit/JetellyShader"
 {
     Properties
     {
@@ -6,14 +6,12 @@ Shader "Unlit/BlendShader"
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" "FrontData"="1" }
+        Tags { "Queue" = "Transparent" "Specular"="1"}
         LOD 100
+        Blend One One
 
         Pass
         {
-            Blend One One //Additive 
-            //Blend DstColor Zero //Multiply
-
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
@@ -31,6 +29,7 @@ Shader "Unlit/BlendShader"
             struct v2f
             {
                 float2 uv : TEXCOORD0;
+                UNITY_FOG_COORDS(1)
                 float4 vertex : SV_POSITION;
             };
 
@@ -42,17 +41,13 @@ Shader "Unlit/BlendShader"
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-                
+                UNITY_TRANSFER_FOG(o,o.vertex);
                 return o;
             }
 
             fixed4 frag(v2f i) : SV_Target
             {
-                // sample the texture
-                fixed4 colorToBlendIn = fixed4(1, 0, 0, 1); //Red
-                //fixed4 col = tex2D(_MainTex, i.uv) + colorToBlendIn; //Should be a blue (cause the texture is almost completely blue)
-                //return col; 
-                return colorToBlendIn;
+                return fixed4(0.5, 0.45, 0.35, 1);
             }
             ENDCG
         }

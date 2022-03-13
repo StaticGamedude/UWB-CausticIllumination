@@ -40,6 +40,8 @@ public class World : MonoBehaviour
     /// </summary>
     public RenderTexture LightCameraFluxTexture;
 
+    public RenderTexture LightCausticDistanceTexture;
+
     /// <summary>
     /// The render texture containing the final intensity/caustic information
     /// </summary>
@@ -82,6 +84,8 @@ public class World : MonoBehaviour
     public bool Debug_RenderCausticPositions = true;
 
     public float Debug_IlluminationDistance = 1;
+
+    public float Debug_Flux = 0.5f;
 
     /// <summary>
     /// Interal list of spheres which represent the positions read from the position texture
@@ -127,7 +131,9 @@ public class World : MonoBehaviour
         Shader.SetGlobalFloat("_IlluminationDistance", this.Debug_IlluminationDistance);
         Shader.SetGlobalVector("_DiffuseObjectPos", this.DiffuseObject.transform.position);
         Shader.SetGlobalTexture("_CausticTexture", this.LightCameraCausticFinalTexture);
+        Shader.SetGlobalFloat("_GlobalAbsorbtionCoefficient", this.Debug_AbsorbtionCoefficient);
         Shader.SetGlobalInt("_NumProjectedVerticies", this.GetNumberOfVisiblePixels(this.LightCameraRefractionPositionTexture));
+        Shader.SetGlobalFloat("_DebugFlux", this.Debug_Flux);
 
         this.HandleValidationInputs();
     }
@@ -184,6 +190,8 @@ public class World : MonoBehaviour
         Texture2D causticTexture = this.ConvertRenderTextureTo2DTexture(specularCausticPositionTexture);
         Texture2D refractionRayTexture = this.ConvertRenderTextureTo2DTexture(specularRefractionRayTexture);
         Texture2D colorTexture = this.ConvertRenderTextureTo2DTexture(specularColorTexture);
+        Texture2D distanceTexture = this.ConvertRenderTextureTo2DTexture(this.LightCausticDistanceTexture);
+
         int count = 0;
 
         this.debug_PositionSpheres.ForEach(sphere => Destroy(sphere));
@@ -208,7 +216,8 @@ public class World : MonoBehaviour
                     Vector3 refractionRay = this.GetVectorFromColor(refractionRayTexture.GetPixel(row, col));
                     Color refractionColor = colorTexture.GetPixel(row, col);
                     Vector3 worldToSplat = splatPos - worldPos;
-                    float distanceFromWorldToSplat = worldToSplat.magnitude;
+                    //float distanceFromWorldToSplat = worldToSplat.magnitude;
+                    float distanceFromWorldToSplat = this.GetVectorFromColor(distanceTexture.GetPixel(row, col)).x;
 
                     if (this.Debug_RenderSpecularPositions)
                     {

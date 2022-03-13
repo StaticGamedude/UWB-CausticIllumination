@@ -36,39 +36,18 @@ Shader "Unlit/SpecularReceivingObject"
 
             // Variables set globally from the CPU
             sampler2D _CausticTexture;
-            sampler2D _CausticFluxTexture;
             sampler2D _SpecularPosTexture;
+            sampler2D _CausticFluxTexture;
+            sampler2D _CausticDistanceTexture;
+
             float4x4 _LightViewProjectionMatrix;
             float _IlluminationDistance;
+            float _GlobalAbsorbtionCoefficient;
+            float _DebugFlux;
             float3 _DiffuseObjectPos;
 
-            float GetCausticIntensity(float3 worldPos)
-            {
-                float totalFlux = 0;
-                for (int i = 0; i < 20; i++)
-                {
-                    for (int j = 0; j < 20; j++)
-                    {
-                        float xCoord = i / 20.0;
-                        float yCoord = j / 20.0;
-                        float2 textureCoord = float2(xCoord, yCoord);
+            float3 _LightWorldPosition;
 
-                        float4 flux = tex2D(_CausticFluxTexture, textureCoord);
-                        float4 splatPos = tex2D(_CausticTexture, textureCoord);
-                        float4 specularPos = tex2D(_SpecularPosTexture, textureCoord);
-                        if (specularPos.a != 0)
-                        {
-                            float d = distance(worldPos, splatPos);
-                            if (d < _IlluminationDistance)
-                            {
-                                totalFlux += flux;
-                            }
-                        }
-                    }
-                }
-
-                return totalFlux;
-            }
 
             v2f vert (appdata v)
             {
@@ -82,28 +61,52 @@ Shader "Unlit/SpecularReceivingObject"
                 return o;
             }
 
+            float2 GetCoordinatesForSpecularTexture(float3 worldPos)
+            {
+                float4 texPt = mul(_LightViewProjectionMatrix, float4(worldPos, 1));
+                float2 tc = 0.5 * texPt.xy / texPt.w + float2(0.5, 0.5);
+                return tc;
+            }
+
+            float GetFlux(float3 worldPos)
+            {
+                float2 tc = GetCoordinatesForSpecularTexture(worldPos);
+                float4 fluxVals = tex2D(_CausticFluxTexture, tc);
+                return fluxVals.x;
+            }
+
+            float GetDistance(float3 worldPos)
+            {
+                float2 tc = GetCoordinatesForSpecularTexture(worldPos);
+                float4 distanceVals = tex2D(_CausticDistanceTexture, tc);
+                return distanceVals.x;
+            }
+
+            bool SpecularSeesPosition(float3 worldPos)
+            {
+                float2 tc = GetCoordinatesForSpecularTexture(worldPos);
+                float4 fluxVals = tex2D(_CausticFluxTexture, tc);
+                return fluxVals.a == 1;
+            }
+
             fixed4 frag (v2f i) : SV_Target
             {
+                //float absorbtionCoef = pow(10, -5);
+                float flux = _DebugFlux; //GetFlux(i.worldPos);
+                float d = GetDistance(i.worldPos);
+                float finalIntensity = flux * exp((-_GlobalAbsorbtionCoefficient * d));
                 fixed4 col = tex2D(_MainTex, i.uv);
-                /*float4 totalFlux = GetCausticIntensity(i.worldPos);
-                float absorbtionCoef = pow(10, -5);
-                float d = distance(i.worldPos, _DiffuseObjectPos);
-                float finalIntensity = totalFlux * exp((-absorbtionCoef * d));
 
-
-                return col * finalIntensity;*/
-
-                return col;
-
-                //if (causticIntensity.a > 0)
-                //{
-                //    //return col * causticIntensity.r;
-                //    return fixed4(col.r + causticIntensity.r, col.g + causticIntensity.r, col.b + causticIntensity.r, col.a);
-                //}
-                //else
-                //{
-                //    return col;
-                //}
+                if (!SpecularSeesPosition(i.worldPos))
+                {
+                    /*return col;*/
+                    return fixed4(1, 0, 0, 1);
+                }
+                else
+                {
+                    //return col + finalIntensity;
+                    return fixed4(0, 1, 0, 1);
+                }
             }
             ENDCG
         }

@@ -63,6 +63,7 @@
     <Compile Include="Assets\GroupResources\Liwen\Source\Script\LineSegment.cs" />
     <Compile Include="Assets\GroupResources\Liwen\Source\Script\MyMesh_TangentSupport.cs" />
     <Compile Include="Assets\GroupResources\Liwen\Source\Script\MyMesh_TextureSupport.cs" />
+    <Compile Include="Assets\Scripts\QuickTesting.cs" />
     <Compile Include="Assets\GroupResources\Liwen\Source\Script\Matrix3x3Helpers.cs" />
     <Compile Include="Assets\GroupResources\Liwen\Source\RenderPipeline\ExampleRenderPipelineAsset.cs" />
     <Compile Include="Assets\GroupResources\Liwen\Source\Script\MyMesh_CreateMesh.cs" />
@@ -74,7 +75,6 @@
     <Compile Include="Assets\Scripts\Globals.cs" />
     <Compile Include="Assets\Scripts\LightCamera.cs" />
     <Compile Include="Assets\GroupResources\Liwen\Source\RenderPipeline\RenderObjectPass.cs" />
-    <Compile Include="Assets\Scripts\QuickTesting.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\LightNormalShader.shader" />
@@ -89,6 +89,7 @@
     <None Include="Assets\Shaders\CausticMapShader.shader" />
     <None Include="Assets\Shaders\CausticFinalShader.shader" />
     <None Include="Assets\Shaders\MultiOutputShader.shader" />
+    <None Include="Assets\Shaders\CausticDistanceShader.shader" />
     <None Include="Assets\Shaders\CausticRefractionRayShader.shader" />
     <None Include="Assets\Shaders\SpecularObjectShader.shader" />
     <None Include="Assets\Shaders\CausticIntensityShader.shader" />

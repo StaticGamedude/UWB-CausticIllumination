@@ -54,11 +54,17 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\LightCam.cs" />
+    <Compile Include="Assets\Scripts\World.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\SpecularObjectShader.shader" />
+    <None Include="Assets\Shaders\RWShaderTest.shader" />
+    <None Include="Assets\Shaders\JetellyShader.shader" />
+    <None Include="Assets\Shaders\FrontDataShader.shader" />
     <None Include="Assets\Shaders\PlaneShader.shader" />
     <None Include="Assets\Shaders\BlendShader.shader" />
+    <None Include="Assets\Shaders\GreenShader.shader" />
+    <None Include="Assets\Shaders\BackDataShader.shader" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

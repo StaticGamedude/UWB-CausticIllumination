@@ -1,4 +1,4 @@
-Shader "Unlit/BlendShader"
+Shader "Unlit/CausticDistanceShader"
 {
     Properties
     {
@@ -6,19 +6,14 @@ Shader "Unlit/BlendShader"
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" "FrontData"="1" }
+        Tags { "SpecularObj" = "1"  }
         LOD 100
 
         Pass
         {
-            Blend One One //Additive 
-            //Blend DstColor Zero //Multiply
-
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
-            // make fog work
-            #pragma multi_compile_fog
 
             #include "UnityCG.cginc"
 
@@ -32,27 +27,30 @@ Shader "Unlit/BlendShader"
             {
                 float2 uv : TEXCOORD0;
                 float4 vertex : SV_POSITION;
+                float3 worldPos : TEXCOORD1;
             };
 
             sampler2D _MainTex;
             float4 _MainTex_ST;
+            sampler2D _CausticMapTexture;
 
             v2f vert (appdata v)
             {
                 v2f o;
+                float3 worldPos = mul(UNITY_MATRIX_M, v.vertex);
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-                
+                o.worldPos = worldPos;
                 return o;
             }
 
-            fixed4 frag(v2f i) : SV_Target
+            float4 frag(v2f i) : SV_Target
             {
-                // sample the texture
-                fixed4 colorToBlendIn = fixed4(1, 0, 0, 1); //Red
-                //fixed4 col = tex2D(_MainTex, i.uv) + colorToBlendIn; //Should be a blue (cause the texture is almost completely blue)
-                //return col; 
-                return colorToBlendIn;
+                float3 splatPos = tex2D(_CausticMapTexture, i.uv).xyz;
+                float d = distance(splatPos, i.worldPos);
+                return float4(d, d, d, 1);
+
+                //return float4(10, 10, 10, 1);
             }
             ENDCG
         }
