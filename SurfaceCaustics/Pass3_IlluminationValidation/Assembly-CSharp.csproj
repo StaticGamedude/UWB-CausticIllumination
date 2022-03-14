@@ -79,6 +79,7 @@
   <ItemGroup>
     <None Include="Assets\Shaders\LightNormalShader.shader" />
     <None Include="Assets\Shaders\CausticColorShader.shader" />
+    <None Include="Assets\Shaders\TestTransformShader.shader" />
     <None Include="Assets\Shaders\PositionShader.shader" />
     <None Include="Assets\Shaders\ReceivingObjectShader.shader" />
     <None Include="Assets\Shaders\SpecularReceivingObjectShader.shader" />

@@ -89,6 +89,13 @@ Shader "Unlit/SpecularReceivingObject"
                 return fluxVals.a == 1;
             }
 
+            bool SpecularSeesPosition_2(float3 worldPos)
+            {
+                float2 tc = GetCoordinatesForSpecularTexture(worldPos);
+                float4 fluxVals = tex2Dlod(_CausticFluxTexture, float4(tc, 1, 1));
+                return fluxVals.a == 1;
+            }
+
             fixed4 frag (v2f i) : SV_Target
             {
                 //float absorbtionCoef = pow(10, -5);
@@ -107,6 +114,8 @@ Shader "Unlit/SpecularReceivingObject"
                     //return col + finalIntensity;
                     return fixed4(0, 1, 0, 1);
                 }
+
+                //return col;
             }
             ENDCG
         }

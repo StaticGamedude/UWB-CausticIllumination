@@ -1,10 +1,10 @@
-Shader "Unlit/CausticMapShader"
+Shader "Unlit/TestTransformShader"
 {
     Properties
     {
-        _MainTex ("Texture", 2D) = "white" {}
+        _MainTex("Texture", 2D) = "white" {}
     }
-    SubShader
+        SubShader
     {
         Tags { "SpecularObj" = "1" }
         LOD 100
@@ -28,10 +28,6 @@ Shader "Unlit/CausticMapShader"
             {
                 float2 uv : TEXCOORD0;
                 float4 vertex : SV_POSITION;
-
-                float3 specularVertexWorldPos : TEXCOORD1;
-                float3 worldRefractedRayDirection : TEXCOORD2;
-                float3 vertexCreatedPos : TEXCOORD3;
             };
 
             sampler2D _MainTex;
@@ -46,7 +42,7 @@ Shader "Unlit/CausticMapShader"
                 float3 p1 = specularVertexWorldPos + (1.0 * refractedLightRayDirection);;
                 float4 texPt = mul(_LightViewProjectionMatrix, float4(p1, 1));
                 float2 tc = 0.5 * texPt.xy / texPt.w + float2(0.5, 0.5);
-                
+
                 float4 recPos = tex2D(_ReceivingPosTexture, tc); //projected p1 position
                 float3 p2 = specularVertexWorldPos + (distance(specularVertexWorldPos, recPos.xzy) * refractedLightRayDirection);
                 texPt = mul(_LightViewProjectionMatrix, float4(p2, 1));
@@ -78,33 +74,23 @@ Shader "Unlit/CausticMapShader"
                 return normalize(refractedRay);
             }
 
-            v2f vert (appdata v)
+            v2f vert(appdata v)
             {
                 v2f o;
                 float3 specularVertexWorldPos = mul(UNITY_MATRIX_M, v.vertex);
                 float3 specularVertexWorldNormal = normalize(mul(transpose(unity_WorldToObject), v.normal));
-                o.vertex = UnityObjectToClipPos(v.vertex);
-                o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+                float3 refractedDirection = RefractRay(specularVertexWorldPos, specularVertexWorldNormal);
+                float3 estimatedPosition = VertexEstimateIntersection(specularVertexWorldPos, refractedDirection, _ReceivingPosTexture);
 
-                o.specularVertexWorldPos = specularVertexWorldPos;
-                o.worldRefractedRayDirection = RefractRay(specularVertexWorldPos, specularVertexWorldNormal);
-                o.vertexCreatedPos = VertexEstimateIntersection(specularVertexWorldPos, o.worldRefractedRayDirection, _ReceivingPosTexture);
+                o.vertex = mul(UNITY_MATRIX_VP, float4(estimatedPosition, 1));
+                o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 return o;
             }
 
             float4 frag(v2f i) : SV_Target
             {
                 fixed4 col = tex2D(_MainTex, i.uv);
-                float isVisible = 0;
-
-                if (col.r != 0 || col.g != 0 && col.b != 0)
-                {
-                    isVisible = 1;
-                }
-
-                //float3 splatPosition = EstimateIntersection(i.specularVertexWorldPos, i.worldRefractedRayDirection, _ReceivingPosTexture);                
-                float3 splatPosition = i.vertexCreatedPos;
-                return float4(splatPosition.xyz, isVisible);
+                return col;
             }
             ENDCG
         }
