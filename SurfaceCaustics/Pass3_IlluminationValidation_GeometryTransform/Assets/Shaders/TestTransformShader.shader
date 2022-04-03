@@ -37,20 +37,6 @@ Shader "Unlit/TestTransformShader"
             float3 _LightWorldPosition;
             float _RefractiveIndex;
 
-            float3 EstimateIntersection(float3 specularVertexWorldPos, float3 refractedLightRayDirection, sampler2D positionTexture)
-            {
-                float3 p1 = specularVertexWorldPos + (1.0 * refractedLightRayDirection);;
-                float4 texPt = mul(_LightViewProjectionMatrix, float4(p1, 1));
-                float2 tc = 0.5 * texPt.xy / texPt.w + float2(0.5, 0.5);
-
-                float4 recPos = tex2D(_ReceivingPosTexture, tc); //projected p1 position
-                float3 p2 = specularVertexWorldPos + (distance(specularVertexWorldPos, recPos.xzy) * refractedLightRayDirection);
-                texPt = mul(_LightViewProjectionMatrix, float4(p2, 1));
-                tc = 0.5 * texPt.xy / texPt.w + float2(0.5, 0.5);
-
-                return tex2D(_ReceivingPosTexture, tc); //projected p2 position
-            }
-
             float3 VertexEstimateIntersection(float3 specularVertexWorldPos, float3 refractedLightRayDirection, sampler2D positionTexture)
             {
                 float3 p1 = specularVertexWorldPos + (1.0 * refractedLightRayDirection);;

@@ -50,15 +50,6 @@ Shader "Unlit/CausticFluxShader"
                 return (1 / visibleSurfaceArea) * dot(worldNormal, incidentLightVector);
             }
 
-            float3 RefractRay(float3 specularVertexWorldPos, float3 specularVertexWorldNormal)
-            {
-                float3 vertexToLight = normalize(_LightWorldPosition - specularVertexWorldPos);
-                float incidentAngle = dot(vertexToLight, specularVertexWorldNormal);
-                float refractionAngle = asin(sin(incidentAngle) / _RefractiveIndex);
-                float3 refractedRay = -1 * ((vertexToLight / _RefractiveIndex) + ((cos(asin(sin(incidentAngle) / _RefractiveIndex)) - (cos(incidentAngle) / _RefractiveIndex)) * specularVertexWorldNormal));
-                return normalize(refractedRay);
-            }
-
             float3 VertexEstimateIntersection(float3 specularVertexWorldPos, float3 refractedLightRayDirection, sampler2D positionTexture)
             {
                 float3 p1 = specularVertexWorldPos + (1.0 * refractedLightRayDirection);;
@@ -71,6 +62,15 @@ Shader "Unlit/CausticFluxShader"
                 tc = 0.5 * texPt.xy / texPt.w + float2(0.5, 0.5);
 
                 return tex2Dlod(_ReceivingPosTexture, float4(tc, 1, 1)); //projected p2 position
+            }
+
+            float3 RefractRay(float3 specularVertexWorldPos, float3 specularVertexWorldNormal)
+            {
+                float3 vertexToLight = normalize(_LightWorldPosition - specularVertexWorldPos);
+                float incidentAngle = dot(vertexToLight, specularVertexWorldNormal);
+                float refractionAngle = asin(sin(incidentAngle) / _RefractiveIndex);
+                float3 refractedRay = -1 * ((vertexToLight / _RefractiveIndex) + ((cos(asin(sin(incidentAngle) / _RefractiveIndex)) - (cos(incidentAngle) / _RefractiveIndex)) * specularVertexWorldNormal));
+                return normalize(refractedRay);
             }
 
             v2f vert (appdata v)
@@ -88,8 +88,17 @@ Shader "Unlit/CausticFluxShader"
                 return o;*/
 
                 v2f o;
-                o.vertex = UnityObjectToClipPos(v.vertex);
+                float3 worldPos = mul(UNITY_MATRIX_M, v.vertex);
+                float3 worldNormal = normalize(mul(transpose(unity_WorldToObject), v.normal));
+                float3 refractedDirection = RefractRay(worldPos, worldNormal);
+                float3 estimatedPosition = VertexEstimateIntersection(worldPos, refractedDirection, _ReceivingPosTexture);
+                float3 flux = GetFluxContribution(_NumProjectedVerticies, worldPos, worldNormal);
+
+                /*o.vertex = UnityObjectToClipPos(v.vertex);
+                o.uv = TRANSFORM_TEX(v.uv, _MainTex);*/
+                o.vertex = mul(UNITY_MATRIX_VP, float4(estimatedPosition, 1));
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+                o.flux = flux;
                 return o;
             }
 
@@ -104,7 +113,8 @@ Shader "Unlit/CausticFluxShader"
                 }
 
                 //return float4(i.flux, i.flux, i.flux, isVisible);
-                return float4(1, 1, 1, isVisible);
+                return float4(0.5, 0.5, 0.5, isVisible);
+                //return float4(1, 1, 1, isVisible);
                 //return float4(1, 1, 1, 1);
 
 
