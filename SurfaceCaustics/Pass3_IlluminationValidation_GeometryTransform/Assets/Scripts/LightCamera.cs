@@ -93,6 +93,9 @@ public class LightCamera : MonoBehaviour
                 shaderTextureParameter = Globals.SHADER_PARAM_CAUSTIC_COLOR_MAP_TEXTURE;
                 break;
             case LightCameraType.CAUSTIC_FLUX:
+                // I have no idea why but...I can't get this option to work like originally expected...
+                // Ended up creating a second enum (CAUSTIC_FLUX_2) to represent the caustic flux shader. It uses a different
+                // render texure and saves the texture under a different shader parameter
                 shaderTextureParameter = Globals.SHADER_PARAM_CAUSTIC_FLUX_TEXTURE;
                 break;
             case LightCameraType.CAUSTIC_FLUX_2:

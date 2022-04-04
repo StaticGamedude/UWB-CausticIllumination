@@ -78,7 +78,7 @@ Shader "Unlit/SpecularReceivingObject"
             float GetFlux(float3 worldPos)
             {
                 float2 tc = GetCoordinatesForSpecularTexture(worldPos);
-                float4 fluxVals = tex2D(_CausticFluxTexture, tc);
+                float4 fluxVals = tex2D(_DrewTest, tc);
                 return fluxVals.x;
             }
 
@@ -105,7 +105,7 @@ Shader "Unlit/SpecularReceivingObject"
             fixed4 frag (v2f i) : SV_Target
             {
                 float absorbtionCoef = pow(10, -5);
-            float flux = _DebugFlux; //GetFlux(i.worldPos);
+                float flux = GetFlux(i.worldPos); //_DebugFlux;
                 float d = GetDistance(i.worldPos);
                 float finalIntensity = flux * exp((-_GlobalAbsorbtionCoefficient/*absorbtionCoef*/ * d));
                 fixed4 col = tex2D(_MainTex, i.uv);

@@ -75,18 +75,6 @@ Shader "Unlit/CausticFluxShader"
 
             v2f vert (appdata v)
             {
-                /*v2f o;
-                float3 worldPos = mul(UNITY_MATRIX_M, v.vertex);
-                float3 worldNormal = mul(transpose(unity_WorldToObject), v.normal);
-                float3 refractedDirection = RefractRay(worldPos, worldNormal);
-                float3 estimatedPosition = VertexEstimateIntersection(worldPos, refractedDirection, _ReceivingPosTexture);
-                float3 flux = GetFluxContribution(_NumProjectedVerticies, worldPos, worldNormal);
-
-                o.vertex = mul(UNITY_MATRIX_VP, float4(estimatedPosition, 1));
-                o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-                o.flux = flux;
-                return o;*/
-
                 v2f o;
                 float3 worldPos = mul(UNITY_MATRIX_M, v.vertex);
                 float3 worldNormal = normalize(mul(transpose(unity_WorldToObject), v.normal));
@@ -94,8 +82,6 @@ Shader "Unlit/CausticFluxShader"
                 float3 estimatedPosition = VertexEstimateIntersection(worldPos, refractedDirection, _ReceivingPosTexture);
                 float3 flux = GetFluxContribution(_NumProjectedVerticies, worldPos, worldNormal);
 
-                /*o.vertex = UnityObjectToClipPos(v.vertex);
-                o.uv = TRANSFORM_TEX(v.uv, _MainTex);*/
                 o.vertex = mul(UNITY_MATRIX_VP, float4(estimatedPosition, 1));
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 o.flux = flux;
@@ -107,20 +93,13 @@ Shader "Unlit/CausticFluxShader"
                 fixed4 col = tex2D(_MainTex, i.uv);
                 float isVisible = 0;
 
-                if (col.r != 0 || col.g != 0 && col.b != 0)
+                if (col.r != 0 || col.g != 0 || col.b != 0)
                 {
                     isVisible = 1;
                 }
 
                 //return float4(i.flux, i.flux, i.flux, isVisible);
                 return float4(0.5, 0.5, 0.5, isVisible);
-                //return float4(1, 1, 1, isVisible);
-                //return float4(1, 1, 1, 1);
-
-
-                //
-                //fixed4 col = tex2D(_MainTex, i.uv);
-                //return col;
             }
 
             ENDCG
