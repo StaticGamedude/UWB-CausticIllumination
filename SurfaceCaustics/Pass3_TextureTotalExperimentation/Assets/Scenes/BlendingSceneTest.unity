@@ -331,7 +331,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 098f63ceb745dc9458745de435b5b1a2, type: 2}
+  - {fileID: 2100000, guid: b5e150fd06da41b42bdb32fee47f2bcd, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -369,7 +369,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 403918955}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -2.5, z: 0}
+  m_LocalPosition: {x: -2.62, y: -2.5, z: 4.88}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 904621465}
@@ -593,7 +593,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1415877317}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 1.26}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 904621465}
@@ -608,6 +608,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1707402238}
+  - component: {fileID: 1707402239}
   m_Layer: 0
   m_Name: World
   m_TagString: Untagged
@@ -629,6 +630,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1707402239
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1707402237}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0abf31e1f5644614bad753bdc0e828b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TestRenderTexture: {fileID: 8400000, guid: c4ee8787dd3a45145828b3ebe87ea7eb, type: 2}
 --- !u!1 &1719235100
 GameObject:
   m_ObjectHideFlags: 0
@@ -757,7 +771,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9605b4df65cc109428ac406810f80287, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  replacementShader: {fileID: 4800000, guid: 066d5d4dfd9cbdd4fa127f69429cba9d, type: 3}
+  replacementShader: {fileID: 4800000, guid: f98da23cd8974144798fe7616207cbe6, type: 3}
 --- !u!20 &2004868605
 Camera:
   m_ObjectHideFlags: 0

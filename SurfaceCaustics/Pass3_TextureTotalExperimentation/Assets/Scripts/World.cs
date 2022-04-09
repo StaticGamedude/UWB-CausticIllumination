@@ -4,32 +4,48 @@ using UnityEngine;
 
 public class World : MonoBehaviour
 {
-    private RenderTexture m_paintAccumulationRT;
-
-    private Material m_MaterialData;
+    public RenderTexture TestRenderTexture;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        Debug.Assert(TestRenderTexture != null);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            Texture2D t = this.ConvertRenderTextureTo2DTexture(TestRenderTexture);
+
+            for (int i = 0; i < t.width; i++)
+            {
+                for (int j = 0; j < t.height; j++)
+                {
+                    Color c = t.GetPixel(i, j);
+                    if (c.r != 0 || c.g != 0 || c.b != 0)
+                    {
+                        Debug.Log($"r value found: {c.r}");
+                    }
+                }
+            }
+        }
     }
 
-    private void ConstructRenderTargets()
+    /// <summary>
+    /// Convert a render texture to a 2D texture
+    /// </summary>
+    /// <param name="rt">Render texture to convert</param>
+    /// <returns>The convereted texture</returns>
+    private Texture2D ConvertRenderTextureTo2DTexture(RenderTexture rt)
     {
-        m_paintAccumulationRT = new RenderTexture(256, 256, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Linear);// Must be ARGB32 but will get automagically treated as float or float4 or int or half, from your shader code declaration.
-        m_paintAccumulationRT.name = _MainTexInternal;
-        m_paintAccumulationRT.enableRandomWrite = true;
-        m_paintAccumulationRT.Create();
+        RenderTexture.active = rt;
+        Texture2D texture = new Texture2D(rt.width, rt.height, TextureFormat.RGBAFloat, false);
+        texture.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0);
+        texture.Apply();
 
-        m_MaterialData.material.SetTexture(m_MaterialData.sp_MainTexInternal, m_paintAccumulationRT);
-        m_MaterialData.material.SetTexture(m_MaterialData.sp_MainTexInternal_Sampler2D, m_paintAccumulationRT);
-        Graphics.ClearRandomWriteTargets();
-        Graphics.SetRandomWriteTarget(2, m_paintAccumulationRT);//with `, true);` it doesn't take RTs
+        return texture;
     }
+
 }

@@ -6,13 +6,14 @@ Shader "Unlit/BlendShader"
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" "FrontData"="1" }
+        Tags { "RenderType"="Opaque" "Specular"="1" }
         LOD 100
 
         Pass
         {
-            Blend One One //Additive 
+            //Blend One One //Additive 
             //Blend DstColor Zero //Multiply
+            Blend SrcColor SrcColor
 
             CGPROGRAM
             #pragma vertex vert
@@ -49,7 +50,7 @@ Shader "Unlit/BlendShader"
             fixed4 frag(v2f i) : SV_Target
             {
                 // sample the texture
-                fixed4 colorToBlendIn = fixed4(1, 0, 0, 1); //Red
+                fixed4 colorToBlendIn = fixed4(0.5, 0, 0, 1); //Red
                 //fixed4 col = tex2D(_MainTex, i.uv) + colorToBlendIn; //Should be a blue (cause the texture is almost completely blue)
                 //return col; 
                 return colorToBlendIn;

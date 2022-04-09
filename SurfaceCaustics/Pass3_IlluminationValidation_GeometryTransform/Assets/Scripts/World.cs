@@ -177,7 +177,11 @@ public class World : MonoBehaviour
             this.continousValidationRendering = !this.continousValidationRendering;
         }
 
-        if (this.continousValidationRendering || Input.GetKeyDown(KeyCode.S))
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            this.RenderRefractionDetails(this.LightCameraRefractionPositionTexture, this.LightCameraCausticTexture, this.LightCameraRefractionRayTexture, this.LightCameraCausticColorTexture);
+        }
+        else if (this.continousValidationRendering || Input.GetKeyDown(KeyCode.S))
         {
             this.RenderRefractionDetails_2(this.LightCameraRefractionPositionTexture, this.LightCameraCausticTexture, this.LightCameraRefractionRayTexture, this.LightCameraCausticColorTexture);
         }
@@ -218,8 +222,8 @@ public class World : MonoBehaviour
                     Vector3 refractionRay = this.GetVectorFromColor(refractionRayTexture.GetPixel(row, col));
                     Color refractionColor = colorTexture.GetPixel(row, col);
                     Vector3 worldToSplat = splatPos - worldPos;
-                    float distanceFromWorldToSplat = worldToSplat.magnitude;
-                    //float distanceFromWorldToSplat = this.GetVectorFromColor(distanceTexture.GetPixel(row, col)).x;
+                    //float distanceFromWorldToSplat = worldToSplat.magnitude;
+                    float distanceFromWorldToSplat = this.GetVectorFromColor(distanceTexture.GetPixel(row, col)).x;
 
                     if (this.Debug_RenderSpecularPositions)
                     {
@@ -307,57 +311,6 @@ public class World : MonoBehaviour
                 }
 
                 count++;
-
-
-                //bool isVisiblePosition = positionTexture.GetPixel(row, col).a > 0; //The alpha channel of the pixel indicates whether the position is valid (i.e. seen by the light camera)
-                //if (!isVisiblePosition)
-                //{
-                //    continue;
-                //}
-
-                //if (this.Debug_RenderEveryXElement <= 1 || (count + 1) % this.Debug_RenderEveryXElement == 0)
-                //{
-                //    Vector3 worldPos = this.GetVectorFromColor(positionTexture.GetPixel(row, col));
-                //    Vector3 splatPos = this.GetVectorFromColor(causticTexture.GetPixel(row, col));
-                //    Vector3 refractionRay = this.GetVectorFromColor(refractionRayTexture.GetPixel(row, col));
-                //    Color refractionColor = colorTexture.GetPixel(row, col);
-                //    Vector3 worldToSplat = splatPos - worldPos;
-                //    float distanceFromWorldToSplat = worldToSplat.magnitude;
-                //    //float distanceFromWorldToSplat = this.GetVectorFromColor(distanceTexture.GetPixel(row, col)).x;
-
-                //    if (this.Debug_RenderSpecularPositions)
-                //    {
-                //        GameObject positionSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                //        positionSphere.transform.position = worldPos;
-                //        positionSphere.transform.localScale = this.Debug_SpherePositionSize;
-                //        positionSphere.name = $"Position Sphere: {name}";
-                //        positionSphere.GetComponent<Renderer>().material.SetColor("_Color", refractionColor);
-                //        this.debug_PositionSpheres.Add(positionSphere);
-                //    }
-
-                //    if (this.Debug_RenderCausticPositions)
-                //    {
-                //        GameObject splatPositionSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                //        splatPositionSphere.transform.position = splatPos;
-                //        splatPositionSphere.transform.localScale = this.Debug_SpherePositionSize;
-                //        splatPositionSphere.name = $"Splat Position Sphere: {name}";
-                //        splatPositionSphere.GetComponent<Renderer>().material.SetColor("_Color", refractionColor);
-                //        this.debug_PositionSpheres.Add(splatPositionSphere);
-                //    }
-
-                //    if (this.Debug_RenderRefractionDirection)
-                //    {
-                //        GameObject normalDirectionCylinder = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-                //        normalDirectionCylinder.transform.position = worldPos + (distanceFromWorldToSplat / 2 * refractionRay.normalized);
-                //        normalDirectionCylinder.transform.rotation = Quaternion.FromToRotation(Vector3.up, refractionRay);
-                //        normalDirectionCylinder.transform.localScale = new Vector3(0.01f, distanceFromWorldToSplat / 2, 0.01f);
-                //        normalDirectionCylinder.name = $"Refraction ray cylinder: {name}";
-                //        normalDirectionCylinder.GetComponent<Renderer>().material.SetColor("_Color", refractionColor);
-                //        this.debug_NormalCylinder.Add(normalDirectionCylinder);
-                //    }
-                //}
-
-
             }
         }
     }
