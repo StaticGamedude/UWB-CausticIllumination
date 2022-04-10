@@ -11,6 +11,8 @@ Shader "Unlit/TestShader"
 
         Pass
         {
+            //Blend 1 SrcColor SrcColor
+            //Blend 1 SrcColor SrcColor, SrcAlpha SrcAlpha
             Blend SrcColor SrcColor
 
             CGPROGRAM
@@ -48,7 +50,7 @@ Shader "Unlit/TestShader"
 
             fixed4 frag(v2f i) : SV_Target
             {
-                return fixed4(0.2, 0, 0, 1);
+                return fixed4(0.5, 0.5, 0.5, 1);
             }
             ENDCG
         }

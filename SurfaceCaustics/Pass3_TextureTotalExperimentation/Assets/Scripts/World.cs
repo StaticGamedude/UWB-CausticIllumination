@@ -18,7 +18,6 @@ public class World : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.T))
         {
             Texture2D t = this.ConvertRenderTextureTo2DTexture(TestRenderTexture);
-
             for (int i = 0; i < t.width; i++)
             {
                 for (int j = 0; j < t.height; j++)
@@ -26,7 +25,8 @@ public class World : MonoBehaviour
                     Color c = t.GetPixel(i, j);
                     if (c.r != 0 || c.g != 0 || c.b != 0)
                     {
-                        Debug.Log($"r value found: {c.r}");
+                        Debug.Log($"first value found: ({c.r}, {c.g}, {c.b})");
+                        break;
                     }
                 }
             }

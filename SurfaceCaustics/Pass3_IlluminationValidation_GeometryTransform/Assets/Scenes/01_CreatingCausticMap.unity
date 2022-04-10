@@ -321,7 +321,7 @@ MonoBehaviour:
   LightCameraReceivingPositionTexture: {fileID: 8400000, guid: 9e2a29d58adfcd4479b52557b552b2f7, type: 2}
   LightCameraCausticTexture: {fileID: 8400000, guid: 51f27b732fe7ee84d912807bcae5288a, type: 2}
   LightCameraCausticColorTexture: {fileID: 8400000, guid: 457bc1b0833402a44be74759abaec9ee, type: 2}
-  LightCameraFluxTexture: {fileID: 8400000, guid: 07f6ef2dded5d8b4fb1f05f827cd4468, type: 2}
+  LightCameraFluxTexture: {fileID: 8400000, guid: 177ec7a1fa2fb8449af32148eca4c320, type: 2}
   LightCausticDistanceTexture: {fileID: 8400000, guid: 65b359dfbcb212540ad6019eb072a4b4, type: 2}
   LightCameraCausticFinalTexture: {fileID: 8400000, guid: bdcb337b7e58d7c499d6a54a54ad0c36, type: 2}
   LightCameraRefractionRayTexture: {fileID: 8400000, guid: ea533865eef9e224b85457de371234f7, type: 2}

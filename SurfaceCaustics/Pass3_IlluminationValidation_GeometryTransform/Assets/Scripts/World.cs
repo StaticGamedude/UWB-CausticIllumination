@@ -167,6 +167,11 @@ public class World : MonoBehaviour
 
     private void HandleValidationInputs()
     {
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            this.PrintDiscoveredFluxValue();
+        }
+
         if (Input.GetKeyDown(KeyCode.D))
         {
             this.DeleteValidationObjects();
@@ -342,5 +347,22 @@ public class World : MonoBehaviour
     private bool IsVisiblePosition(Texture2D texture, int row, int col)
     {
         return texture.GetPixel(row, col).a > 0;
+    }
+
+    private void PrintDiscoveredFluxValue()
+    {
+        Texture2D fluxTexture = this.ConvertRenderTextureTo2DTexture(this.LightCameraFluxTexture);
+        for (int row = 0; row < fluxTexture.width; row++)
+        {
+            for (int col = 0; col < fluxTexture.height; col++)
+            {
+                Color color = fluxTexture.GetPixel(row, col);
+                if (color.a > 0)
+                {
+                    Debug.Log($"Found color value: {color.r}, {color.g}, {color.b}");
+                    return;
+                }
+            }
+        }
     }
 }

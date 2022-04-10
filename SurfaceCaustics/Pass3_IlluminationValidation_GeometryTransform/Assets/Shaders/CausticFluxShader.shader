@@ -11,6 +11,8 @@ Shader "Unlit/CausticFluxShader"
 
         Pass
         {
+            Blend SrcColor SrcColor
+
             CGPROGRAM
             #pragma target 5.0
             #pragma vertex vert
@@ -43,6 +45,7 @@ Shader "Unlit/CausticFluxShader"
             float4x4 _LightViewProjectionMatrix;
             float3 _LightWorldPosition;
             float _RefractiveIndex;
+            float _DebugFlux;
 
             float GetFluxContribution(float visibleSurfaceArea, float3 worldPosition, float3 worldNormal)
             {
@@ -99,7 +102,7 @@ Shader "Unlit/CausticFluxShader"
                 }
 
                 //return float4(i.flux, i.flux, i.flux, isVisible);
-                return float4(0.5, 0.5, 0.5, isVisible);
+                return float4(_DebugFlux, _DebugFlux, _DebugFlux, isVisible);
             }
 
             ENDCG
