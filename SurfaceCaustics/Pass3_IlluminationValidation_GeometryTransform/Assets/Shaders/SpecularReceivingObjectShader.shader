@@ -109,12 +109,13 @@ Shader "Unlit/SpecularReceivingObject"
                 float finalIntensity = flux * exp((-_GlobalAbsorbtionCoefficient/*absorbtionCoef*/ * d));
                 fixed4 col = tex2D(_MainTex, i.uv);
 
-                if (SpecularSeesPosition(i.worldPos))
+                return col + finalIntensity;
+                /*if (SpecularSeesPosition(i.worldPos))
                 {
                     return col + finalIntensity;
                 }
 
-                return col;
+                return col;*/
             }
             ENDCG
         }

@@ -59,8 +59,8 @@ float3 VertexEstimateIntersection(float3 specularVertexWorldPos, float3 refracte
 float3 RefractRay(float3 specularVertexWorldPos, float3 specularVertexWorldNormal)
 {
     float3 vertexToLight = normalize(_LightWorldPosition - specularVertexWorldPos);
-    float incidentAngle = dot(vertexToLight, specularVertexWorldNormal);
+    float incidentAngle = acos(dot(vertexToLight, specularVertexWorldNormal));
     float refractionAngle = asin(sin(incidentAngle) / _RefractiveIndex);
-    float3 refractedRay = -1 * ((vertexToLight / _RefractiveIndex) + ((cos(asin(sin(incidentAngle) / _RefractiveIndex)) - (cos(incidentAngle) / _RefractiveIndex)) * specularVertexWorldNormal));
+    float3 refractedRay = -1 * ((vertexToLight / _RefractiveIndex) + ((cos(refractionAngle) - (cos(incidentAngle) / _RefractiveIndex)) * specularVertexWorldNormal));
     return normalize(refractedRay);
 }
