@@ -104,7 +104,6 @@ Shader "Unlit/SpecularReceivingObject"
             
             fixed4 frag (v2f i) : SV_Target
             {
-                float absorbtionCoef = pow(10, -5);
                 float flux = GetFlux(i.worldPos); //_DebugFlux;
                 float d = GetDistance(i.worldPos);
                 float finalIntensity = flux * exp((-_GlobalAbsorbtionCoefficient/*absorbtionCoef*/ * d));

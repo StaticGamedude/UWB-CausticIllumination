@@ -11,7 +11,7 @@ Shader "Unlit/CausticFluxShader"
 
         Pass
         {
-            Blend SrcColor SrcColor
+            Blend One One
 
             CGPROGRAM
             #pragma target 5.0
@@ -20,6 +20,7 @@ Shader "Unlit/CausticFluxShader"
             
 
             #include "UnityCG.cginc"
+            #include "CommonFunctions.cginc"
 
             struct appdata
             {
@@ -40,40 +41,13 @@ Shader "Unlit/CausticFluxShader"
 
             // Variables set globally from the CPU
             int _NumProjectedVerticies;
-            sampler2D _CausticTexture;
-            sampler2D _ReceivingPosTexture;
-            float4x4 _LightViewProjectionMatrix;
-            float3 _LightWorldPosition;
-            float _RefractiveIndex;
             float _DebugFlux;
+            float _DebugFluxMultiplier;
 
             float GetFluxContribution(float visibleSurfaceArea, float3 worldPosition, float3 worldNormal)
             {
                 float3 incidentLightVector = normalize(_LightWorldPosition - worldPosition);
                 return (1 / visibleSurfaceArea) * dot(worldNormal, incidentLightVector);
-            }
-
-            float3 VertexEstimateIntersection(float3 specularVertexWorldPos, float3 refractedLightRayDirection, sampler2D positionTexture)
-            {
-                float3 p1 = specularVertexWorldPos + (1.0 * refractedLightRayDirection);;
-                float4 texPt = mul(_LightViewProjectionMatrix, float4(p1, 1));
-                float2 tc = 0.5 * texPt.xy / texPt.w + float2(0.5, 0.5);
-
-                float4 recPos = tex2Dlod(_ReceivingPosTexture, float4(tc, 1, 1)); //projected p1 position
-                float3 p2 = specularVertexWorldPos + (distance(specularVertexWorldPos, recPos.xzy) * refractedLightRayDirection);
-                texPt = mul(_LightViewProjectionMatrix, float4(p2, 1));
-                tc = 0.5 * texPt.xy / texPt.w + float2(0.5, 0.5);
-
-                return tex2Dlod(_ReceivingPosTexture, float4(tc, 1, 1)); //projected p2 position
-            }
-
-            float3 RefractRay(float3 specularVertexWorldPos, float3 specularVertexWorldNormal)
-            {
-                float3 vertexToLight = normalize(_LightWorldPosition - specularVertexWorldPos);
-                float incidentAngle = dot(vertexToLight, specularVertexWorldNormal);
-                float refractionAngle = asin(sin(incidentAngle) / _RefractiveIndex);
-                float3 refractedRay = -1 * ((vertexToLight / _RefractiveIndex) + ((cos(asin(sin(incidentAngle) / _RefractiveIndex)) - (cos(incidentAngle) / _RefractiveIndex)) * specularVertexWorldNormal));
-                return normalize(refractedRay);
             }
 
             v2f vert (appdata v)
@@ -85,7 +59,15 @@ Shader "Unlit/CausticFluxShader"
                 float3 estimatedPosition = VertexEstimateIntersection(worldPos, refractedDirection, _ReceivingPosTexture);
                 float3 flux = GetFluxContribution(_NumProjectedVerticies, worldPos, worldNormal);
 
-                o.vertex = mul(UNITY_MATRIX_VP, float4(estimatedPosition, 1));
+                if (_Debug_TransformSpecularGeometry == 1)
+                {
+                    o.vertex = mul(UNITY_MATRIX_VP, float4(estimatedPosition, 1));
+                }
+                else
+                {
+                    o.vertex = UnityObjectToClipPos(v.vertex);
+                }
+
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 o.flux = flux;
                 return o;
@@ -101,8 +83,8 @@ Shader "Unlit/CausticFluxShader"
                     isVisible = 1;
                 }
 
-                //return float4(i.flux, i.flux, i.flux, isVisible);
-                return float4(_DebugFlux, _DebugFlux, _DebugFlux, isVisible);
+                return float4(i.flux * _DebugFluxMultiplier, i.flux * _DebugFluxMultiplier, i.flux * _DebugFluxMultiplier, isVisible);
+                //return float4(_DebugFlux, _DebugFlux, _DebugFlux, isVisible);
             }
 
             ENDCG

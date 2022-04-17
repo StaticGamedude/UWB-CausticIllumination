@@ -6,7 +6,7 @@ Shader "Unlit/TestTransformShader"
     }
         SubShader
     {
-        Tags { "RenderType" = "Opaque"/*"SpecularObj" = "1"*/ }
+        Tags { "RenderType" = "Opaque"}
         LOD 100
 
         Pass
@@ -16,6 +16,7 @@ Shader "Unlit/TestTransformShader"
             #pragma fragment frag
 
             #include "UnityCG.cginc"
+            #include "CommonFunctions.cginc"
 
             struct appdata
             {
@@ -32,33 +33,6 @@ Shader "Unlit/TestTransformShader"
 
             sampler2D _MainTex;
             float4 _MainTex_ST;
-            sampler2D _ReceivingPosTexture;
-            float4x4 _LightViewProjectionMatrix;
-            float3 _LightWorldPosition;
-            float _RefractiveIndex;
-
-            float3 VertexEstimateIntersection(float3 specularVertexWorldPos, float3 refractedLightRayDirection, sampler2D positionTexture)
-            {
-                float3 p1 = specularVertexWorldPos + (1.0 * refractedLightRayDirection);;
-                float4 texPt = mul(_LightViewProjectionMatrix, float4(p1, 1));
-                float2 tc = 0.5 * texPt.xy / texPt.w + float2(0.5, 0.5);
-
-                float4 recPos = tex2Dlod(_ReceivingPosTexture, float4(tc, 1, 1)); //projected p1 position
-                float3 p2 = specularVertexWorldPos + (distance(specularVertexWorldPos, recPos.xzy) * refractedLightRayDirection);
-                texPt = mul(_LightViewProjectionMatrix, float4(p2, 1));
-                tc = 0.5 * texPt.xy / texPt.w + float2(0.5, 0.5);
-
-                return tex2Dlod(_ReceivingPosTexture, float4(tc, 1, 1)); //projected p2 position
-            }
-
-            float3 RefractRay(float3 specularVertexWorldPos, float3 specularVertexWorldNormal)
-            {
-                float3 vertexToLight = normalize(_LightWorldPosition - specularVertexWorldPos);
-                float incidentAngle = dot(vertexToLight, specularVertexWorldNormal);
-                float refractionAngle = asin(sin(incidentAngle) / _RefractiveIndex);
-                float3 refractedRay = -1 * ((vertexToLight / _RefractiveIndex) + ((cos(asin(sin(incidentAngle) / _RefractiveIndex)) - (cos(incidentAngle) / _RefractiveIndex)) * specularVertexWorldNormal));
-                return normalize(refractedRay);
-            }
 
             v2f vert(appdata v)
             {
@@ -75,8 +49,9 @@ Shader "Unlit/TestTransformShader"
 
             float4 frag(v2f i) : SV_Target
             {
-                return float4(1, 0, 1, 1);
+                return float4(1, 0, 0, 1);
             }
+
             ENDCG
         }
     }

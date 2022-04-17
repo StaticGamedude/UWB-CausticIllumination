@@ -75,10 +75,12 @@
     <Compile Include="Assets\Scripts\Globals.cs" />
     <Compile Include="Assets\Scripts\LightCamera.cs" />
     <Compile Include="Assets\GroupResources\Liwen\Source\RenderPipeline\RenderObjectPass.cs" />
+    <Compile Include="Assets\Scripts\DebugEstimationStep.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\LightNormalShader.shader" />
     <None Include="Assets\Shaders\CausticColorShader.shader" />
+    <None Include="Assets\Shaders\SinShader.shader" />
     <None Include="Assets\Shaders\TestTransformShader.shader" />
     <None Include="Assets\Shaders\PositionShader.shader" />
     <None Include="Assets\Shaders\ReceivingObjectShader.shader" />
@@ -88,6 +90,7 @@
     <None Include="Assets\Shaders\CausticFluxShader.shader" />
     <None Include="Assets\Shaders\Tex2DValidationShader.shader" />
     <None Include="Assets\Shaders\CausticMapShader.shader" />
+    <None Include="Assets\Shaders\CommonFunctions.cginc" />
     <None Include="Assets\Shaders\CausticFinalShader.shader" />
     <None Include="Assets\Shaders\MultiOutputShader.shader" />
     <None Include="Assets\Shaders\CausticDistanceShader.shader" />

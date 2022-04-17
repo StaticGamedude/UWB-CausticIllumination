@@ -87,6 +87,18 @@ public class World : MonoBehaviour
 
     public float Debug_Flux = 0.5f;
 
+    public float Debug_Flux_Multiplier = 500;
+
+    public int Debug_NumOfVisiblePixels = 600;
+
+    public float SeparatingDistance = 0.5f;
+
+    public bool Debug_TransformSpecularGeometry = true;
+
+    public int Debug_QuickDistanceTest = 1;
+
+    public DebugEstimationStep Debug_EstimationStep = DebugEstimationStep.INVERSE_REFRACTION_DIRECTION;
+
     /// <summary>
     /// Interal list of spheres which represent the positions read from the position texture
     /// </summary>
@@ -133,8 +145,11 @@ public class World : MonoBehaviour
         Shader.SetGlobalTexture("_CausticTexture", this.LightCameraCausticFinalTexture);
         Shader.SetGlobalTexture("_CausticFluxTexture", this.LightCameraFluxTexture);
         Shader.SetGlobalFloat("_GlobalAbsorbtionCoefficient", this.Debug_AbsorbtionCoefficient);
-        Shader.SetGlobalInt("_NumProjectedVerticies", this.GetNumberOfVisiblePixels(this.LightCameraRefractionPositionTexture));
+        Shader.SetGlobalInt("_NumProjectedVerticies", /*this.GetNumberOfVisiblePixels(this.LightCameraRefractionPositionTexture)*/ this.Debug_NumOfVisiblePixels);
         Shader.SetGlobalFloat("_DebugFlux", this.Debug_Flux);
+        Shader.SetGlobalFloat("_DebugFluxMultiplier", this.Debug_Flux_Multiplier);
+        Shader.SetGlobalInt("_Debug_TransformSpecularGeometry", this.Debug_TransformSpecularGeometry ? 1 : 0);
+        Shader.SetGlobalInt("_Debug_EstimationStep", (int)this.Debug_EstimationStep);
 
         this.HandleValidationInputs();
     }
@@ -189,6 +204,11 @@ public class World : MonoBehaviour
         else if (this.continousValidationRendering || Input.GetKeyDown(KeyCode.S))
         {
             this.RenderRefractionDetails_2(this.LightCameraRefractionPositionTexture, this.LightCameraCausticTexture, this.LightCameraRefractionRayTexture, this.LightCameraCausticColorTexture);
+        }
+
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            this.Test();
         }
 
         this.RenderStatusText.text = $"Continous rendering " + (this.continousValidationRendering ? "enabled" : "disabled");
@@ -364,5 +384,35 @@ public class World : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void Test()
+    {
+        Debug.Log("Checking for nearby points");
+        Texture2D causticTexture = this.ConvertRenderTextureTo2DTexture(this.LightCameraCausticTexture);
+
+        List<Vector3> allPositions = new List<Vector3>();
+        for(int i = 0; i < causticTexture.width; i++)
+        {
+            for (int j = 0; j < causticTexture.height; j++)
+            {
+                Color color = causticTexture.GetPixel(i, j);
+                if (color.a > 0)
+                {
+                    allPositions.Add(this.GetVectorFromColor(causticTexture.GetPixel(i, j)));
+                }
+            }
+        }
+
+        foreach(Vector3 splatPos in allPositions)
+        {
+            var nearbyPositions = allPositions.Where(p => p != splatPos && Vector3.Distance(p, splatPos) < /*this.SeparatingDistance*/float.Epsilon).ToList();
+            if (nearbyPositions.Count > 0)
+            {
+                Debug.Log($"({splatPos.x}, {splatPos.y}, {splatPos.z} has {nearbyPositions.Count} nearby positions");
+            }
+        }
+
+        Debug.Log("Nearby check complete");
     }
 }

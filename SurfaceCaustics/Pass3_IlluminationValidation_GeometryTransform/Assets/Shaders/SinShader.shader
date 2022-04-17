@@ -1,4 +1,4 @@
-Shader "Unlit/BlendShader"
+Shader "Unlit/SinShader"
 {
     Properties
     {
@@ -6,20 +6,14 @@ Shader "Unlit/BlendShader"
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" "Specular"="1" }
+        Tags { "RenderType" = "Opaque" "SpecularObj" = "1" }
         LOD 100
 
         Pass
         {
-            Blend One One //Additive 
-            //Blend DstColor Zero //Multiply
-            //Blend SrcColor SrcColor
-
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
-            // make fog work
-            #pragma multi_compile_fog
 
             #include "UnityCG.cginc"
 
@@ -40,20 +34,22 @@ Shader "Unlit/BlendShader"
 
             v2f vert (appdata v)
             {
+                float phase = _Time * 20.0;
+                float offset = (v.vertex.x + (v.vertex.z * 1)) * 200;
+                v.vertex.y = sin(phase + offset) * 0.2;
+
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-                
+                UNITY_TRANSFER_FOG(o,o.vertex);
                 return o;
             }
 
-            fixed4 frag(v2f i) : SV_Target
+            fixed4 frag (v2f i) : SV_Target
             {
                 // sample the texture
-                fixed4 colorToBlendIn = fixed4(0.5, 0, 0, 1); //Red
-                //fixed4 col = tex2D(_MainTex, i.uv) + colorToBlendIn; //Should be a blue (cause the texture is almost completely blue)
-                //return col; 
-                return colorToBlendIn;
+                fixed4 col = tex2D(_MainTex, i.uv);
+                return col;
             }
             ENDCG
         }

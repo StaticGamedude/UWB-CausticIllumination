@@ -12,8 +12,8 @@ Shader "Unlit/TestShader"
         Pass
         {
             //Blend 1 SrcColor SrcColor
-            //Blend 1 SrcColor SrcColor, SrcAlpha SrcAlpha
-            Blend SrcColor SrcColor
+            Blend 1 SrcColor SrcColor, SrcAlpha SrcAlpha
+            //Blend SrcColor SrcColor
 
             CGPROGRAM
             #pragma vertex vert
