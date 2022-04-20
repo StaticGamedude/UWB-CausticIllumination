@@ -47,7 +47,9 @@ Shader "Unlit/CausticFluxShader"
             float GetFluxContribution(float visibleSurfaceArea, float3 worldPosition, float3 worldNormal)
             {
                 float3 incidentLightVector = normalize(_LightWorldPosition - worldPosition);
-                return (1 / visibleSurfaceArea) * dot(worldNormal, incidentLightVector);
+
+                //Because of the possibility of negative angles between the normal and light vector, we clamp the value
+                return (1 / visibleSurfaceArea) * max(dot(worldNormal, incidentLightVector), 0.01); 
             }
 
             v2f vert (appdata v)

@@ -47,8 +47,9 @@ Shader "Unlit/SpecularReceivingObject"
             float _GlobalAbsorbtionCoefficient;
             float _DebugFlux;
             float3 _DiffuseObjectPos;
-
             float3 _LightWorldPosition;
+            int _Debug_AllowNegativeIntensities;
+            int _Debug_MultiplyIntensity;
 
             /*
             * Given the world position of the receiving object, get the texture
@@ -109,7 +110,22 @@ Shader "Unlit/SpecularReceivingObject"
                 float finalIntensity = flux * exp((-_GlobalAbsorbtionCoefficient/*absorbtionCoef*/ * d));
                 fixed4 col = tex2D(_MainTex, i.uv);
 
-                return col + finalIntensity;
+
+                if (finalIntensity >= 0 || (_Debug_AllowNegativeIntensities == 1))
+                {
+                    /*return col + finalIntensity;*/
+                    if (_Debug_MultiplyIntensity == 1)
+                    {
+                        return col * finalIntensity;
+                    }
+                    else
+                    {
+                        return col + finalIntensity;
+                    }
+                }
+
+                return col;
+                
                 /*if (SpecularSeesPosition(i.worldPos))
                 {
                     return col + finalIntensity;

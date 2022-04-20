@@ -97,6 +97,12 @@ public class World : MonoBehaviour
 
     public int Debug_QuickDistanceTest = 1;
 
+    public bool Debug_AllowNegativeIntensities = true;
+
+    public bool Debug_MultiplyIntensity = false;
+
+    public Color Debug_LightColor = Color.white;
+
     public DebugEstimationStep Debug_EstimationStep = DebugEstimationStep.INVERSE_REFRACTION_DIRECTION;
 
     /// <summary>
@@ -150,6 +156,9 @@ public class World : MonoBehaviour
         Shader.SetGlobalFloat("_DebugFluxMultiplier", this.Debug_Flux_Multiplier);
         Shader.SetGlobalInt("_Debug_TransformSpecularGeometry", this.Debug_TransformSpecularGeometry ? 1 : 0);
         Shader.SetGlobalInt("_Debug_EstimationStep", (int)this.Debug_EstimationStep);
+        Shader.SetGlobalInt("_Debug_AllowNegativeIntensities", this.Debug_AllowNegativeIntensities ? 1 : 0);
+        Shader.SetGlobalInt("_Debug_MultiplyIntensity", this.Debug_MultiplyIntensity ? 1 : 0);
+        Shader.SetGlobalColor("_DebugLightColor", this.Debug_LightColor);
 
         this.HandleValidationInputs();
     }
@@ -388,23 +397,51 @@ public class World : MonoBehaviour
 
     private void Test()
     {
-        Debug.Log("Checking for nearby points");
-        Texture2D causticTexture = this.ConvertRenderTextureTo2DTexture(this.LightCameraCausticTexture);
+        //Debug.Log("Checking for nearby points");
+        //Texture2D causticTexture = this.ConvertRenderTextureTo2DTexture(this.LightCameraCausticTexture);
+
+        //List<Vector3> allPositions = new List<Vector3>();
+        //for(int i = 0; i < causticTexture.width; i++)
+        //{
+        //    for (int j = 0; j < causticTexture.height; j++)
+        //    {
+        //        Color color = causticTexture.GetPixel(i, j);
+        //        if (color.a > 0)
+        //        {
+        //            allPositions.Add(this.GetVectorFromColor(causticTexture.GetPixel(i, j)));
+        //        }
+        //    }
+        //}
+
+        //foreach(Vector3 splatPos in allPositions)
+        //{
+        //    var nearbyPositions = allPositions.Where(p => p != splatPos && Vector3.Distance(p, splatPos) < /*this.SeparatingDistance*/float.Epsilon).ToList();
+        //    if (nearbyPositions.Count > 0)
+        //    {
+        //        Debug.Log($"({splatPos.x}, {splatPos.y}, {splatPos.z} has {nearbyPositions.Count} nearby positions");
+        //    }
+        //}
+
+        //Debug.Log("Nearby check complete");
+
+
+        Debug.Log("Checking for negative values in flux texture");
+        Texture2D causticTexture = this.ConvertRenderTextureTo2DTexture(this.LightCameraFluxTexture);
 
         List<Vector3> allPositions = new List<Vector3>();
-        for(int i = 0; i < causticTexture.width; i++)
+        for (int i = 0; i < causticTexture.width; i++)
         {
             for (int j = 0; j < causticTexture.height; j++)
             {
                 Color color = causticTexture.GetPixel(i, j);
-                if (color.a > 0)
+                if (color.r < 0)
                 {
-                    allPositions.Add(this.GetVectorFromColor(causticTexture.GetPixel(i, j)));
+                    Debug.Log($"found negative value: {color}");
                 }
             }
         }
 
-        foreach(Vector3 splatPos in allPositions)
+        foreach (Vector3 splatPos in allPositions)
         {
             var nearbyPositions = allPositions.Where(p => p != splatPos && Vector3.Distance(p, splatPos) < /*this.SeparatingDistance*/float.Epsilon).ToList();
             if (nearbyPositions.Count > 0)
@@ -413,6 +450,6 @@ public class World : MonoBehaviour
             }
         }
 
-        Debug.Log("Nearby check complete");
+        Debug.Log("Negative check complete");
     }
 }
