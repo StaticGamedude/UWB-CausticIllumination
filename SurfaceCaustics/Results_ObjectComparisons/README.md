@@ -1,0 +1,2 @@
+# Pass 3
+Attempts to follow the algorithm as described in the article [Caustics Mapping: An Image-Space Technique for Real-Time Caustics](https://ieeexplore.ieee.org/document/4069236). Attempts to reproduce the results as described in the third pass of the algorithm which attempts to increase the illumination of the receiving object.
