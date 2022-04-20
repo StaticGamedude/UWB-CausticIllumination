@@ -331,7 +331,7 @@ MonoBehaviour:
   Debug_SpherePositionSize: {x: 0.05, y: 0.05, z: 0.05}
   Debug_CylinderNormalSize: {x: 0.01, y: 0.05, z: 0.01}
   Debug_RefractionIndex: 1
-  Debug_LightIntensity: 0.25
+  Debug_LightIntensity: 1
   Debug_AbsorbtionCoefficient: 0.00017
   Debug_RenderSpecularPositions: 1
   Debug_RenderRefractionDirection: 1
@@ -345,6 +345,7 @@ MonoBehaviour:
   Debug_QuickDistanceTest: 1
   Debug_AllowNegativeIntensities: 1
   Debug_MultiplyIntensity: 1
+  Debug_LightColor: {r: 1, g: 1, b: 1, a: 1}
   Debug_EstimationStep: 4
 --- !u!114 &286145854
 MonoBehaviour:
