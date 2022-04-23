@@ -43,14 +43,11 @@ public enum LightCameraType
     CAUSTIC_INTENSITY,
 
     /// <summary>
-    /// Value indicates that the camera is expected to store the final caustic data needed to support resulting caustic effect
-    /// </summary>
-    CAUSTIC_FINAL,
-
-    /// <summary>
     /// Value indicates the distance from the specular vertex position to the receiving object
     /// </summary>
     CAUSTIC_DISTANCE,
+
+    CAUSTIC_DREW_COLOR,
 
     /// <summary>
     /// Value used when testing miscellaneous properties

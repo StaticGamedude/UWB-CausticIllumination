@@ -101,11 +101,11 @@ public class LightCamera : MonoBehaviour
             case LightCameraType.CAUSTIC_FLUX_2:
                 shaderTextureParameter = "_DrewTest";
                 break;
-            case LightCameraType.CAUSTIC_FINAL:
-                shaderTextureParameter = Globals.SHADER_PARAM_CAUSTIC_FINAL_MAP_TEXTURE;
-                break;
             case LightCameraType.CAUSTIC_DISTANCE:
                 shaderTextureParameter = Globals.SHADER_PARAM_CAUSTIC_DISTANCE_TEXTURE;
+                break;
+            case LightCameraType.CAUSTIC_DREW_COLOR:
+                shaderTextureParameter = "_DrewCausticColor";
                 break;
         }
 

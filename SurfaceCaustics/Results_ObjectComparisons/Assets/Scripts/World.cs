@@ -425,31 +425,18 @@ public class World : MonoBehaviour
         //Debug.Log("Nearby check complete");
 
 
-        Debug.Log("Checking for negative values in flux texture");
-        Texture2D causticTexture = this.ConvertRenderTextureTo2DTexture(this.LightCameraFluxTexture);
+        Debug.Log("Checking color in color texture");
+        Texture2D causticTexture = this.ConvertRenderTextureTo2DTexture(this.LightCameraCausticColorTexture);
 
-        List<Vector3> allPositions = new List<Vector3>();
         for (int i = 0; i < causticTexture.width; i++)
         {
             for (int j = 0; j < causticTexture.height; j++)
             {
                 Color color = causticTexture.GetPixel(i, j);
-                if (color.r < 0)
-                {
-                    Debug.Log($"found negative value: {color}");
-                }
+                Debug.Log($"found negative value: {color}");
             }
         }
 
-        foreach (Vector3 splatPos in allPositions)
-        {
-            var nearbyPositions = allPositions.Where(p => p != splatPos && Vector3.Distance(p, splatPos) < /*this.SeparatingDistance*/float.Epsilon).ToList();
-            if (nearbyPositions.Count > 0)
-            {
-                Debug.Log($"({splatPos.x}, {splatPos.y}, {splatPos.z} has {nearbyPositions.Count} nearby positions");
-            }
-        }
-
-        Debug.Log("Negative check complete");
+        Debug.Log("Color check complete");
     }
 }

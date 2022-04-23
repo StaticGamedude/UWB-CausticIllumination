@@ -35,12 +35,14 @@ Shader "Unlit/SpecularReceivingObject"
             float4 _MainTex_ST;
 
             // Variables set globally from the CPU
+            sampler2D _DrewCausticColor;
             sampler2D _CausticTexture;
             sampler2D _SpecularPosTexture;
             sampler2D _CausticFluxTexture;
             sampler2D _DrewTest;
             sampler2D _CausticMapTexture;
             sampler2D _CausticDistanceTexture;
+            sampler2D _CausticColorMapTexture;
 
             float4x4 _LightViewProjectionMatrix;
             float _IlluminationDistance;
@@ -92,6 +94,13 @@ Shader "Unlit/SpecularReceivingObject"
                 return distanceVals.x;
             }
 
+            fixed4 GetCausticColor(float3 worldPos)
+            {
+                float2 tc = GetCoordinatesForSpecularTexture(worldPos);
+                fixed4 causticColor = tex2D(_DrewCausticColor, tc);
+                return causticColor;
+            }
+
             v2f vert (appdata v)
             {
                 v2f o;
@@ -111,14 +120,14 @@ Shader "Unlit/SpecularReceivingObject"
                 float d = GetDistance(i.worldPos);
                 float finalIntensity = flux * exp((-_GlobalAbsorbtionCoefficient * d));
                 fixed4 col = tex2D(_MainTex, i.uv);
-
+                fixed4 causticColor = GetCausticColor(i.worldPos);
 
                 if (finalIntensity >= 0 || (_Debug_AllowNegativeIntensities == 1))
                 {
                     /*return col + finalIntensity;*/
                     if (_Debug_MultiplyIntensity == 1)
                     {
-                        return col * finalIntensity * _DebugLightColor * _LightIntensity;
+                        return col * finalIntensity * _DebugLightColor * causticColor * _LightIntensity;
                     }
                     else
                     {

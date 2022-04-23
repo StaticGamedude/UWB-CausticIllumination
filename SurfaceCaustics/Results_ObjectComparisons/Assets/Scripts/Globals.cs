@@ -62,11 +62,6 @@ public class Globals
     /// </summary>
     public readonly static string SHADER_PARAM_CAUSTIC_INTENSITY_TEXTURE = "_CausticIntensityTexture";
 
-    /// <summary>
-    /// Represents the parameter which stores the final caustic details
-    /// </summary>
-    public readonly static string SHADER_PARAM_CAUSTIC_FINAL_MAP_TEXTURE = "_CausticColorMapTexture";
-
     public readonly static string SHADER_PARAM_CAUSTIC_DISTANCE_TEXTURE = "_CausticDistanceTexture";
 
     /// <summary>
