@@ -562,7 +562,7 @@ GameObject:
   m_Component:
   - component: {fileID: 228764020}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: ComparingBunnies
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
