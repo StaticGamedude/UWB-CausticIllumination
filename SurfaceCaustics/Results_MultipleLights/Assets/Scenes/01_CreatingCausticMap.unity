@@ -647,7 +647,6 @@ MonoBehaviour:
   Debug_CylinderNormalSize: {x: 0.01, y: 0.05, z: 0.01}
   Debug_RefractionIndex: 1
   Debug_LightIntensity: 1
-  Debug_AbsorbtionCoefficient: 0.00017
   Debug_RenderSpecularPositions: 1
   Debug_RenderRefractionDirection: 1
   Debug_RenderCausticPositions: 1
@@ -2150,6 +2149,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a13d5b934a890a043bdfb66ed7592e96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  LightIntensity: 1
+  LightColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1800026489
 GameObject:
   m_ObjectHideFlags: 0

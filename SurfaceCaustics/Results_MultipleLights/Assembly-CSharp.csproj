@@ -80,6 +80,7 @@
     <Compile Include="Assets\Resources\Scripts\LightSource.cs" />
     <Compile Include="Assets\Resources\Scripts\LightCamera.cs" />
     <Compile Include="Assets\GroupResources\Liwen\Source\RenderPipeline\RenderObjectPass.cs" />
+    <Compile Include="Assets\Resources\Scripts\LightSourceDataProperties.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Resources\Shaders\LightNormalShader.shader" />

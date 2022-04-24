@@ -1,18 +1,10 @@
 //Globals set in the CPU
 sampler2D _ReceivingPosTexture;
+sampler2D _ReceivingPosTextures[8];
 float4x4 _LightViewProjectionMatrix;
 float3 _LightWorldPosition;
 int _Debug_TransformSpecularGeometry;
 int _Debug_EstimationStep;
-
-float CustomDistance(float3 pos1, float3 pos2)
-{
-    float xDif = pos2.x - pos1.x;
-    float yDif = pos2.y - pos1.y;
-    float zDif = pos2.z - pos1.z;
-    
-    return sqrt((xDif * xDif) + (yDif * yDif) + (zDif * zDif));
-}
 
 //Get our "splat" position based on a specular vertex's position/normal and the refracted light direction
 float3 VertexEstimateIntersection(float3 specularVertexWorldPos, float3 refractedLightRayDirection, sampler2D positionTexture)
@@ -42,7 +34,7 @@ float3 VertexEstimateIntersection(float3 specularVertexWorldPos, float3 refracte
         return recPos.xyz;
     }
     
-    float newDistance = /*CustomDistance*/distance(specularVertexWorldPos, recPos.xyz); //distance(specularVertexWorldPos, recPos.xzy);
+    float newDistance = distance(specularVertexWorldPos, recPos.xyz);
     p2 = specularVertexWorldPos + ( newDistance * refractedLightRayDirection); //P2 - D units Point along the refracted ray direction, where D is the distance from the vertex to the p1 projected position
     if (_Debug_EstimationStep == 3)
     {

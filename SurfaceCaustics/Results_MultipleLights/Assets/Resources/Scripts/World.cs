@@ -125,6 +125,10 @@ public class World : MonoBehaviour
     /// </summary>
     private bool continousValidationRendering = false;
 
+    private int supportedNumberOfLights = 8;
+
+    private LightSourceDataProperties[] allLightSourceData;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -134,6 +138,23 @@ public class World : MonoBehaviour
 
         Debug.Assert(LightCameraRefractionPositionTexture != null);
         Debug.Assert(LightCameraRefractionNormalTexture != null);
+
+        LightSource[] foundLightSources = FindObjectsOfType<LightSource>();
+
+        this.allLightSourceData = new LightSourceDataProperties[this.supportedNumberOfLights];
+        for(int i = 0; i < this.supportedNumberOfLights; i++)
+        {
+            if (i >= foundLightSources.Length)
+            {
+                LightSourceDataProperties dummyDataProperty = new LightSourceDataProperties();
+                dummyDataProperty.LightSourceID = -1;
+                this.allLightSourceData[i] = dummyDataProperty;
+            }
+            else
+            {
+                this.allLightSourceData[i] = foundLightSources[i].dataProperties;
+            }
+        }
     }
 
     // Update is called once per frame
@@ -159,6 +180,26 @@ public class World : MonoBehaviour
         Shader.SetGlobalInt("_Debug_AllowNegativeIntensities", this.Debug_AllowNegativeIntensities ? 1 : 0);
         Shader.SetGlobalInt("_Debug_MultiplyIntensity", this.Debug_MultiplyIntensity ? 1 : 0);
         //Shader.SetGlobalColor("_DebugLightColor", this.Debug_LightColor);
+
+        //Texture2DArray finalLightingTextureArray = new Texture2DArray(1024, 1024, 32, TextureFormat.ARGB32, false);
+        //float[] lightIDs = this.allLightSourceData.Select(data => (float)data.LightSourceID).ToArray();
+        //for (int i = 0; i < this.allLightSourceData.Length; i++)
+        //{
+        //    LightSourceDataProperties dataProperty = this.allLightSourceData[i];
+
+        //    if (dataProperty.LightSourceID == -1)
+        //    {
+        //        break;
+        //    }
+
+        //    Texture2D finalLightingTexture = this.ConvertRenderTextureTo2DTexture(dataProperty.FinalColorTexture);
+        //    finalLightingTextureArray.SetPixels(finalLightingTexture.GetPixels(0), dataProperty.LightSourceID, 0);
+        //}
+
+        //finalLightingTextureArray.Apply();
+
+        //Shader.SetGlobalTexture("_FinalLightingTextures", finalLightingTextureArray);
+        //Shader.SetGlobalFloatArray("_LightIDs", lightIDs);
 
         this.HandleValidationInputs();
     }

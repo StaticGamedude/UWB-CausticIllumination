@@ -19,16 +19,25 @@ public class LightSource : MonoBehaviour
 
     public Color LightColor = Color.white;
 
+    public LightSourceDataProperties dataProperties;
+
+    private static int lightSourceID = 0;
+
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        List<Camera> passOneCameras = this.InitializePassOneCameras();
-        List<Camera> passTwoCameras = this.InitializePassTwoCameras();
-        List<Camera> passThreeCameras = this.InitializePassThreeCamera();
+        this.dataProperties = new LightSourceDataProperties();
+        this.dataProperties.LightSourceID = lightSourceID;
+
+        List<Camera> passOneCameras = this.InitializePassOneCameras(dataProperties);
+        List<Camera> passTwoCameras = this.InitializePassTwoCameras(dataProperties);
+        List<Camera> passThreeCameras = this.InitializePassThreeCamera(dataProperties);
 
         this.lightCameras.AddRange(passOneCameras);
         this.lightCameras.AddRange(passTwoCameras);
         this.lightCameras.AddRange(passThreeCameras);
+
+        lightSourceID++;
     }
 
     // Update is called once per frame
@@ -38,7 +47,7 @@ public class LightSource : MonoBehaviour
         Shader.SetGlobalFloat("_LightIntensity", this.LightIntensity);
     }
 
-    private List<Camera> InitializePassOneCameras()
+    private List<Camera> InitializePassOneCameras(LightSourceDataProperties dataProperties)
     {
         GameObject passOneCameraContainer = new GameObject();
         passOneCameraContainer.name = "PassOneCameras";
@@ -46,19 +55,26 @@ public class LightSource : MonoBehaviour
         Shader refractivePositionShader = Resources.Load<Shader>(Path.Combine(SHADERS_DIRETORY, "PositionShader"));
         Shader refractiveNormalShader = Resources.Load<Shader>(Path.Combine(SHADERS_DIRETORY, "LightNormalShader"));
         Shader receivingPositionShader = Resources.Load<Shader>(Path.Combine(SHADERS_DIRETORY, "ReceivingObjectShader"));
-        Camera refractivePositionCamera = this.InstantiateCausticCamera("SpecularPositionsCamera", passOneCameraContainer, this.InitRenderTexture(false), refractivePositionShader, LightCameraType.REFRACTIVE_POSITION, LightCameraVisibilityType.SPECULAR);
-        Camera refractiveNormalCamera = this.InstantiateCausticCamera("SpecularNormalsCamera", passOneCameraContainer, this.InitRenderTexture(false), refractiveNormalShader, LightCameraType.REFRACTIVE_NORMAL, LightCameraVisibilityType.SPECULAR);
-        Camera receivingPositionCamera = this.InstantiateCausticCamera("ReceivingPositionCamera", passOneCameraContainer, this.InitRenderTexture(false), receivingPositionShader, LightCameraType.RECEIVING_POSITION, LightCameraVisibilityType.RECEIVER);
+        RenderTexture refractivePositionTexture = this.InitRenderTexture(false);
+        RenderTexture refractiveNormalTexture = this.InitRenderTexture(false);
+        RenderTexture receivingPositionTexture = this.InitRenderTexture(false);
+        Camera refractivePositionCamera = this.InstantiateCausticCamera("SpecularPositionsCamera", passOneCameraContainer, refractivePositionTexture, refractivePositionShader, LightCameraType.REFRACTIVE_POSITION, LightCameraVisibilityType.SPECULAR);
+        Camera refractiveNormalCamera = this.InstantiateCausticCamera("SpecularNormalsCamera", passOneCameraContainer, refractiveNormalTexture, refractiveNormalShader, LightCameraType.REFRACTIVE_NORMAL, LightCameraVisibilityType.SPECULAR);
+        Camera receivingPositionCamera = this.InstantiateCausticCamera("ReceivingPositionCamera", passOneCameraContainer, receivingPositionTexture, receivingPositionShader, LightCameraType.RECEIVING_POSITION, LightCameraVisibilityType.RECEIVER);
 
         passOneCameraContainer.transform.parent = this.transform;
         passOneCameraContainer.transform.localPosition = Vector3.zero;
         passOneCameraContainer.transform.localRotation = Quaternion.identity;
         passOneCameraContainer.transform.localScale = Vector3.one;
 
+        dataProperties.RefractionPositionTexture = refractivePositionTexture;
+        dataProperties.RefractionNormalTexture = refractiveNormalTexture;
+        dataProperties.ReceivingPositionTexture = receivingPositionTexture;
+
         return new List<Camera>() { refractivePositionCamera, refractiveNormalCamera, receivingPositionCamera };
     }
 
-    private List<Camera> InitializePassTwoCameras()
+    private List<Camera> InitializePassTwoCameras(LightSourceDataProperties dataProperties)
     {
         GameObject passTwoCameraContainer = new GameObject();
         passTwoCameraContainer.name = "PassTwoCameras";
@@ -66,30 +82,40 @@ public class LightSource : MonoBehaviour
         Shader refractionDistanceShader = Resources.Load<Shader>(Path.Combine(SHADERS_DIRETORY, "CausticDistanceShader"));
         Shader refractionFluxShader = Resources.Load<Shader>(Path.Combine(SHADERS_DIRETORY, "CausticFluxShader"));
         Shader refractionColorShader = Resources.Load<Shader>(Path.Combine(SHADERS_DIRETORY, "DrewCausticColorShader"));
-        Camera refractionDistanceCamera = this.InstantiateCausticCamera("SpecularDistanceCamera", passTwoCameraContainer, this.InitRenderTexture(false), refractionDistanceShader, LightCameraType.CAUSTIC_DISTANCE, LightCameraVisibilityType.SPECULAR);
-        Camera refractionFluxCamera = this.InstantiateCausticCamera("SpecularFluxCamera", passTwoCameraContainer, this.InitRenderTexture(false), refractionFluxShader, LightCameraType.CAUSTIC_FLUX_2, LightCameraVisibilityType.SPECULAR);
-        Camera refractionColorCamera = this.InstantiateCausticCamera("SpecularColorCamera", passTwoCameraContainer, this.InitRenderTexture(true), refractionColorShader, LightCameraType.CAUSTIC_DREW_COLOR, LightCameraVisibilityType.SPECULAR);
+        RenderTexture refractionDistanceTexture = this.InitRenderTexture(false);
+        RenderTexture refractionFluxTexture = this.InitRenderTexture(false);
+        RenderTexture refractionColorTexture = this.InitRenderTexture(true);
+        Camera refractionDistanceCamera = this.InstantiateCausticCamera("SpecularDistanceCamera", passTwoCameraContainer, refractionDistanceTexture, refractionDistanceShader, LightCameraType.CAUSTIC_DISTANCE, LightCameraVisibilityType.SPECULAR);
+        Camera refractionFluxCamera = this.InstantiateCausticCamera("SpecularFluxCamera", passTwoCameraContainer, refractionFluxTexture, refractionFluxShader, LightCameraType.CAUSTIC_FLUX_2, LightCameraVisibilityType.SPECULAR);
+        Camera refractionColorCamera = this.InstantiateCausticCamera("SpecularColorCamera", passTwoCameraContainer, refractionColorTexture, refractionColorShader, LightCameraType.CAUSTIC_DREW_COLOR, LightCameraVisibilityType.SPECULAR);
 
         passTwoCameraContainer.transform.parent = this.transform;
         passTwoCameraContainer.transform.localPosition = Vector3.zero;
         passTwoCameraContainer.transform.localRotation = Quaternion.identity;
         passTwoCameraContainer.transform.localScale = Vector3.one;
 
+        dataProperties.RefractionDistanceTexture = refractionDistanceTexture;
+        dataProperties.RefractionFluxTexture = refractionFluxTexture;
+        dataProperties.RefractionColorTexture = refractionColorTexture;
+
         return new List<Camera>() { refractionDistanceCamera, refractionFluxCamera, refractionColorCamera };
     }
 
-    private List<Camera> InitializePassThreeCamera()
+    private List<Camera> InitializePassThreeCamera(LightSourceDataProperties dataProperties)
     {
         GameObject passThreeCameraContainer = new GameObject();
         passThreeCameraContainer.name = "PassThreeCameras";
 
-        Shader refractionFinal = Resources.Load<Shader>(Path.Combine(SHADERS_DIRETORY, "CausticFinalShader"));
-        Camera refractionResultCamera = this.InstantiateCausticCamera("SpecularResultCamera", passThreeCameraContainer, this.InitRenderTexture(true), refractionFinal, LightCameraType.CAUSTIC_FINAL_LIGHT_COLOR, LightCameraVisibilityType.SPECULAR);
+        Shader refractionFinalShader = Resources.Load<Shader>(Path.Combine(SHADERS_DIRETORY, "CausticFinalShader"));
+        RenderTexture refractionFinalTexture = this.InitRenderTexture(true);
+        Camera refractionResultCamera = this.InstantiateCausticCamera("SpecularResultCamera", passThreeCameraContainer, refractionFinalTexture, refractionFinalShader, LightCameraType.CAUSTIC_FINAL_LIGHT_COLOR, LightCameraVisibilityType.SPECULAR);
 
         passThreeCameraContainer.transform.parent = this.transform;
         passThreeCameraContainer.transform.localPosition = Vector3.zero;
         passThreeCameraContainer.transform.localRotation = Quaternion.identity;
         passThreeCameraContainer.transform.localScale = Vector3.one;
+
+        dataProperties.FinalColorTexture = refractionFinalTexture;
 
         return new List<Camera>() { refractionResultCamera };
     }

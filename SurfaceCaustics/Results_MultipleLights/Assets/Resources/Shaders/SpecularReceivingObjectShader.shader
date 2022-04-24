@@ -57,6 +57,11 @@ Shader "Unlit/SpecularReceivingObject"
             float _LightIntensity;
             float _AbsorbtionCoefficient;
 
+
+            UNITY_DECLARE_TEX2DARRAY(_FinalLightingTextures);
+            //sampler2D _FinalLightingTextures; //This contains an array of textures
+            float _LightIDs[8];
+
             /*
             * Given the world position of the receiving object, get the texture
             * coordinates that can be used to map into a caustic texture.
@@ -128,11 +133,21 @@ Shader "Unlit/SpecularReceivingObject"
                 float flux = GetFlux(i.worldPos); //_DebugFlux;
                 float d = GetDistance(i.worldPos);
                 float finalIntensity = flux * exp((-/*_GlobalAbsorbtionCoefficient*/_AbsorbtionCoefficient * d));
+                float2 tc = GetCoordinatesForSpecularTexture(i.worldPos);
                 fixed4 col = tex2D(_MainTex, i.uv);
                 fixed4 causticColor = GetCausticColor(i.worldPos);
                 fixed4 finalColor = GetFinalCausticColor(i.worldPos);
 
-                //return col * finalColor;
+                /*fixed4 firstSample = UNITY_SAMPLE_TEX2DARRAY(_FinalLightingTextures, float3(tc, _LightIDs[0]));
+                for (int i = 1; i < 8; i++)
+                {
+                    if (_LightIDs[i] != -1)
+                    {
+                        firstSample = firstSample * UNITY_SAMPLE_TEX2DARRAY(_FinalLightingTextures, float3(tc, _LightIDs[i]));
+                    }
+                }
+
+                return col * firstSample;*/
 
                 return col * finalColor;
 
