@@ -43,6 +43,7 @@ Shader "Unlit/SpecularReceivingObject"
             sampler2D _CausticMapTexture;
             sampler2D _CausticDistanceTexture;
             sampler2D _CausticColorMapTexture;
+            sampler2D _FinalLightColorTexture;
 
             float4x4 _LightViewProjectionMatrix;
             float _IlluminationDistance;
@@ -101,6 +102,13 @@ Shader "Unlit/SpecularReceivingObject"
                 return causticColor;
             }
 
+            fixed4 GetFinalCausticColor(float3 worldPos)
+            {
+                float2 tc = GetCoordinatesForSpecularTexture(worldPos);
+                fixed4 causticColor = tex2D(_FinalLightColorTexture, tc);
+                return causticColor;
+            }
+
             v2f vert (appdata v)
             {
                 v2f o;
@@ -121,28 +129,26 @@ Shader "Unlit/SpecularReceivingObject"
                 float finalIntensity = flux * exp((-_GlobalAbsorbtionCoefficient * d));
                 fixed4 col = tex2D(_MainTex, i.uv);
                 fixed4 causticColor = GetCausticColor(i.worldPos);
+                fixed4 finalColor = GetFinalCausticColor(i.worldPos);
 
-                if (finalIntensity >= 0 || (_Debug_AllowNegativeIntensities == 1))
-                {
-                    /*return col + finalIntensity;*/
-                    if (_Debug_MultiplyIntensity == 1)
-                    {
-                        return col * finalIntensity * _DebugLightColor * causticColor * _LightIntensity;
-                    }
-                    else
-                    {
-                        return col + finalIntensity;
-                    }
-                }
+                //return col * finalColor;
 
-                return col;
-                
-                /*if (SpecularSeesPosition(i.worldPos))
-                {
-                    return col + finalIntensity;
-                }
+                return col * finalColor;
 
-                return col;*/
+                //if (finalIntensity >= 0 || (_Debug_AllowNegativeIntensities == 1))
+                //{
+                //    /*return col + finalIntensity;*/
+                //    if (_Debug_MultiplyIntensity == 1)
+                //    {
+                //        return col * finalIntensity * _DebugLightColor * causticColor * _LightIntensity;
+                //    }
+                //    else
+                //    {
+                //        return col + finalIntensity;
+                //    }
+                //}
+
+                //return col;
             }
             ENDCG
         }

@@ -53,4 +53,6 @@ public enum LightCameraType
     /// Value used when testing miscellaneous properties
     /// </summary>
     OTHER,
+
+    CAUSTIC_FINAL_LIGHT_COLOR,
 }

@@ -14,10 +14,9 @@ Shader "Unlit/CausticFinalShader"
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
-            // make fog work
-            #pragma multi_compile_fog
 
             #include "UnityCG.cginc"
+            #include "CommonFunctions.cginc"
 
             struct appdata
             {
@@ -30,56 +29,80 @@ Shader "Unlit/CausticFinalShader"
             {
                 float2 uv : TEXCOORD0;
                 float4 vertex : SV_POSITION;
-                float causticIntensity : TEXCOORD1;
+                float3 splatPos : TEXCOORD1;
             };
 
             sampler2D _MainTex;
             float4 _MainTex_ST;
-            float3 _LightWorldPosition;
-            float _LightIntensity;
-            int _NumProjectedVerticies;
-            float _AbsorptionCoefficient;
-            float _RefractionDistance;
+            float _ObjectRefractionIndex;
+            // Variables set globally from the CPU
+            sampler2D _DrewCausticColor;
+            sampler2D _CausticTexture;
+            sampler2D _SpecularPosTexture;
+            sampler2D _CausticFluxTexture;
+            sampler2D _DrewTest;
+            sampler2D _CausticMapTexture;
+            sampler2D _CausticDistanceTexture;
+            sampler2D _CausticColorMapTexture;
 
-            float GetFluxContribution(float visibleSurfaceArea, float3 worldPosition, float3 worldNormal)
+            float _GlobalAbsorbtionCoefficient;
+            fixed4 _DebugLightColor;
+            float _LightIntensity;
+
+            /*
+           * Given the world position of the receiving object, get the texture
+           * coordinates that can be used to map into a caustic texture.
+           */
+            float2 GetCoordinatesForSpecularTexture(float3 worldPos)
             {
-                float3 incidentLightVector = normalize(worldPosition - _LightWorldPosition);
-                return (1 / visibleSurfaceArea) * dot(worldNormal, incidentLightVector);
+                float4 texPt = mul(_LightViewProjectionMatrix, float4(worldPos, 1));
+                float2 tc = 0.5 * texPt.xy / texPt.w + float2(0.5, 0.5);
+                return tc;
             }
 
-            float ComputeCausticIntensity(float lightIntesnity, float absorptionCoefficient, float distanceThroughSpecularObject)
+            float GetFlux(float3 worldPos)
             {
-                float e = 2.718282; //Not sure how to reference the internal constant from Unity
-                return lightIntesnity * pow(e, (absorptionCoefficient * 1));
-                //return lightIntesnity * exp(-absorptionCoefficient * 20);
+                float2 tc = GetCoordinatesForSpecularTexture(worldPos);
+                float4 fluxVals = tex2D(_DrewTest, tc);
+                return fluxVals.x;
+            }
+
+            float GetDistance(float3 worldPos)
+            {
+                float2 tc = GetCoordinatesForSpecularTexture(worldPos);
+                float4 distanceVals = tex2D(_CausticDistanceTexture, tc);
+                return distanceVals.x;
+            }
+
+            fixed4 GetCausticColor(float3 worldPos)
+            {
+                float2 tc = GetCoordinatesForSpecularTexture(worldPos);
+                fixed4 causticColor = tex2D(_DrewCausticColor, tc);
+                return causticColor;
             }
 
             v2f vert (appdata v)
             {
                 v2f o;
                 float3 worldPos = mul(UNITY_MATRIX_M, v.vertex);
-                float3 worldNormal = mul(transpose(unity_WorldToObject), v.normal);
-                float fluxContribution = GetFluxContribution(_NumProjectedVerticies, worldPos, worldNormal);
-                float causticIntensity = ComputeCausticIntensity(_LightIntensity, fluxContribution, _RefractionDistance);
+                float3 worldNormal = normalize(mul(transpose(unity_WorldToObject), v.normal));
+                float3 refractedDirection = RefractRay(worldPos, worldNormal, _ObjectRefractionIndex);
+                float3 estimatedPosition = VertexEstimateIntersection(worldPos, refractedDirection, _ReceivingPosTexture);
 
-                o.vertex = UnityObjectToClipPos(v.vertex);
+                o.vertex = mul(UNITY_MATRIX_VP, float4(estimatedPosition, 1));
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-                o.causticIntensity = causticIntensity;
+                o.splatPos = estimatedPosition;
                 return o;
             }
 
-            float4 frag (v2f i) : SV_Target
+            fixed4 frag (v2f i) : SV_Target
             {
-                // sample the texture
-                fixed4 col = tex2D(_MainTex, i.uv);
-                float isVisible = 0;
+                float flux = GetFlux(i.splatPos); //_DebugFlux;
+                float d = GetDistance(i.splatPos);
+                float finalIntensity = flux * exp((-_GlobalAbsorbtionCoefficient * d));
+                fixed4 causticColor = GetCausticColor(i.splatPos);
 
-                if (col.r != 0 || col.g != 0 && col.b != 0)
-                {
-                    isVisible = 1;
-                }
-
-                return float4(i.causticIntensity, i.causticIntensity, i.causticIntensity, isVisible);
+                return finalIntensity * _DebugLightColor * causticColor * _LightIntensity;
             }
             ENDCG
         }

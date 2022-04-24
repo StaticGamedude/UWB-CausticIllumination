@@ -107,6 +107,9 @@ public class LightCamera : MonoBehaviour
             case LightCameraType.CAUSTIC_DREW_COLOR:
                 shaderTextureParameter = "_DrewCausticColor";
                 break;
+            case LightCameraType.CAUSTIC_FINAL_LIGHT_COLOR:
+                shaderTextureParameter = "_FinalLightColorTexture";
+                break;
         }
 
         Shader.SetGlobalTexture(shaderTextureParameter, DataTexture);
