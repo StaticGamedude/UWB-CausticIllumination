@@ -33,6 +33,8 @@ public class LightCamera : MonoBehaviour
     /// </summary>
     public LightCameraVisibilityType LightCameraVisibilityType;
 
+    public bool SetTextureSize = true;
+
     #endregion
 
     /// <summary>
@@ -51,8 +53,12 @@ public class LightCamera : MonoBehaviour
         Debug.Assert(this.DataTexture != null);
 
         //this.lightCamera.fieldOfView = 5;
-        this.DataTexture.width = 1024; //256
-        this.DataTexture.height = 1024; //256
+        if (this.SetTextureSize)
+        {
+            this.DataTexture.width = 1024; //256
+            this.DataTexture.height = 1024; //256
+        }
+        
 
         switch (this.LightCameraVisibilityType)
         {
