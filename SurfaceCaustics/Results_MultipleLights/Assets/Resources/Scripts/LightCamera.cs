@@ -35,6 +35,8 @@ public class LightCamera : MonoBehaviour
 
     public bool SetTextureSize = true;
 
+    public string finalLightShaderParameter = string.Empty;
+
     #endregion
 
     /// <summary>
@@ -124,5 +126,10 @@ public class LightCamera : MonoBehaviour
         Shader.SetGlobalMatrix(Globals.SHADER_PARAM_LIGHT_VIEW_PROJECTION_MATRIX, this.lightCamera.projectionMatrix * lightCamera.worldToCameraMatrix);
         Shader.SetGlobalFloat(Globals.SHADER_PARAM_LIGHT_CAMERA_FAR, 1.0f / lightCamera.farClipPlane);
         Shader.SetGlobalVector(Globals.SHADER_PARAM_LIGHT_WORLD_POS, lightCamera.transform.position);
+
+        if (!string.IsNullOrEmpty(this.finalLightShaderParameter))
+        {
+            Shader.SetGlobalTexture(this.finalLightShaderParameter, DataTexture);
+        }
     }
 }

@@ -182,7 +182,7 @@ public class World : MonoBehaviour
         //Shader.SetGlobalColor("_DebugLightColor", this.Debug_LightColor);
 
         //Texture2DArray finalLightingTextureArray = new Texture2DArray(1024, 1024, 32, TextureFormat.ARGB32, false);
-        //float[] lightIDs = this.allLightSourceData.Select(data => (float)data.LightSourceID).ToArray();
+        float[] lightIDs = this.allLightSourceData.Select(data => (float)data.LightSourceID).ToArray();
         //for (int i = 0; i < this.allLightSourceData.Length; i++)
         //{
         //    LightSourceDataProperties dataProperty = this.allLightSourceData[i];
@@ -199,7 +199,7 @@ public class World : MonoBehaviour
         //finalLightingTextureArray.Apply();
 
         //Shader.SetGlobalTexture("_FinalLightingTextures", finalLightingTextureArray);
-        //Shader.SetGlobalFloatArray("_LightIDs", lightIDs);
+        Shader.SetGlobalFloatArray("_LightIDs", lightIDs);
 
         this.HandleValidationInputs();
     }

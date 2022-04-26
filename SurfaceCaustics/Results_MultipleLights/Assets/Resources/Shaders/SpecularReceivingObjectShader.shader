@@ -32,6 +32,9 @@ Shader "Unlit/SpecularReceivingObject"
             };
 
             sampler2D _MainTex;
+            sampler2D _LightTexture0;
+            sampler2D _LightTexture1;
+
             float4 _MainTex_ST;
 
             // Variables set globally from the CPU
@@ -108,10 +111,10 @@ Shader "Unlit/SpecularReceivingObject"
                 return causticColor;
             }
 
-            fixed4 GetFinalCausticColor(float3 worldPos)
+            fixed4 GetFinalCausticColor(float3 worldPos, sampler2D lightTexture)
             {
                 float2 tc = GetCoordinatesForSpecularTexture(worldPos);
-                fixed4 causticColor = tex2D(_FinalLightColorTexture, tc);
+                fixed4 causticColor = tex2D(/*_FinalLightColorTexture*//*_LightTexture0*/lightTexture, tc);
                 return causticColor;
             }
 
@@ -136,7 +139,21 @@ Shader "Unlit/SpecularReceivingObject"
                 float2 tc = GetCoordinatesForSpecularTexture(i.worldPos);
                 fixed4 col = tex2D(_MainTex, i.uv);
                 fixed4 causticColor = GetCausticColor(i.worldPos);
-                fixed4 finalColor = GetFinalCausticColor(i.worldPos);
+                fixed4 finalColor = fixed4(0, 0, 0, 0);
+
+                if (_LightIDs[0] != -1)
+                {
+                    finalColor = finalColor + GetFinalCausticColor(i.worldPos, _LightTexture0);
+                }
+
+                if (_LightIDs[1] != -1)
+                {
+                    finalColor = finalColor + GetFinalCausticColor(i.worldPos, _LightTexture1);
+                }
+
+                return finalColor;
+
+                /*fixed4 finalColor = GetFinalCausticColor(i.worldPos);*/
 
                 /*fixed4 firstSample = UNITY_SAMPLE_TEX2DARRAY(_FinalLightingTextures, float3(tc, _LightIDs[0]));
                 for (int i = 1; i < 8; i++)
