@@ -66,9 +66,11 @@ public class LightCamera : MonoBehaviour
         {
             case LightCameraVisibilityType.SPECULAR:
                 this.lightCamera.SetReplacementShader(SpecularObjectShader, Globals.SPECULAR_OBJECT_SHADER_TAG);
+                //this.lightCamera.RenderWithShader(SpecularObjectShader, Globals.SPECULAR_OBJECT_SHADER_TAG);
                 break;
             case LightCameraVisibilityType.RECEIVER:
                 this.lightCamera.SetReplacementShader(SpecularObjectShader, Globals.RECEIVING_OBJECT_SHADER_TAG);
+                //this.lightCamera.RenderWithShader(SpecularObjectShader, Globals.RECEIVING_OBJECT_SHADER_TAG);
                 break;
         }
     }

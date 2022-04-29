@@ -3,6 +3,7 @@ Shader "Unlit/CausticFinalShader"
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
+        _LightID ("Light ID", Int) = 0
     }
     SubShader
     {
@@ -49,6 +50,7 @@ Shader "Unlit/CausticFinalShader"
             fixed4 _DebugLightColor;
             float _LightIntensity;
             float _AbsorbtionCoefficient;
+            int _LightID;
 
             /*
            * Given the world position of the receiving object, get the texture
@@ -102,6 +104,13 @@ Shader "Unlit/CausticFinalShader"
                 float d = GetDistance(i.splatPos);
                 float finalIntensity = flux * exp((-/*_GlobalAbsorbtionCoefficient*/_AbsorbtionCoefficient * d));
                 fixed4 causticColor = GetCausticColor(i.splatPos);
+
+                //if (_LightID == 0)
+                //{
+                //    return fixed4(0, 1, 0, 1);
+                //}
+
+                //return fixed4(0, 0, 1, 1);
 
                 return finalIntensity * _DebugLightColor * causticColor * _LightIntensity;
             }

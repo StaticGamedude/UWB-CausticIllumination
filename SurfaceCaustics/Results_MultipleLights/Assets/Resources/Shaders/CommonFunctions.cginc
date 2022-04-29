@@ -1,6 +1,5 @@
 //Globals set in the CPU
 sampler2D _ReceivingPosTexture;
-sampler2D _ReceivingPosTextures[8];
 float4x4 _LightViewProjectionMatrix;
 float3 _LightWorldPosition;
 int _Debug_TransformSpecularGeometry;

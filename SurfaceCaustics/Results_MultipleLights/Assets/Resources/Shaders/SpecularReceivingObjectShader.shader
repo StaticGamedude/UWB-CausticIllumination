@@ -60,7 +60,6 @@ Shader "Unlit/SpecularReceivingObject"
             float _LightIntensity;
             float _AbsorbtionCoefficient;
 
-
             UNITY_DECLARE_TEX2DARRAY(_FinalLightingTextures);
             //sampler2D _FinalLightingTextures; //This contains an array of textures
             float _LightIDs[8];
@@ -100,8 +99,8 @@ Shader "Unlit/SpecularReceivingObject"
             float GetDistance(float3 worldPos)
             {
                 float2 tc = GetCoordinatesForSpecularTexture(worldPos);
-                float4 distanceVals = tex2D(_CausticDistanceTexture, tc);
-                return distanceVals.x;
+                float4 distanceVals = tex2D(_DrewTest, tc);
+                return distanceVals.y;
             }
 
             fixed4 GetCausticColor(float3 worldPos)
@@ -166,7 +165,7 @@ Shader "Unlit/SpecularReceivingObject"
 
                 return col * firstSample;*/
 
-                return col * finalColor;
+                //return col * finalColor;
 
                 //if (finalIntensity >= 0 || (_Debug_AllowNegativeIntensities == 1))
                 //{

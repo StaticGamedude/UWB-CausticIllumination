@@ -34,6 +34,7 @@ Shader "Unlit/CausticFluxShader"
                 float2 uv : TEXCOORD0;
                 float4 vertex : SV_POSITION;
                 float flux : TEXCOORD1;
+                float distance : TEXCOORD2;
             };
 
             sampler2D _MainTex;
@@ -73,6 +74,7 @@ Shader "Unlit/CausticFluxShader"
 
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 o.flux = flux;
+                o.distance = distance(worldPos, estimatedPosition);
                 return o;
             }
 
@@ -80,13 +82,15 @@ Shader "Unlit/CausticFluxShader"
             {
                 fixed4 col = tex2D(_MainTex, i.uv);
                 float isVisible = 0;
-
+                float resultingFluxValue = i.flux * _DebugFluxMultiplier;
                 if (col.r != 0 || col.g != 0 || col.b != 0)
                 {
                     isVisible = 1;
                 }
 
-                return float4(i.flux * _DebugFluxMultiplier, i.flux * _DebugFluxMultiplier, i.flux * _DebugFluxMultiplier, isVisible);
+
+
+                return float4(resultingFluxValue, i.distance, i.flux * _DebugFluxMultiplier, isVisible);
             }
 
             ENDCG
