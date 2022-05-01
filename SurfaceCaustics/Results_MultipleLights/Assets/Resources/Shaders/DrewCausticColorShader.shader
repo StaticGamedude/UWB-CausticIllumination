@@ -46,8 +46,13 @@ Shader "Unlit/DrewCausticColorShader"
                 v2f o;
                 float3 worldPos = mul(UNITY_MATRIX_M, v.vertex);
                 float3 worldNormal = normalize(mul(transpose(unity_WorldToObject), v.normal));
-                float3 refractedDirection = RefractRay(_LightWorldPosition, worldPos, worldNormal, _ObjectRefractionIndex);
-                float3 estimatedPosition = VertexEstimateIntersection(_LightViewProjectionMatrix, worldPos, refractedDirection, _ReceivingPosTexture);
+                float3 estimatedPosition = GetEstimatedSplatPosition( //VertexEstimateIntersection(_LightViewProjectionMatrix, worldPos, refractedDirection, _ReceivingPosTexture);
+                                            _LightViewProjectionMatrix,
+                                            _LightWorldPosition,
+                                            _ObjectRefractionIndex,
+                                            worldPos,
+                                            worldNormal,
+                                            _ReceivingPosTexture);
 
                 o.vertex = mul(UNITY_MATRIX_VP, float4(estimatedPosition, 1));
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);

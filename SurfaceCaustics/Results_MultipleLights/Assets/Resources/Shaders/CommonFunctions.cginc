@@ -27,3 +27,16 @@ float3 RefractRay(float3 lightPosition, float3 specularVertexWorldPos, float3 sp
     float3 refractedRay = -1 * ((vertexToLight / refractionIndex) + ((cos(refractionAngle) - (cos(incidentAngle) / refractionIndex)) * specularVertexWorldNormal));
     return normalize(refractedRay);
 }
+
+float3 GetEstimatedSplatPosition(
+    float4x4 lightViewProjectMatrix,
+    float3 lightPosition,
+    float sepcularObjectRefractionIndex,
+    float3 specularWorldPos,
+    float3 specularWorldNormal,
+    sampler2D receiverPositionTexture
+)
+{
+    float3 refractedDirection = RefractRay(lightPosition, specularWorldPos, specularWorldNormal, sepcularObjectRefractionIndex);
+    return VertexEstimateIntersection(lightViewProjectMatrix, specularWorldPos, refractedDirection, receiverPositionTexture);
+}
