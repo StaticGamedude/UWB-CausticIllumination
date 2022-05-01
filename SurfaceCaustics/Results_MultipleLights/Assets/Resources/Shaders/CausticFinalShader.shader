@@ -52,6 +52,11 @@ Shader "Unlit/CausticFinalShader"
             float _AbsorbtionCoefficient;
             int _LightID;
 
+            //Light specific parameters
+            sampler2D _ReceivingPosTexture;
+            float4x4 _LightViewProjectionMatrix;
+            float3 _LightWorldPosition;
+
             /*
            * Given the world position of the receiving object, get the texture
            * coordinates that can be used to map into a caustic texture.
@@ -89,8 +94,8 @@ Shader "Unlit/CausticFinalShader"
                 v2f o;
                 float3 worldPos = mul(UNITY_MATRIX_M, v.vertex);
                 float3 worldNormal = normalize(mul(transpose(unity_WorldToObject), v.normal));
-                float3 refractedDirection = RefractRay(worldPos, worldNormal, _ObjectRefractionIndex);
-                float3 estimatedPosition = VertexEstimateIntersection(worldPos, refractedDirection, _ReceivingPosTexture);
+                float3 refractedDirection = RefractRay(_LightWorldPosition, worldPos, worldNormal, _ObjectRefractionIndex);
+                float3 estimatedPosition = VertexEstimateIntersection(_LightViewProjectionMatrix, worldPos, refractedDirection, _ReceivingPosTexture);
 
                 o.vertex = mul(UNITY_MATRIX_VP, float4(estimatedPosition, 1));
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);

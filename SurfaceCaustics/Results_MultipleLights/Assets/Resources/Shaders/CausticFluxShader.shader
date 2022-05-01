@@ -37,6 +37,11 @@ Shader "Unlit/CausticFluxShader"
                 float distance : TEXCOORD2;
             };
 
+            //Light specific parameters
+            sampler2D _ReceivingPosTexture;
+            float4x4 _LightViewProjectionMatrix;
+            float3 _LightWorldPosition;
+
             sampler2D _MainTex;
             float4 _MainTex_ST;
 
@@ -59,19 +64,11 @@ Shader "Unlit/CausticFluxShader"
                 v2f o;
                 float3 worldPos = mul(UNITY_MATRIX_M, v.vertex);
                 float3 worldNormal = normalize(mul(transpose(unity_WorldToObject), v.normal));
-                float3 refractedDirection = RefractRay(worldPos, worldNormal, _ObjectRefractionIndex);
-                float3 estimatedPosition = VertexEstimateIntersection(worldPos, refractedDirection, _ReceivingPosTexture);
+                float3 refractedDirection = RefractRay(_LightWorldPosition, worldPos, worldNormal, _ObjectRefractionIndex);
+                float3 estimatedPosition = VertexEstimateIntersection(_LightViewProjectionMatrix, worldPos, refractedDirection, _ReceivingPosTexture);
                 float3 flux = GetFluxContribution(_NumProjectedVerticies, worldPos, worldNormal);
 
-                if (_Debug_TransformSpecularGeometry == 1)
-                {
-                    o.vertex = mul(UNITY_MATRIX_VP, float4(estimatedPosition, 1));
-                }
-                else
-                {
-                    o.vertex = UnityObjectToClipPos(v.vertex);
-                }
-
+                o.vertex = mul(UNITY_MATRIX_VP, float4(estimatedPosition, 1));
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 o.flux = flux;
                 o.distance = distance(worldPos, estimatedPosition);

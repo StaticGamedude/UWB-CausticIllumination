@@ -93,8 +93,6 @@ public class World : MonoBehaviour
 
     public float SeparatingDistance = 0.5f;
 
-    public bool Debug_TransformSpecularGeometry = true;
-
     public int Debug_QuickDistanceTest = 1;
 
     public bool Debug_AllowNegativeIntensities = true;
@@ -102,8 +100,6 @@ public class World : MonoBehaviour
     public bool Debug_MultiplyIntensity = false;
 
     public Color Debug_LightColor = Color.white;
-
-    public DebugEstimationStep Debug_EstimationStep = DebugEstimationStep.INVERSE_REFRACTION_DIRECTION;
 
     /// <summary>
     /// Interal list of spheres which represent the positions read from the position texture
@@ -175,8 +171,6 @@ public class World : MonoBehaviour
         Shader.SetGlobalInt("_NumProjectedVerticies", /*this.GetNumberOfVisiblePixels(this.LightCameraRefractionPositionTexture)*/ this.Debug_NumOfVisiblePixels);
         Shader.SetGlobalFloat("_DebugFlux", this.Debug_Flux);
         Shader.SetGlobalFloat("_DebugFluxMultiplier", this.Debug_Flux_Multiplier);
-        Shader.SetGlobalInt("_Debug_TransformSpecularGeometry", this.Debug_TransformSpecularGeometry ? 1 : 0);
-        Shader.SetGlobalInt("_Debug_EstimationStep", (int)this.Debug_EstimationStep);
         Shader.SetGlobalInt("_Debug_AllowNegativeIntensities", this.Debug_AllowNegativeIntensities ? 1 : 0);
         Shader.SetGlobalInt("_Debug_MultiplyIntensity", this.Debug_MultiplyIntensity ? 1 : 0);
         //Shader.SetGlobalColor("_DebugLightColor", this.Debug_LightColor);
