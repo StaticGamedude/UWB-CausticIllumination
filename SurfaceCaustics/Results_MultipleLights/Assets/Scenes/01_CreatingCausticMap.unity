@@ -205,7 +205,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &103860897
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -609,12 +609,10 @@ MonoBehaviour:
   Debug_Flux_Multiplier: 500
   Debug_NumOfVisiblePixels: 600
   SeparatingDistance: 0.5
-  Debug_TransformSpecularGeometry: 1
   Debug_QuickDistanceTest: 1
   Debug_AllowNegativeIntensities: 1
   Debug_MultiplyIntensity: 1
   Debug_LightColor: {r: 1, g: 1, b: 1, a: 1}
-  Debug_EstimationStep: 4
 --- !u!114 &286145854
 MonoBehaviour:
   m_ObjectHideFlags: 0

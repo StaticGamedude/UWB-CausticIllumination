@@ -129,8 +129,6 @@ public class LightSource : MonoBehaviour
         RenderTexture refractionFinalTexture = this.InitRenderTexture(true, "RefractionFinalTexture");
         Camera refractionResultCamera = this.InstantiateCausticCamera("SpecularResultCamera", passThreeCameraContainer, refractionFinalTexture, refractionFinalShader, LightCameraType.CAUSTIC_FINAL_LIGHT_COLOR, LightCameraVisibilityType.SPECULAR);
 
-        //refractionFinalShader.na
-
         passThreeCameraContainer.transform.parent = this.transform;
         passThreeCameraContainer.transform.localPosition = Vector3.zero;
         passThreeCameraContainer.transform.localRotation = Quaternion.identity;

@@ -77,17 +77,19 @@
     <Compile Include="Assets\Resources\Scripts\MultiOutput.cs" />
     <Compile Include="Assets\Resources\Scripts\World.cs" />
     <Compile Include="Assets\Resources\Scripts\Globals.cs" />
+    <Compile Include="Assets\Resources\Scripts\LightSourceDataProperties.cs" />
     <Compile Include="Assets\Resources\Scripts\LightSource.cs" />
     <Compile Include="Assets\Resources\Scripts\LightCamera.cs" />
     <Compile Include="Assets\GroupResources\Liwen\Source\RenderPipeline\RenderObjectPass.cs" />
-    <Compile Include="Assets\Resources\Scripts\LightSourceDataProperties.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Resources\Shaders\LightNormalShader.shader" />
     <None Include="Assets\Resources\Shaders\CausticColorShader.shader" />
     <None Include="Assets\Resources\Shaders\SinShader.shader" />
+    <None Include="Assets\Resources\Shaders\CausticColorFunctions.cginc" />
     <None Include="Assets\Resources\Shaders\TestTransformShader.shader" />
     <None Include="Assets\Resources\Shaders\PositionShader.shader" />
+    <None Include="Assets\Resources\Shaders\CausticFluxFunctions.cginc" />
     <None Include="Assets\Resources\Shaders\ReceivingObjectShader.shader" />
     <None Include="Assets\Resources\Shaders\SpecularReceivingObjectShader.shader" />
     <None Include="Assets\GroupResources\Liwen\Resources\WaveShader.shader" />
@@ -98,6 +100,7 @@
     <None Include="Assets\Resources\Shaders\CausticResultShader.shader" />
     <None Include="Assets\Resources\Shaders\CausticMapShader.shader" />
     <None Include="Assets\Resources\Shaders\CommonFunctions.cginc" />
+    <None Include="Assets\Resources\Shaders\CausticFinalFunctions.cginc" />
     <None Include="Assets\Resources\Shaders\CausticFinalShader.shader" />
     <None Include="Assets\Resources\Shaders\MultiOutputShader.shader" />
     <None Include="Assets\Resources\Shaders\CausticDistanceShader.shader" />
@@ -105,6 +108,7 @@
     <None Include="Assets\Resources\Shaders\DrewCausticColorShader.shader" />
     <None Include="Assets\Textures\epyphany\ReadMe.txt" />
     <None Include="Assets\Resources\Shaders\SpecularObjectShader.shader" />
+    <None Include="Assets\Resources\Shaders\SpecularFunctions.cginc" />
     <None Include="Assets\Resources\Shaders\CausticIntensityShader.shader" />
   </ItemGroup>
   <ItemGroup>
