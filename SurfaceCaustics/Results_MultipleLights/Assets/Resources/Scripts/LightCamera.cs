@@ -37,6 +37,8 @@ public class LightCamera : MonoBehaviour
 
     public string finalLightShaderParameter = string.Empty;
 
+    public int LightSourceID;
+
     #endregion
 
     /// <summary>
@@ -66,11 +68,9 @@ public class LightCamera : MonoBehaviour
         {
             case LightCameraVisibilityType.SPECULAR:
                 this.lightCamera.SetReplacementShader(SpecularObjectShader, Globals.SPECULAR_OBJECT_SHADER_TAG);
-                //this.lightCamera.RenderWithShader(SpecularObjectShader, Globals.SPECULAR_OBJECT_SHADER_TAG);
                 break;
             case LightCameraVisibilityType.RECEIVER:
                 this.lightCamera.SetReplacementShader(SpecularObjectShader, Globals.RECEIVING_OBJECT_SHADER_TAG);
-                //this.lightCamera.RenderWithShader(SpecularObjectShader, Globals.RECEIVING_OBJECT_SHADER_TAG);
                 break;
         }
     }
@@ -122,16 +122,16 @@ public class LightCamera : MonoBehaviour
                 break;
         }
 
-        Shader.SetGlobalTexture(shaderTextureParameter, DataTexture);
-        Shader.SetGlobalMatrix(Globals.SHADER_PARAM_LIGHT_MATRIX, lightMatrix);
-        Shader.SetGlobalMatrix(Globals.SHADER_PARAM_LIGHT_CAMERA_MATRIX, this.lightCamera.worldToCameraMatrix);
-        Shader.SetGlobalMatrix(Globals.SHADER_PARAM_LIGHT_VIEW_PROJECTION_MATRIX, this.lightCamera.projectionMatrix * lightCamera.worldToCameraMatrix);
-        Shader.SetGlobalFloat(Globals.SHADER_PARAM_LIGHT_CAMERA_FAR, 1.0f / lightCamera.farClipPlane);
-        Shader.SetGlobalVector(Globals.SHADER_PARAM_LIGHT_WORLD_POS, lightCamera.transform.position);
+        Shader.SetGlobalTexture($"{shaderTextureParameter}_{this.LightSourceID}", DataTexture);
+        Shader.SetGlobalMatrix($"{Globals.SHADER_PARAM_LIGHT_MATRIX}_{this.LightSourceID}", lightMatrix);
+        Shader.SetGlobalMatrix($"{Globals.SHADER_PARAM_LIGHT_CAMERA_MATRIX}_{this.LightSourceID}", this.lightCamera.worldToCameraMatrix);
+        Shader.SetGlobalMatrix($"{Globals.SHADER_PARAM_LIGHT_VIEW_PROJECTION_MATRIX}_{this.LightSourceID}", this.lightCamera.projectionMatrix * lightCamera.worldToCameraMatrix);
+        Shader.SetGlobalFloat($"{Globals.SHADER_PARAM_LIGHT_CAMERA_FAR}_{this.LightSourceID}", 1.0f / lightCamera.farClipPlane);
+        Shader.SetGlobalVector($"{Globals.SHADER_PARAM_LIGHT_WORLD_POS}_{this.LightSourceID}", lightCamera.transform.position);
 
-        if (!string.IsNullOrEmpty(this.finalLightShaderParameter))
-        {
-            Shader.SetGlobalTexture(this.finalLightShaderParameter, DataTexture);
-        }
+        //if (!string.IsNullOrEmpty(this.finalLightShaderParameter))
+        //{
+        //    Shader.SetGlobalTexture(this.finalLightShaderParameter, DataTexture);
+        //}
     }
 }

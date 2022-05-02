@@ -18,9 +18,9 @@ Shader "Unlit/DrewCausticColorShader"
             #include "CausticColorFunctions.cginc"
 
             //Light specific parameters
-            sampler2D _ReceivingPosTexture;
-            float4x4 _LightViewProjectionMatrix;
-            float3 _LightWorldPosition;
+            sampler2D _ReceivingPosTexture_0;
+            float4x4 _LightViewProjectionMatrix_0;
+            float3 _LightWorldPosition_0;
 
             sampler2D _MainTex;
             float4 _MainTex_ST;
@@ -32,11 +32,11 @@ Shader "Unlit/DrewCausticColorShader"
                 float2 uv = TRANSFORM_TEX(v.uv, _MainTex);
                 return SharedColorVertexShader(
                     v,
-                    _LightViewProjectionMatrix,
-                    _LightWorldPosition,
+                    _LightViewProjectionMatrix_0,
+                    _LightWorldPosition_0,
                     _ObjectRefractionIndex,
                     uv,
-                    _ReceivingPosTexture,
+                    _ReceivingPosTexture_0,
                     _NumProjectedVerticies
                 );
             }

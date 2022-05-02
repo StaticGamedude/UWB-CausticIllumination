@@ -22,14 +22,8 @@ Shader "Unlit/CausticFinalShader"
             float4 _MainTex_ST;
             float _ObjectRefractionIndex;
             // Variables set globally from the CPU
-            sampler2D _DrewCausticColor;
-            sampler2D _CausticTexture;
-            sampler2D _SpecularPosTexture;
-            sampler2D _CausticFluxTexture;
-            sampler2D _DrewTest;
-            sampler2D _CausticMapTexture;
-            sampler2D _CausticDistanceTexture;
-            sampler2D _CausticColorMapTexture;
+            sampler2D _DrewCausticColor_0;
+            sampler2D _DrewTest_0; // This contains the caustic flux and distance information
 
             float _GlobalAbsorbtionCoefficient;
             fixed4 _DebugLightColor;
@@ -38,20 +32,20 @@ Shader "Unlit/CausticFinalShader"
             int _LightID;
 
             //Light specific parameters
-            sampler2D _ReceivingPosTexture;
-            float4x4 _LightViewProjectionMatrix;
-            float3 _LightWorldPosition;
+            sampler2D _ReceivingPosTexture_0;
+            float4x4 _LightViewProjectionMatrix_0;
+            float3 _LightWorldPosition_0;
 
             v2f vert (appdata v)
             {
                 float2 uv = TRANSFORM_TEX(v.uv, _MainTex);
                 return SharedCausticFinalVertexShader(
                     v,
-                    _LightViewProjectionMatrix,
-                    _LightWorldPosition,
+                    _LightViewProjectionMatrix_0,
+                    _LightWorldPosition_0,
                     _ObjectRefractionIndex,
                     uv,
-                    _ReceivingPosTexture
+                    _ReceivingPosTexture_0
                 );
             }
 
@@ -59,11 +53,11 @@ Shader "Unlit/CausticFinalShader"
             {
                 return SharedCausticFinalFragmentShader(
                     i,
-                    _LightViewProjectionMatrix,
+                    _LightViewProjectionMatrix_0,
                     _DebugLightColor,
                     _LightIntensity,
-                    _DrewTest,
-                    _DrewCausticColor,
+                    _DrewTest_0,
+                    _DrewCausticColor_0,
                     _AbsorbtionCoefficient
                 );
             }

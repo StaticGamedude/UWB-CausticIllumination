@@ -46,7 +46,7 @@ Shader "Unlit/SpecularReceivingObject"
             sampler2D _CausticMapTexture;
             sampler2D _CausticDistanceTexture;
             sampler2D _CausticColorMapTexture;
-            sampler2D _FinalLightColorTexture;
+            sampler2D _FinalLightColorTexture_0;
 
             float4x4 _LightViewProjectionMatrix;
             float _IlluminationDistance;
@@ -113,7 +113,7 @@ Shader "Unlit/SpecularReceivingObject"
             fixed4 GetFinalCausticColor(float3 worldPos, sampler2D lightTexture)
             {
                 float2 tc = GetCoordinatesForSpecularTexture(worldPos);
-                fixed4 causticColor = tex2D(/*_FinalLightColorTexture*//*_LightTexture0*/lightTexture, tc);
+                fixed4 causticColor = tex2D(_FinalLightColorTexture_0/*_LightTexture0*//*lightTexture*/, tc);
                 return causticColor;
             }
 

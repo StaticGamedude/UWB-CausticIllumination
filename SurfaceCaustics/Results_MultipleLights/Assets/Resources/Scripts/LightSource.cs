@@ -25,8 +25,6 @@ public class LightSource : MonoBehaviour
 
     private Shader tempShader;
 
-    private Camera tempCam;
-
     // Start is called before the first frame update
     void Awake()
     {
@@ -43,18 +41,6 @@ public class LightSource : MonoBehaviour
 
         lightSourceID++;
     }
-
-    private void Start()
-    {
-        //foreach (Camera lightCam in this.lightCameras)
-        //{
-        //    //var renderTex = lightCam.targetTexture;
-
-        //    //this.SetLightIDOnShader(refractionFinalShader);
-        //}
-    }
-
-
 
     // Update is called once per frame
     void Update()
@@ -164,6 +150,7 @@ public class LightSource : MonoBehaviour
         lightCamLogic.DataTexture = targetRenderTexture;
         lightCamLogic.LightCamType = lightCamType;
         lightCamLogic.LightCameraVisibilityType = visibilityType;
+        lightCamLogic.LightSourceID = this.dataProperties.LightSourceID;
 
         if (lightCamType == LightCameraType.CAUSTIC_FINAL_LIGHT_COLOR)
         {
