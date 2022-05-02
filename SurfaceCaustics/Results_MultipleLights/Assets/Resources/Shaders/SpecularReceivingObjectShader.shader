@@ -47,6 +47,7 @@ Shader "Unlit/SpecularReceivingObject"
             sampler2D _CausticDistanceTexture;
             sampler2D _CausticColorMapTexture;
             sampler2D _FinalLightColorTexture_0;
+            sampler2D _FinalLightColorTexture_1;
 
             float4x4 _LightViewProjectionMatrix;
             float _IlluminationDistance;
@@ -113,7 +114,7 @@ Shader "Unlit/SpecularReceivingObject"
             fixed4 GetFinalCausticColor(float3 worldPos, sampler2D lightTexture)
             {
                 float2 tc = GetCoordinatesForSpecularTexture(worldPos);
-                fixed4 causticColor = tex2D(_FinalLightColorTexture_0/*_LightTexture0*//*lightTexture*/, tc);
+                fixed4 causticColor = tex2D(lightTexture, tc);
                 return causticColor;
             }
 
@@ -134,7 +135,7 @@ Shader "Unlit/SpecularReceivingObject"
             {
                 float flux = GetFlux(i.worldPos); //_DebugFlux;
                 float d = GetDistance(i.worldPos);
-                float finalIntensity = flux * exp((-/*_GlobalAbsorbtionCoefficient*/_AbsorbtionCoefficient * d));
+                float finalIntensity = flux * exp((-_AbsorbtionCoefficient * d));
                 float2 tc = GetCoordinatesForSpecularTexture(i.worldPos);
                 fixed4 col = tex2D(_MainTex, i.uv);
                 fixed4 causticColor = GetCausticColor(i.worldPos);
@@ -142,12 +143,12 @@ Shader "Unlit/SpecularReceivingObject"
 
                 if (_LightIDs[0] != -1)
                 {
-                    finalColor = finalColor + GetFinalCausticColor(i.worldPos, _LightTexture0);
+                    finalColor = finalColor + GetFinalCausticColor(i.worldPos, _FinalLightColorTexture_0);
                 }
 
                 if (_LightIDs[1] != -1)
                 {
-                    finalColor = finalColor + GetFinalCausticColor(i.worldPos, _LightTexture1);
+                    finalColor = finalColor + GetFinalCausticColor(i.worldPos, _FinalLightColorTexture_1);
                 }
 
                 return finalColor;

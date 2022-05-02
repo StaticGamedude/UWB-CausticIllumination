@@ -85,8 +85,8 @@ public class LightSource : MonoBehaviour
         passTwoCameraContainer.name = "PassTwoCameras";
 
         //Shader refractionDistanceShader = Resources.Load<Shader>(Path.Combine(SHADERS_DIRETORY, "CausticDistanceShader"));
-        Shader refractionFluxShader = Resources.Load<Shader>(Path.Combine(SHADERS_DIRETORY, "CausticFluxShader"));
-        Shader refractionColorShader = Resources.Load<Shader>(Path.Combine(SHADERS_DIRETORY, "DrewCausticColorShader"));
+        Shader refractionFluxShader = Resources.Load<Shader>(Path.Combine(SHADERS_DIRETORY, $"CausticFluxShader_{this.dataProperties.LightSourceID}"));
+        Shader refractionColorShader = Resources.Load<Shader>(Path.Combine(SHADERS_DIRETORY, $"DrewCausticColorShader_{this.dataProperties.LightSourceID}"));
         //RenderTexture refractionDistanceTexture = this.InitRenderTexture(false, "RefractionDistanceTexture");
         RenderTexture refractionFluxTexture = this.InitRenderTexture(false, "RefractionFluxTexture");
         RenderTexture refractionColorTexture = this.InitRenderTexture(true, "RefractionColorTexture");
@@ -111,7 +111,7 @@ public class LightSource : MonoBehaviour
         GameObject passThreeCameraContainer = new GameObject();
         passThreeCameraContainer.name = "PassThreeCameras";
 
-        Shader refractionFinalShader = Resources.Load<Shader>(Path.Combine(SHADERS_DIRETORY, "CausticFinalShader"));
+        Shader refractionFinalShader = Resources.Load<Shader>(Path.Combine(SHADERS_DIRETORY, $"CausticFinalShader_{this.dataProperties.LightSourceID}"));
         RenderTexture refractionFinalTexture = this.InitRenderTexture(true, "RefractionFinalTexture");
         Camera refractionResultCamera = this.InstantiateCausticCamera("SpecularResultCamera", passThreeCameraContainer, refractionFinalTexture, refractionFinalShader, LightCameraType.CAUSTIC_FINAL_LIGHT_COLOR, LightCameraVisibilityType.SPECULAR);
 

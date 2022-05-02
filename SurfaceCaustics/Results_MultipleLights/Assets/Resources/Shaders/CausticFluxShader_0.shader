@@ -1,4 +1,4 @@
-Shader "Unlit/CausticFluxShader"
+Shader "Unlit/CausticFluxShader_0"
 {
     Properties
     {
