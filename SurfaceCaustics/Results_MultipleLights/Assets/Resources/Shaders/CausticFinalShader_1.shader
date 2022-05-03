@@ -21,13 +21,14 @@ Shader "Unlit/CausticFinalShader_1"
             sampler2D _MainTex;
             float4 _MainTex_ST;
             float _ObjectRefractionIndex;
+            float _SpecularColorFactor;
             // Variables set globally from the CPU
             sampler2D _DrewCausticColor_1;
             sampler2D _DrewTest_1; // This contains the caustic flux and distance information
 
             float _GlobalAbsorbtionCoefficient;
-            fixed4 _DebugLightColor;
-            float _LightIntensity;
+            fixed4 _DebugLightColor_1;
+            float _LightIntensity_1;
             float _AbsorbtionCoefficient;
             int _LightID;
 
@@ -54,11 +55,13 @@ Shader "Unlit/CausticFinalShader_1"
                 return SharedCausticFinalFragmentShader(
                     i,
                     _LightViewProjectionMatrix_1,
-                    _DebugLightColor,
-                    _LightIntensity,
+                    _LightWorldPosition_1,
+                    _DebugLightColor_1,
+                    _LightIntensity_1,
                     _DrewTest_1,
                     _DrewCausticColor_1,
-                    _AbsorbtionCoefficient
+                    _AbsorbtionCoefficient,
+                    _SpecularColorFactor
                 );
             }
             ENDCG

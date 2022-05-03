@@ -9,6 +9,7 @@ Shader "Unlit/CausticFinalShader_0"
     {
         Tags { "SpecularObj" = "1" }
         LOD 100
+        Cull Off
 
         Pass
         {
@@ -21,13 +22,14 @@ Shader "Unlit/CausticFinalShader_0"
             sampler2D _MainTex;
             float4 _MainTex_ST;
             float _ObjectRefractionIndex;
+            float _SpecularColorFactor;
             // Variables set globally from the CPU
             sampler2D _DrewCausticColor_0;
             sampler2D _DrewTest_0; // This contains the caustic flux and distance information
 
             float _GlobalAbsorbtionCoefficient;
-            fixed4 _DebugLightColor;
-            float _LightIntensity;
+            fixed4 _DebugLightColor_0;
+            float _LightIntensity_0;
             float _AbsorbtionCoefficient;
             int _LightID;
 
@@ -54,11 +56,13 @@ Shader "Unlit/CausticFinalShader_0"
                 return SharedCausticFinalFragmentShader(
                     i,
                     _LightViewProjectionMatrix_0,
-                    _DebugLightColor,
-                    _LightIntensity,
+                    _LightWorldPosition_0,
+                    _DebugLightColor_0,
+                    _LightIntensity_0,
                     _DrewTest_0,
                     _DrewCausticColor_0,
-                    _AbsorbtionCoefficient
+                    _AbsorbtionCoefficient,
+                    _SpecularColorFactor
                 );
             }
             ENDCG

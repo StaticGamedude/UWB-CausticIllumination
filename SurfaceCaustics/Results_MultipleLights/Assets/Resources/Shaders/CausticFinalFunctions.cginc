@@ -48,7 +48,22 @@ fixed4 GetCausticColor(float4x4 lightViewProjectionMatrix, sampler2D sourceTextu
     return causticColor;
 }
 
-v2f SharedCausticFinalVertexShader(
+float ClampSpecularColorFactor(float userFactorValue)
+{
+    if (userFactorValue > 1)
+    {
+        return 1;
+    }
+    else if (userFactorValue <= 0)
+    {
+        return 0.0001;
+    }
+    
+    return userFactorValue;
+}
+
+v2f
+    SharedCausticFinalVertexShader(
     appdata v,
     float4x4 lightViewProjectionMatrix,
     float3 lightWorldPos,
@@ -78,16 +93,18 @@ v2f SharedCausticFinalVertexShader(
 fixed4 SharedCausticFinalFragmentShader(
     v2f i, 
     float4x4 lightViewProjectionMatrix, 
+    float3 lightWorldPos,
     fixed4 lightColor,
     float lightIntensity, 
     sampler2D fluxDataTexture, 
     sampler2D causticColorTexture, 
-    float specularAbsorbtionCoefficient)
+    float specularAbsorbtionCoefficient,
+    float specularColorFactor)
 {
     float flux = GetFlux(lightViewProjectionMatrix, fluxDataTexture, i.splatPos);
     float d = GetDistance(lightViewProjectionMatrix, fluxDataTexture, i.splatPos);
     float finalIntensity = flux * exp((-specularAbsorbtionCoefficient * d));
-    fixed4 causticColor = GetCausticColor(lightViewProjectionMatrix, causticColorTexture, i.splatPos);
-
+    fixed4 causticColor = GetCausticColor(lightViewProjectionMatrix, causticColorTexture, i.splatPos) * (ClampSpecularColorFactor(specularColorFactor));
+    
     return finalIntensity * lightColor * causticColor * lightIntensity;
 }

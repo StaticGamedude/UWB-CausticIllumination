@@ -151,7 +151,7 @@ Shader "Unlit/SpecularReceivingObject"
                     finalColor = finalColor + GetFinalCausticColor(i.worldPos, _FinalLightColorTexture_1);
                 }
 
-                return finalColor;
+                return col + finalColor;
 
                 /*fixed4 finalColor = GetFinalCausticColor(i.worldPos);*/
 

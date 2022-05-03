@@ -46,9 +46,9 @@ public class LightSource : MonoBehaviour
     void Update()
     {
         this.SetLightIDOnShader(tempShader);
-        Shader.SetGlobalColor("_DebugLightColor", this.LightColor);
-        Shader.SetGlobalFloat("_LightIntensity", this.LightIntensity);
-        Shader.SetGlobalTexture($"_LightTexture{this.dataProperties.LightSourceID}", this.dataProperties.FinalColorTexture);
+        Shader.SetGlobalColor($"_DebugLightColor_{this.dataProperties.LightSourceID}", this.LightColor);
+        Shader.SetGlobalFloat($"_LightIntensity_{this.dataProperties.LightSourceID}", this.LightIntensity);
+        //Shader.SetGlobalTexture($"_LightTexture{this.dataProperties.LightSourceID}", this.dataProperties.FinalColorTexture);
     }
 
     private List<Camera> InitializePassOneCameras(LightSourceDataProperties dataProperties)
@@ -56,15 +56,15 @@ public class LightSource : MonoBehaviour
         GameObject passOneCameraContainer = new GameObject();
         passOneCameraContainer.name = "PassOneCameras";
 
-        Shader refractivePositionShader = Resources.Load<Shader>(Path.Combine(SHADERS_DIRETORY, "PositionShader"));
-        Shader refractiveNormalShader = Resources.Load<Shader>(Path.Combine(SHADERS_DIRETORY, "LightNormalShader"));
+        //Shader refractivePositionShader = Resources.Load<Shader>(Path.Combine(SHADERS_DIRETORY, "PositionShader"));
+        //Shader refractiveNormalShader = Resources.Load<Shader>(Path.Combine(SHADERS_DIRETORY, "LightNormalShader"));
         Shader receivingPositionShader = Resources.Load<Shader>(Path.Combine(SHADERS_DIRETORY, "ReceivingObjectShader"));
-        RenderTexture refractivePositionTexture = this.InitRenderTexture(false, "RefractionPositionTexture");
-        RenderTexture refractiveNormalTexture = this.InitRenderTexture(false, "RefractionNormalTexture");
+        //RenderTexture refractivePositionTexture = this.InitRenderTexture(false, "RefractionPositionTexture");
+        //RenderTexture refractiveNormalTexture = this.InitRenderTexture(false, "RefractionNormalTexture");
         RenderTexture receivingPositionTexture = this.InitRenderTexture(false, "ReceivingPositionTexture");
         
-        Camera refractivePositionCamera = this.InstantiateCausticCamera("SpecularPositionsCamera", passOneCameraContainer, refractivePositionTexture, refractivePositionShader, LightCameraType.REFRACTIVE_POSITION, LightCameraVisibilityType.SPECULAR);
-        Camera refractiveNormalCamera = this.InstantiateCausticCamera("SpecularNormalsCamera", passOneCameraContainer, refractiveNormalTexture, refractiveNormalShader, LightCameraType.REFRACTIVE_NORMAL, LightCameraVisibilityType.SPECULAR);
+        //Camera refractivePositionCamera = this.InstantiateCausticCamera("SpecularPositionsCamera", passOneCameraContainer, refractivePositionTexture, refractivePositionShader, LightCameraType.REFRACTIVE_POSITION, LightCameraVisibilityType.SPECULAR);
+        //Camera refractiveNormalCamera = this.InstantiateCausticCamera("SpecularNormalsCamera", passOneCameraContainer, refractiveNormalTexture, refractiveNormalShader, LightCameraType.REFRACTIVE_NORMAL, LightCameraVisibilityType.SPECULAR);
         Camera receivingPositionCamera = this.InstantiateCausticCamera("ReceivingPositionCamera", passOneCameraContainer, receivingPositionTexture, receivingPositionShader, LightCameraType.RECEIVING_POSITION, LightCameraVisibilityType.RECEIVER);
 
         passOneCameraContainer.transform.parent = this.transform;
@@ -72,11 +72,11 @@ public class LightSource : MonoBehaviour
         passOneCameraContainer.transform.localRotation = Quaternion.identity;
         passOneCameraContainer.transform.localScale = Vector3.one;
 
-        dataProperties.RefractionPositionTexture = refractivePositionTexture;
-        dataProperties.RefractionNormalTexture = refractiveNormalTexture;
+        //dataProperties.RefractionPositionTexture = refractivePositionTexture;
+        //dataProperties.RefractionNormalTexture = refractiveNormalTexture;
         dataProperties.ReceivingPositionTexture = receivingPositionTexture;
 
-        return new List<Camera>() { refractivePositionCamera, refractiveNormalCamera, receivingPositionCamera };
+        return new List<Camera>() { /*refractivePositionCamera, refractiveNormalCamera,*/ receivingPositionCamera };
     }
 
     private List<Camera> InitializePassTwoCameras(LightSourceDataProperties dataProperties)

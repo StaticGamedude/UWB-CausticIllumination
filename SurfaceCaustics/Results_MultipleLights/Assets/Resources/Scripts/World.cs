@@ -73,8 +73,6 @@ public class World : MonoBehaviour
     /// </summary>
     public float Debug_RefractionIndex = 1; // Defaulting to 1. Equivalent to the speed of light moving in a vacuum. 
 
-    public float Debug_LightIntensity = 1;
-
     //public float Debug_AbsorbtionCoefficient = 0.00017f;
 
     public bool Debug_RenderSpecularPositions = true;
@@ -162,7 +160,6 @@ public class World : MonoBehaviour
         }
 
         Shader.SetGlobalFloat("_RefractiveIndex", this.Debug_RefractionIndex);
-        //Shader.SetGlobalFloat("_LightIntensity", this.Debug_LightIntensity);
         Shader.SetGlobalFloat("_IlluminationDistance", this.Debug_IlluminationDistance);
         Shader.SetGlobalVector("_DiffuseObjectPos", this.DiffuseObject.transform.position);
         Shader.SetGlobalTexture("_CausticTexture", this.LightCameraCausticFinalTexture);

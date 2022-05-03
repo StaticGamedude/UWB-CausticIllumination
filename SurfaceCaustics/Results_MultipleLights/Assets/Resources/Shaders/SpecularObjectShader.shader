@@ -10,6 +10,7 @@ Shader "Unlit/SpecularObjectShader"
         _MainTex ("Texture", 2D) = "white" {}
         _ObjectRefractionIndex ("Refraction Index", Float) = 1.0
         _AbsorbtionCoefficient ("Absorbtion Coefficient", Float) = 0.00017
+        _SpecularColorFactor ("Specular Color Factor (0-1)", Float) = 1
     }
     SubShader
     {
