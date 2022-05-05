@@ -106,5 +106,5 @@ fixed4 SharedCausticFinalFragmentShader(
     float finalIntensity = flux * exp((-specularAbsorbtionCoefficient * d));
     fixed4 causticColor = GetCausticColor(lightViewProjectionMatrix, causticColorTexture, i.splatPos) * (ClampSpecularColorFactor(specularColorFactor));
     
-    return finalIntensity * lightColor * causticColor * lightIntensity;
+    return finalIntensity * lightColor * /*causticColor * */lightIntensity;
 }

@@ -99,6 +99,12 @@ public class World : MonoBehaviour
 
     public Color Debug_LightColor = Color.white;
 
+    public float ShadowFactor = 0.5f;
+
+    public bool RenderShadows = true;
+
+    public bool RenderCaustics = true;
+
     /// <summary>
     /// Interal list of spheres which represent the positions read from the position texture
     /// </summary>
@@ -159,6 +165,15 @@ public class World : MonoBehaviour
             this.Debug_RefractionIndex = 1;
         }
 
+        if (this.ShadowFactor > 1)
+        {
+            this.ShadowFactor = 1;
+        }
+        else if (this.ShadowFactor < 0)
+        {
+            this.ShadowFactor = 0;
+        }
+
         Shader.SetGlobalFloat("_RefractiveIndex", this.Debug_RefractionIndex);
         Shader.SetGlobalFloat("_IlluminationDistance", this.Debug_IlluminationDistance);
         Shader.SetGlobalVector("_DiffuseObjectPos", this.DiffuseObject.transform.position);
@@ -170,6 +185,9 @@ public class World : MonoBehaviour
         Shader.SetGlobalFloat("_DebugFluxMultiplier", this.Debug_Flux_Multiplier);
         Shader.SetGlobalInt("_Debug_AllowNegativeIntensities", this.Debug_AllowNegativeIntensities ? 1 : 0);
         Shader.SetGlobalInt("_Debug_MultiplyIntensity", this.Debug_MultiplyIntensity ? 1 : 0);
+        Shader.SetGlobalFloat("_ShadowFactor", this.ShadowFactor);
+        Shader.SetGlobalInt("_RenderShadows", this.RenderShadows ? 1 : 0);
+        Shader.SetGlobalInt("_RenderCaustics", this.RenderCaustics ? 1 : 0);
         //Shader.SetGlobalColor("_DebugLightColor", this.Debug_LightColor);
 
         //Texture2DArray finalLightingTextureArray = new Texture2DArray(1024, 1024, 32, TextureFormat.ARGB32, false);
@@ -191,6 +209,7 @@ public class World : MonoBehaviour
 
         //Shader.SetGlobalTexture("_FinalLightingTextures", finalLightingTextureArray);
         Shader.SetGlobalFloatArray("_LightIDs", lightIDs);
+        
 
         this.HandleValidationInputs();
     }

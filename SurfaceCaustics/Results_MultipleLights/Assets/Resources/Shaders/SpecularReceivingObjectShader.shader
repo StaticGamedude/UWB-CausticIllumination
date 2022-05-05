@@ -48,6 +48,7 @@ Shader "Unlit/SpecularReceivingObject"
             sampler2D _CausticColorMapTexture;
             sampler2D _FinalLightColorTexture_0;
             sampler2D _FinalLightColorTexture_1;
+            sampler2D _CausticShadowTexture_0;
 
             float4x4 _LightViewProjectionMatrix;
             float _IlluminationDistance;
@@ -60,6 +61,9 @@ Shader "Unlit/SpecularReceivingObject"
             fixed4 _DebugLightColor;
             float _LightIntensity;
             float _AbsorbtionCoefficient;
+            float _ShadowFactor;
+            int _RenderShadows;
+            int _RenderCaustics;
 
             UNITY_DECLARE_TEX2DARRAY(_FinalLightingTextures);
             //sampler2D _FinalLightingTextures; //This contains an array of textures
@@ -118,6 +122,13 @@ Shader "Unlit/SpecularReceivingObject"
                 return causticColor;
             }
 
+            bool IsShadowPosition(float3 worldPos, sampler2D shadowTexture)
+            {
+                float2 tc = GetCoordinatesForSpecularTexture(worldPos);
+                fixed4 shadowValue = tex2D(shadowTexture, tc);
+                return shadowValue.x > 0;
+            }
+
             v2f vert (appdata v)
             {
                 v2f o;
@@ -141,14 +152,22 @@ Shader "Unlit/SpecularReceivingObject"
                 fixed4 causticColor = GetCausticColor(i.worldPos);
                 fixed4 finalColor = fixed4(0, 0, 0, 0);
 
-                if (_LightIDs[0] != -1)
+                if (_RenderCaustics == 1)
                 {
-                    finalColor = finalColor + GetFinalCausticColor(i.worldPos, _FinalLightColorTexture_0);
-                }
+                    if (_LightIDs[0] != -1)
+                    {
+                        finalColor = finalColor + GetFinalCausticColor(i.worldPos, _FinalLightColorTexture_0);
+                    }
 
-                if (_LightIDs[1] != -1)
+                    if (_LightIDs[1] != -1)
+                    {
+                        finalColor = finalColor + GetFinalCausticColor(i.worldPos, _FinalLightColorTexture_1);
+                    }
+                }
+                
+                if (IsShadowPosition(i.worldPos, _CausticShadowTexture_0) && _RenderShadows == 1)
                 {
-                    finalColor = finalColor + GetFinalCausticColor(i.worldPos, _FinalLightColorTexture_1);
+                    col = col * _ShadowFactor;
                 }
 
                 return col + finalColor;

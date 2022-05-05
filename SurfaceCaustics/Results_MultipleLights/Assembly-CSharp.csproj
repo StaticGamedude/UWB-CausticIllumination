@@ -81,9 +81,11 @@
     <Compile Include="Assets\Resources\Scripts\LightSource.cs" />
     <Compile Include="Assets\Resources\Scripts\LightCamera.cs" />
     <Compile Include="Assets\GroupResources\Liwen\Source\RenderPipeline\RenderObjectPass.cs" />
+    <Compile Include="Assets\Resources\Scripts\SetCausticFlags.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Resources\Shaders\LightNormalShader.shader" />
+    <None Include="Assets\Resources\Shaders\CausticShadowShader.shader" />
     <None Include="Assets\Resources\Shaders\CausticColorShader.shader" />
     <None Include="Assets\Resources\Shaders\SinShader.shader" />
     <None Include="Assets\Resources\Shaders\CausticColorFunctions.cginc" />
