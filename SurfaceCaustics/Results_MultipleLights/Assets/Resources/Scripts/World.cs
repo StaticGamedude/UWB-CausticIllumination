@@ -160,6 +160,8 @@ public class World : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        float[] lightIDs = this.allLightSourceData.Select(data => (float)data.LightSourceID).ToArray();
+
         if (this.Debug_RefractionIndex < 1)
         {
             this.Debug_RefractionIndex = 1;
@@ -179,7 +181,6 @@ public class World : MonoBehaviour
         Shader.SetGlobalVector("_DiffuseObjectPos", this.DiffuseObject.transform.position);
         Shader.SetGlobalTexture("_CausticTexture", this.LightCameraCausticFinalTexture);
         Shader.SetGlobalTexture("_CausticFluxTexture", this.LightCameraFluxTexture);
-        //Shader.SetGlobalFloat("_GlobalAbsorbtionCoefficient", this.Debug_AbsorbtionCoefficient);
         Shader.SetGlobalInt("_NumProjectedVerticies", /*this.GetNumberOfVisiblePixels(this.LightCameraRefractionPositionTexture)*/ this.Debug_NumOfVisiblePixels);
         Shader.SetGlobalFloat("_DebugFlux", this.Debug_Flux);
         Shader.SetGlobalFloat("_DebugFluxMultiplier", this.Debug_Flux_Multiplier);
@@ -188,29 +189,10 @@ public class World : MonoBehaviour
         Shader.SetGlobalFloat("_ShadowFactor", this.ShadowFactor);
         Shader.SetGlobalInt("_RenderShadows", this.RenderShadows ? 1 : 0);
         Shader.SetGlobalInt("_RenderCaustics", this.RenderCaustics ? 1 : 0);
-        //Shader.SetGlobalColor("_DebugLightColor", this.Debug_LightColor);
 
-        //Texture2DArray finalLightingTextureArray = new Texture2DArray(1024, 1024, 32, TextureFormat.ARGB32, false);
-        float[] lightIDs = this.allLightSourceData.Select(data => (float)data.LightSourceID).ToArray();
-        //for (int i = 0; i < this.allLightSourceData.Length; i++)
-        //{
-        //    LightSourceDataProperties dataProperty = this.allLightSourceData[i];
-
-        //    if (dataProperty.LightSourceID == -1)
-        //    {
-        //        break;
-        //    }
-
-        //    Texture2D finalLightingTexture = this.ConvertRenderTextureTo2DTexture(dataProperty.FinalColorTexture);
-        //    finalLightingTextureArray.SetPixels(finalLightingTexture.GetPixels(0), dataProperty.LightSourceID, 0);
-        //}
-
-        //finalLightingTextureArray.Apply();
-
-        //Shader.SetGlobalTexture("_FinalLightingTextures", finalLightingTextureArray);
-        Shader.SetGlobalFloatArray("_LightIDs", lightIDs);
         
 
+        Shader.SetGlobalFloatArray("_LightIDs", lightIDs);
         this.HandleValidationInputs();
     }
 

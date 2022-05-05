@@ -75,7 +75,7 @@ public class LightSource : MonoBehaviour
 
         Shader refractionFluxShader = Resources.Load<Shader>(Path.Combine(SHADERS_DIRETORY, $"CausticFluxShader_{this.dataProperties.LightSourceID}"));
         Shader refractionColorShader = Resources.Load<Shader>(Path.Combine(SHADERS_DIRETORY, $"DrewCausticColorShader_{this.dataProperties.LightSourceID}"));
-        Shader shadowShader = Resources.Load<Shader>(Path.Combine(SHADERS_DIRETORY, $"CausticShadowShader"));
+        Shader shadowShader = Resources.Load<Shader>(Path.Combine(SHADERS_DIRETORY, $"CausticShadowShader_{this.dataProperties.LightSourceID}"));
         RenderTexture refractionFluxTexture = this.InitRenderTexture(false, "RefractionFluxTexture");
         RenderTexture refractionColorTexture = this.InitRenderTexture(true, "RefractionColorTexture");
         RenderTexture refractionShadowTexture = this.InitRenderTexture(true, "RefractionShadowTexture");

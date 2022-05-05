@@ -85,8 +85,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Resources\Shaders\LightNormalShader.shader" />
-    <None Include="Assets\Resources\Shaders\CausticShadowShader.shader" />
-    <None Include="Assets\Resources\Shaders\CausticColorShader.shader" />
+    <None Include="Assets\Resources\Shaders\CausticShadowShader_0.shader" />
+    <None Include="Assets\Resources\Shaders\CausticColorShader_0.shader" />
     <None Include="Assets\Resources\Shaders\SinShader.shader" />
     <None Include="Assets\Resources\Shaders\CausticColorFunctions.cginc" />
     <None Include="Assets\Resources\Shaders\TestTransformShader.shader" />
@@ -107,6 +107,7 @@
     <None Include="Assets\Resources\Shaders\CausticFinalFunctions.cginc" />
     <None Include="Assets\Resources\Shaders\CausticFinalShader_0.shader" />
     <None Include="Assets\Resources\Shaders\MultiOutputShader.shader" />
+    <None Include="Assets\Resources\Shaders\ShadowSupport.cginc" />
     <None Include="Assets\Resources\Shaders\CausticDistanceShader.shader" />
     <None Include="Assets\Resources\Shaders\CausticRefractionRayShader.shader" />
     <None Include="Assets\Resources\Shaders\DrewCausticColorShader_0.shader" />
@@ -115,6 +116,7 @@
     <None Include="Assets\Resources\Shaders\SpecularObjectShader.shader" />
     <None Include="Assets\Resources\Shaders\SpecularFunctions.cginc" />
     <None Include="Assets\Resources\Shaders\CausticIntensityShader.shader" />
+    <None Include="Assets\Resources\Shaders\CausticShadowShader_1.shader" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
