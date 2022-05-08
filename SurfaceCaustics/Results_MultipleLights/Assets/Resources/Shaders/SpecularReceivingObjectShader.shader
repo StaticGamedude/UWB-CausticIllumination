@@ -51,7 +51,8 @@ Shader "Unlit/SpecularReceivingObject"
             sampler2D _CausticShadowTexture_0;
             sampler2D _CausticShadowTexture_1;
 
-            float4x4 _LightViewProjectionMatrix;
+            float4x4 _LightViewProjectionMatrix_0;
+            float4x4 _LightViewProjectionMatrix_1;
             float _IlluminationDistance;
             float _GlobalAbsorbtionCoefficient;
             float _DebugFlux;
@@ -74,9 +75,10 @@ Shader "Unlit/SpecularReceivingObject"
             * Given the world position of the receiving object, get the texture
             * coordinates that can be used to map into a caustic texture.
             */
-            float2 GetCoordinatesForSpecularTexture(float3 worldPos)
+            float2 GetCoordinatesForSpecularTexture(int lightID, float3 worldPos)
             {
-                float4 texPt = mul(_LightViewProjectionMatrix, float4(worldPos, 1));
+                float4x4 projectionMatrix = lightID == 0 ? _LightViewProjectionMatrix_0 : _LightViewProjectionMatrix_1;
+                float4 texPt = mul(projectionMatrix, float4(worldPos, 1));
                 float2 tc = 0.5 * texPt.xy / texPt.w + float2(0.5, 0.5);
                 return tc;
             }
@@ -85,9 +87,9 @@ Shader "Unlit/SpecularReceivingObject"
             * Determine if the world position (of the receiving object) is hit by any refracted
             * light ray
             */
-            bool SpecularSeesPosition(float3 worldPos)
+            bool SpecularSeesPosition(int lightID, float3 worldPos)
             {
-                float2 tc = GetCoordinatesForSpecularTexture(worldPos);
+                float2 tc = GetCoordinatesForSpecularTexture(lightID, worldPos);
                 float4 fluxVals = tex2D(_DrewTest/*_CausticMapTexture*/, tc);
                 return fluxVals.a == 1;
             }
@@ -95,39 +97,49 @@ Shader "Unlit/SpecularReceivingObject"
             /*
             * Get the amount of flux that has accumulated onto the provided receiving position
             */
-            float GetFlux(float3 worldPos)
+            float GetFlux(int lightID, float3 worldPos)
             {
-                float2 tc = GetCoordinatesForSpecularTexture(worldPos);
+                float2 tc = GetCoordinatesForSpecularTexture(lightID, worldPos);
                 float4 fluxVals = tex2D(_DrewTest, tc);
                 return fluxVals.x;
             }
 
-            float GetDistance(float3 worldPos)
+            float GetDistance(int lightID, float3 worldPos)
             {
-                float2 tc = GetCoordinatesForSpecularTexture(worldPos);
+                float2 tc = GetCoordinatesForSpecularTexture(lightID, worldPos);
                 float4 distanceVals = tex2D(_DrewTest, tc);
                 return distanceVals.y;
             }
 
-            fixed4 GetCausticColor(float3 worldPos)
+            fixed4 GetCausticColor(int lightID, float3 worldPos)
             {
-                float2 tc = GetCoordinatesForSpecularTexture(worldPos);
+                float2 tc = GetCoordinatesForSpecularTexture(lightID, worldPos);
                 fixed4 causticColor = tex2D(_DrewCausticColor, tc);
                 return causticColor;
             }
 
-            fixed4 GetFinalCausticColor(float3 worldPos, sampler2D lightTexture)
+            fixed4 GetFinalCausticColor(int lightID, float3 worldPos, sampler2D lightTexture)
             {
-                float2 tc = GetCoordinatesForSpecularTexture(worldPos);
+                float2 tc = GetCoordinatesForSpecularTexture(lightID, worldPos);
                 fixed4 causticColor = tex2D(lightTexture, tc);
                 return causticColor;
             }
 
-            bool IsShadowPosition(float3 worldPos, sampler2D shadowTexture)
+            bool IsShadowPosition(int lightID, float3 worldPos, sampler2D shadowTexture)
             {
-                float2 tc = GetCoordinatesForSpecularTexture(worldPos);
+                float2 tc = GetCoordinatesForSpecularTexture(lightID, worldPos);
                 fixed4 shadowValue = tex2D(shadowTexture, tc);
                 return shadowValue.x > 0;
+            }
+
+            bool IsUnderLightShadowCam(int lightID, sampler2D shadowTexture, float3 worldPos)
+            {
+                if (_LightIDs[lightID] == -1)
+                {
+                    return false;
+                }
+
+                return IsShadowPosition(lightID, worldPos, shadowTexture);
             }
 
             v2f vert (appdata v)
@@ -142,47 +154,31 @@ Shader "Unlit/SpecularReceivingObject"
                 return o;
             }
 
-            bool IsUnderLightShadowCam(int lightID, sampler2D shadowTexture, float3 worldPos)
-            {
-                if (_LightIDs[lightID] == -1)
-                {
-                    return false;
-                }
-
-                return IsShadowPosition(worldPos, shadowTexture);
-            }
-
-            
             fixed4 frag (v2f i) : SV_Target
             {
-                float flux = GetFlux(i.worldPos);
-                float d = GetDistance(i.worldPos);
-                float finalIntensity = flux * exp((-_AbsorbtionCoefficient * d));
-                float2 tc = GetCoordinatesForSpecularTexture(i.worldPos);
                 fixed4 col = tex2D(_MainTex, i.uv);
-                fixed4 causticColor = GetCausticColor(i.worldPos);
                 fixed4 finalColor = fixed4(0, 0, 0, 0);
-                bool isInShadow_0 = IsShadowPosition(i.worldPos, _CausticShadowTexture_0) && _LightIDs[0] != -1;
-                bool isInShadow_1 = IsShadowPosition(i.worldPos, _CausticShadowTexture_1) && _LightIDs[1] != -1;
+                bool isInShadow_0 = IsShadowPosition(0, i.worldPos, _CausticShadowTexture_0) && _LightIDs[0] != -1;
+                bool isInShadow_1 = IsShadowPosition(0, i.worldPos, _CausticShadowTexture_1) && _LightIDs[1] != -1;
 
 
                 if (_RenderCaustics == 1)
                 {
                     if (_LightIDs[0] != -1)
                     {
-                        finalColor = finalColor + GetFinalCausticColor(i.worldPos, _FinalLightColorTexture_0);
+                        finalColor = finalColor + GetFinalCausticColor(0, i.worldPos, _FinalLightColorTexture_0);
                     }
 
                     if (_LightIDs[1] != -1)
                     {
-                        finalColor = finalColor + GetFinalCausticColor(i.worldPos, _FinalLightColorTexture_1);
+                        finalColor = finalColor + GetFinalCausticColor(1, i.worldPos, _FinalLightColorTexture_1);
                     }
                 }
                 
-                if (_RenderShadows == 1 && (IsUnderLightShadowCam(0, _CausticShadowTexture_0, i.worldPos) || IsUnderLightShadowCam(1, _CausticShadowTexture_1, i.worldPos)))
+                /*if (_RenderShadows == 1 && (IsUnderLightShadowCam(0, _CausticShadowTexture_0, i.worldPos) || IsUnderLightShadowCam(1, _CausticShadowTexture_1, i.worldPos)))
                 {
                     col = col * _ShadowFactor;
-                }
+                }*/
 
                 return col + finalColor;
             }

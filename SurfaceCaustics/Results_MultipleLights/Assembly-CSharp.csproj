@@ -76,12 +76,12 @@
     <Compile Include="Assets\Resources\Scripts\RenderingPass.cs" />
     <Compile Include="Assets\Resources\Scripts\MultiOutput.cs" />
     <Compile Include="Assets\Resources\Scripts\World.cs" />
+    <Compile Include="Assets\Resources\Scripts\SetCausticFlags.cs" />
     <Compile Include="Assets\Resources\Scripts\Globals.cs" />
     <Compile Include="Assets\Resources\Scripts\LightSourceDataProperties.cs" />
     <Compile Include="Assets\Resources\Scripts\LightSource.cs" />
     <Compile Include="Assets\Resources\Scripts\LightCamera.cs" />
     <Compile Include="Assets\GroupResources\Liwen\Source\RenderPipeline\RenderObjectPass.cs" />
-    <Compile Include="Assets\Resources\Scripts\SetCausticFlags.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Resources\Shaders\LightNormalShader.shader" />
