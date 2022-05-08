@@ -89,6 +89,7 @@
     <None Include="Assets\Resources\Shaders\CausticColorShader_0.shader" />
     <None Include="Assets\Resources\Shaders\SinShader.shader" />
     <None Include="Assets\Resources\Shaders\CausticColorFunctions.cginc" />
+    <None Include="Assets\Resources\Shaders\ShadowFinalShader_1.shader" />
     <None Include="Assets\Resources\Shaders\TestTransformShader.shader" />
     <None Include="Assets\Resources\Shaders\PositionShader.shader" />
     <None Include="Assets\Resources\Shaders\CausticFluxFunctions.cginc" />
@@ -107,6 +108,7 @@
     <None Include="Assets\Resources\Shaders\CausticFinalFunctions.cginc" />
     <None Include="Assets\Resources\Shaders\CausticFinalShader_0.shader" />
     <None Include="Assets\Resources\Shaders\MultiOutputShader.shader" />
+    <None Include="Assets\Resources\Shaders\ShadowFinalShader_0.shader" />
     <None Include="Assets\Resources\Shaders\ShadowSupport.cginc" />
     <None Include="Assets\Resources\Shaders\CausticDistanceShader.shader" />
     <None Include="Assets\Resources\Shaders\CausticRefractionRayShader.shader" />

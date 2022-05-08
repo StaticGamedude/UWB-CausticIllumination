@@ -50,6 +50,8 @@ Shader "Unlit/SpecularReceivingObject"
             sampler2D _FinalLightColorTexture_1;
             sampler2D _CausticShadowTexture_0;
             sampler2D _CausticShadowTexture_1;
+            sampler2D _ShadowFinalTexture_0;
+            sampler2D _ShadowFinalTexture_1;
 
             float4x4 _LightViewProjectionMatrix_0;
             float4x4 _LightViewProjectionMatrix_1;
@@ -128,8 +130,13 @@ Shader "Unlit/SpecularReceivingObject"
             bool IsShadowPosition(int lightID, float3 worldPos, sampler2D shadowTexture)
             {
                 float2 tc = GetCoordinatesForSpecularTexture(lightID, worldPos);
-                fixed4 shadowValue = tex2D(shadowTexture, tc);
-                return shadowValue.x > 0;
+                fixed4 shadowColor = tex2D(shadowTexture, tc);
+                if (shadowColor.r > 0.01 && shadowColor.g > 0.01 && shadowColor.b > 0.01)
+                {
+                    return true;
+                }
+
+                return false;
             }
 
             bool IsUnderLightShadowCam(int lightID, sampler2D shadowTexture, float3 worldPos)
@@ -141,6 +148,8 @@ Shader "Unlit/SpecularReceivingObject"
 
                 return IsShadowPosition(lightID, worldPos, shadowTexture);
             }
+
+
 
             v2f vert (appdata v)
             {
@@ -158,9 +167,6 @@ Shader "Unlit/SpecularReceivingObject"
             {
                 fixed4 col = tex2D(_MainTex, i.uv);
                 fixed4 finalColor = fixed4(0, 0, 0, 0);
-                bool isInShadow_0 = IsShadowPosition(0, i.worldPos, _CausticShadowTexture_0) && _LightIDs[0] != -1;
-                bool isInShadow_1 = IsShadowPosition(0, i.worldPos, _CausticShadowTexture_1) && _LightIDs[1] != -1;
-
 
                 if (_RenderCaustics == 1)
                 {
@@ -175,10 +181,12 @@ Shader "Unlit/SpecularReceivingObject"
                     }
                 }
                 
-                /*if (_RenderShadows == 1 && (IsUnderLightShadowCam(0, _CausticShadowTexture_0, i.worldPos) || IsUnderLightShadowCam(1, _CausticShadowTexture_1, i.worldPos)))
+                float2 tc = GetCoordinatesForSpecularTexture(0, i.worldPos);
+                fixed4 shadowColor = tex2D(_ShadowFinalTexture_0, tc);
+                if (_RenderShadows == 1 && (IsUnderLightShadowCam(0, _ShadowFinalTexture_0, i.worldPos) || IsUnderLightShadowCam(1, _ShadowFinalTexture_1, i.worldPos)))
                 {
-                    col = col * _ShadowFactor;
-                }*/
+                    col = col * 0.4;
+                }
 
                 return col + finalColor;
             }

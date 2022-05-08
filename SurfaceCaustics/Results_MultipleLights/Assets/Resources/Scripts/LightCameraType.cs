@@ -56,5 +56,7 @@ public enum LightCameraType
 
     CAUSTIC_FINAL_LIGHT_COLOR,
 
-    SHADOW
+    SHADOW,
+
+    SHADOW_FINAL,
 }

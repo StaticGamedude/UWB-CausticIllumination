@@ -123,6 +123,9 @@ public class LightCamera : MonoBehaviour
             case LightCameraType.SHADOW:
                 shaderTextureParameter = "_CausticShadowTexture";
                 break;
+            case LightCameraType.SHADOW_FINAL:
+                shaderTextureParameter = "_ShadowFinalTexture";
+                break;
         }
 
         Shader.SetGlobalTexture($"{shaderTextureParameter}_{this.LightSourceID}", DataTexture);

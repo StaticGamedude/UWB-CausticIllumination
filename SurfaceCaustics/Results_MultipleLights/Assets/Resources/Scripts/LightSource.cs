@@ -78,7 +78,7 @@ public class LightSource : MonoBehaviour
         Shader shadowShader = Resources.Load<Shader>(Path.Combine(SHADERS_DIRETORY, $"CausticShadowShader_{this.dataProperties.LightSourceID}"));
         RenderTexture refractionFluxTexture = this.InitRenderTexture(false, "RefractionFluxTexture");
         RenderTexture refractionColorTexture = this.InitRenderTexture(true, "RefractionColorTexture");
-        RenderTexture refractionShadowTexture = this.InitRenderTexture(true, "RefractionShadowTexture");
+        RenderTexture refractionShadowTexture = this.InitRenderTexture(false, "RefractionShadowTexture");
         Camera refractionFluxCamera = this.InstantiateCausticCamera("SpecularFluxCamera", passTwoCameraContainer, refractionFluxTexture, refractionFluxShader, LightCameraType.CAUSTIC_FLUX_2, LightCameraVisibilityType.SPECULAR);
         Camera refractionColorCamera = this.InstantiateCausticCamera("SpecularColorCamera", passTwoCameraContainer, refractionColorTexture, refractionColorShader, LightCameraType.CAUSTIC_DREW_COLOR, LightCameraVisibilityType.SPECULAR);
         Camera refractionShadowCamera = this.InstantiateCausticCamera("SpecularShadowCamera", passTwoCameraContainer, refractionShadowTexture, shadowShader, LightCameraType.SHADOW, LightCameraVisibilityType.SPECULAR);
@@ -100,8 +100,11 @@ public class LightSource : MonoBehaviour
         passThreeCameraContainer.name = "PassThreeCameras";
 
         Shader refractionFinalShader = Resources.Load<Shader>(Path.Combine(SHADERS_DIRETORY, $"CausticFinalShader_{this.dataProperties.LightSourceID}"));
+        Shader shadowFinalShader = Resources.Load<Shader>(Path.Combine(SHADERS_DIRETORY, $"ShadowFinalShader_{this.dataProperties.LightSourceID}"));
         RenderTexture refractionFinalTexture = this.InitRenderTexture(true, "RefractionFinalTexture");
+        RenderTexture shadowFinalTexture = this.InitRenderTexture(true, "ShadowFinalTexture");
         Camera refractionResultCamera = this.InstantiateCausticCamera("SpecularResultCamera", passThreeCameraContainer, refractionFinalTexture, refractionFinalShader, LightCameraType.CAUSTIC_FINAL_LIGHT_COLOR, LightCameraVisibilityType.SPECULAR);
+        Camera shadowFinalCamera = this.InstantiateCausticCamera("ShadowFinalCamera", passThreeCameraContainer, shadowFinalTexture, shadowFinalShader, LightCameraType.SHADOW_FINAL, LightCameraVisibilityType.SPECULAR);
 
         passThreeCameraContainer.transform.parent = this.transform;
         passThreeCameraContainer.transform.localPosition = Vector3.zero;
@@ -112,7 +115,7 @@ public class LightSource : MonoBehaviour
 
         this.tempShader = refractionFinalShader;
 
-        return new List<Camera>() { refractionResultCamera };
+        return new List<Camera>() { refractionResultCamera, shadowFinalCamera };
     }
 
     private RenderTexture InitRenderTexture(bool isColorTexture, string name)

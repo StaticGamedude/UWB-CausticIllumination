@@ -106,5 +106,22 @@ fixed4 SharedCausticFinalFragmentShader(
     float finalIntensity = flux * exp((-specularAbsorbtionCoefficient * d));
     fixed4 causticColor = GetCausticColor(lightViewProjectionMatrix, causticColorTexture, i.splatPos) * (ClampSpecularColorFactor(specularColorFactor));
     
-    return finalIntensity * lightColor * /*causticColor * */lightIntensity;
+    return finalIntensity * lightColor * causticColor * lightIntensity;
+}
+
+fixed4 SharedShadowFragmentShader(
+    v2f i,
+    float4x4 lightViewProjectionMatrix,
+    float3 lightWorldPos,
+    fixed4 lightColor,
+    float lightIntensity,
+    sampler2D fluxDataTexture,
+    float specularAbsorbtionCoefficient,
+    float specularColorFactor)
+{
+    float flux = GetFlux(lightViewProjectionMatrix, fluxDataTexture, i.splatPos);
+    float d = GetDistance(lightViewProjectionMatrix, fluxDataTexture, i.splatPos);
+    float finalIntensity = flux * exp((-specularAbsorbtionCoefficient * d));
+    
+    return finalIntensity * lightColor * lightIntensity;
 }
