@@ -52,6 +52,7 @@ Shader "Unlit/SpecularReceivingObject"
             sampler2D _CausticShadowTexture_1;
             sampler2D _ShadowFinalTexture_0;
             sampler2D _ShadowFinalTexture_1;
+            sampler2D _TestTexture;
 
             float4x4 _LightViewProjectionMatrix_0;
             float4x4 _LightViewProjectionMatrix_1;
@@ -68,6 +69,8 @@ Shader "Unlit/SpecularReceivingObject"
             float _ShadowFactor;
             int _RenderShadows;
             int _RenderCaustics;
+            float _ShadowThreshold;
+            
 
             UNITY_DECLARE_TEX2DARRAY(_FinalLightingTextures);
             //sampler2D _FinalLightingTextures; //This contains an array of textures
@@ -131,7 +134,7 @@ Shader "Unlit/SpecularReceivingObject"
             {
                 float2 tc = GetCoordinatesForSpecularTexture(lightID, worldPos);
                 fixed4 shadowColor = tex2D(shadowTexture, tc);
-                if (shadowColor.r > 0.01 && shadowColor.g > 0.01 && shadowColor.b > 0.01)
+                if (shadowColor.r > _ShadowThreshold && shadowColor.g > _ShadowThreshold && shadowColor.b > _ShadowThreshold)
                 {
                     return true;
                 }
@@ -183,10 +186,18 @@ Shader "Unlit/SpecularReceivingObject"
                 
                 float2 tc = GetCoordinatesForSpecularTexture(0, i.worldPos);
                 fixed4 shadowColor = tex2D(_ShadowFinalTexture_0, tc);
-                if (_RenderShadows == 1 && (IsUnderLightShadowCam(0, _ShadowFinalTexture_0, i.worldPos) || IsUnderLightShadowCam(1, _ShadowFinalTexture_1, i.worldPos)))
+                /*if (_RenderShadows == 1 && (IsUnderLightShadowCam(0, _ShadowFinalTexture_0, i.worldPos) || IsUnderLightShadowCam(1, _ShadowFinalTexture_1, i.worldPos)))
                 {
                     col = col * 0.4;
-                }
+                }*/
+
+                /*fixed4 testCol = tex2D(_TestTexture, tc);
+                return testCol;*/
+
+                /*if (_RenderShadows == 1)
+                {
+                    col = col - shadowColor;
+                }*/
 
                 return col + finalColor;
             }

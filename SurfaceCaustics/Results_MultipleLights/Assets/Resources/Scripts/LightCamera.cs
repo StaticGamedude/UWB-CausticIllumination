@@ -21,7 +21,7 @@ public class LightCamera : MonoBehaviour
     /// world positions or world normals of the verticies of the objects that the camera can see. Texture is expected 
     /// to be set in the unity editor
     /// </summary>
-    public Texture DataTexture;
+    public RenderTexture DataTexture;
 
     /// <summary>
     /// Represents the type of data that this camera is meant to capture
@@ -135,9 +135,36 @@ public class LightCamera : MonoBehaviour
         Shader.SetGlobalFloat($"{Globals.SHADER_PARAM_LIGHT_CAMERA_FAR}_{this.LightSourceID}", 1.0f / lightCamera.farClipPlane);
         Shader.SetGlobalVector($"{Globals.SHADER_PARAM_LIGHT_WORLD_POS}_{this.LightSourceID}", lightCamera.transform.position);
 
+        if( this.LightCamType == LightCameraType.CAUSTIC_FLUX_2)
+        {
+            //this.CountNumOfNonEmptyPixels(this.DataTexture);
+        }
         //if (!string.IsNullOrEmpty(this.finalLightShaderParameter))
         //{
         //    Shader.SetGlobalTexture(this.finalLightShaderParameter, DataTexture);
         //}
+    }
+
+    void CountNumOfNonEmptyPixels(RenderTexture rt)
+    {
+        RenderTexture originalRenderTexture = RenderTexture.active;
+        RenderTexture.active = rt;
+        Texture2D texture = new Texture2D(rt.width, rt.height, TextureFormat.RGBAFloat, false);
+        texture.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0);
+
+        Color32[] allPixelValues = texture.GetPixels32();
+
+        int nonEmptyCount = 0;
+        foreach(Color32 col in allPixelValues)
+        {
+            if (col.a > 0)
+            {
+                nonEmptyCount++;
+            }
+        }
+
+        Debug.Log($"Num of non-empty pixels found: {nonEmptyCount}");
+
+        RenderTexture.active = originalRenderTexture;
     }
 }

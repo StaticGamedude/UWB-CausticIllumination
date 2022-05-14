@@ -105,6 +105,8 @@ public class World : MonoBehaviour
 
     public bool RenderCaustics = true;
 
+    public float ShadowThreshold = 0.01f;
+
     /// <summary>
     /// Interal list of spheres which represent the positions read from the position texture
     /// </summary>
@@ -128,6 +130,10 @@ public class World : MonoBehaviour
     private int supportedNumberOfLights = 8;
 
     private LightSourceDataProperties[] allLightSourceData;
+
+    public Camera TestCamera;
+
+    public Shader TestShader;
 
     // Start is called before the first frame update
     void Start()
@@ -155,6 +161,8 @@ public class World : MonoBehaviour
                 this.allLightSourceData[i] = foundLightSources[i].dataProperties;
             }
         }
+
+        this.TestCamera.SetReplacementShader(this.TestShader, "SpecularObj");
     }
 
     // Update is called once per frame
@@ -189,11 +197,14 @@ public class World : MonoBehaviour
         Shader.SetGlobalFloat("_ShadowFactor", this.ShadowFactor);
         Shader.SetGlobalInt("_RenderShadows", this.RenderShadows ? 1 : 0);
         Shader.SetGlobalInt("_RenderCaustics", this.RenderCaustics ? 1 : 0);
-
+        Shader.SetGlobalFloat("_ShadowThreshold", this.ShadowThreshold);
         
 
         Shader.SetGlobalFloatArray("_LightIDs", lightIDs);
         this.HandleValidationInputs();
+
+
+        Shader.SetGlobalTexture("_TestTexture", this.TestCamera.targetTexture);
     }
 
     /// <summary>
@@ -472,4 +483,5 @@ public class World : MonoBehaviour
 
         Debug.Log("Color check complete");
     }
+
 }

@@ -123,6 +123,10 @@ public class LightSource : MonoBehaviour
         RenderTexture newTexture = new RenderTexture(1024, 1024, 32);
         newTexture.name = name;
         newTexture.format = !isColorTexture ? RenderTextureFormat.ARGBFloat : RenderTextureFormat.Default;
+        newTexture.antiAliasing = 8;
+        newTexture.autoGenerateMips = false;
+        newTexture.useDynamicScale = false;
+        newTexture.useMipMap = false;
         return newTexture;
     }
 

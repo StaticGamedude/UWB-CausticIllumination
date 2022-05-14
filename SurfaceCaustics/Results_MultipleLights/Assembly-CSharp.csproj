@@ -103,6 +103,7 @@
     <None Include="Assets\Resources\Shaders\CausticResultShader.shader" />
     <None Include="Assets\Resources\Shaders\CausticMapShader.shader" />
     <None Include="Assets\Resources\Shaders\DrewCausticColorShader_1.shader" />
+    <None Include="Assets\Resources\Shaders\TestShader.shader" />
     <None Include="Assets\Resources\Shaders\CommonFunctions.cginc" />
     <None Include="Assets\Resources\Shaders\CausticFluxShader_1.shader" />
     <None Include="Assets\Resources\Shaders\CausticFinalFunctions.cginc" />
