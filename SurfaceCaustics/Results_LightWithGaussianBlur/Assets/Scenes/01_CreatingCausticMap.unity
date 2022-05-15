@@ -205,7 +205,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &103860897
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -616,6 +616,7 @@ MonoBehaviour:
   RenderShadows: 0
   RenderCaustics: 1
   ShadowThreshold: 0.1
+  CausticBlurKernalSize: 5
   TestCamera: {fileID: 1390146055}
   TestShader: {fileID: 4800000, guid: 37b05c79fe8022647bdf43e8f8270775, type: 3}
 --- !u!114 &286145854
