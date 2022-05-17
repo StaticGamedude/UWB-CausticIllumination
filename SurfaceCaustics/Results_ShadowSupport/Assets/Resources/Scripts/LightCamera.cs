@@ -39,6 +39,8 @@ public class LightCamera : MonoBehaviour
 
     public int LightSourceID;
 
+    public LightSource ParentLightSource;
+
     #endregion
 
     /// <summary>
@@ -59,8 +61,8 @@ public class LightCamera : MonoBehaviour
         //this.lightCamera.fieldOfView = 5;
         if (this.SetTextureSize)
         {
-            this.DataTexture.width = 4096; //256
-            this.DataTexture.height = 4096; //256
+            this.DataTexture.width = 2048;
+            this.DataTexture.height = 2048;
         }
         
 
@@ -72,6 +74,26 @@ public class LightCamera : MonoBehaviour
             case LightCameraVisibilityType.RECEIVER:
                 this.lightCamera.SetReplacementShader(SpecularObjectShader, Globals.RECEIVING_OBJECT_SHADER_TAG);
                 break;
+        }
+    }
+
+    private void Update()
+    {
+
+        if (this.ParentLightSource != null)
+        {
+            Transform parentLightSourceTransform = this.ParentLightSource.transform;
+            this.lightCamera.transform.position = parentLightSourceTransform.position;
+            this.lightCamera.transform.rotation = parentLightSourceTransform.rotation;
+
+            Matrix4x4 lightMatrix = Globals.BIAS * this.lightCamera.projectionMatrix * lightCamera.worldToCameraMatrix;
+            Shader.SetGlobalMatrix($"{Globals.SHADER_PARAM_LIGHT_MATRIX}_{this.LightSourceID}", lightMatrix);
+            Shader.SetGlobalMatrix($"{Globals.SHADER_PARAM_LIGHT_CAMERA_MATRIX}_{this.LightSourceID}", this.lightCamera.worldToCameraMatrix);
+            Shader.SetGlobalMatrix($"{Globals.SHADER_PARAM_LIGHT_VIEW_PROJECTION_MATRIX}_{this.LightSourceID}", this.lightCamera.projectionMatrix * lightCamera.worldToCameraMatrix);
+            Shader.SetGlobalFloat($"{Globals.SHADER_PARAM_LIGHT_CAMERA_FAR}_{this.LightSourceID}", 1.0f / lightCamera.farClipPlane);
+            Shader.SetGlobalVector($"{Globals.SHADER_PARAM_LIGHT_WORLD_POS}_{this.LightSourceID}", lightCamera.transform.position);
+
+            //this.lightCamera.transform.Loo
         }
     }
 
@@ -132,11 +154,11 @@ public class LightCamera : MonoBehaviour
         }
 
         Shader.SetGlobalTexture($"{shaderTextureParameter}_{this.LightSourceID}", DataTexture);
-        Shader.SetGlobalMatrix($"{Globals.SHADER_PARAM_LIGHT_MATRIX}_{this.LightSourceID}", lightMatrix);
-        Shader.SetGlobalMatrix($"{Globals.SHADER_PARAM_LIGHT_CAMERA_MATRIX}_{this.LightSourceID}", this.lightCamera.worldToCameraMatrix);
-        Shader.SetGlobalMatrix($"{Globals.SHADER_PARAM_LIGHT_VIEW_PROJECTION_MATRIX}_{this.LightSourceID}", this.lightCamera.projectionMatrix * lightCamera.worldToCameraMatrix);
-        Shader.SetGlobalFloat($"{Globals.SHADER_PARAM_LIGHT_CAMERA_FAR}_{this.LightSourceID}", 1.0f / lightCamera.farClipPlane);
-        Shader.SetGlobalVector($"{Globals.SHADER_PARAM_LIGHT_WORLD_POS}_{this.LightSourceID}", lightCamera.transform.position);
+        //Shader.SetGlobalMatrix($"{Globals.SHADER_PARAM_LIGHT_MATRIX}_{this.LightSourceID}", lightMatrix);
+        //Shader.SetGlobalMatrix($"{Globals.SHADER_PARAM_LIGHT_CAMERA_MATRIX}_{this.LightSourceID}", this.lightCamera.worldToCameraMatrix);
+        //Shader.SetGlobalMatrix($"{Globals.SHADER_PARAM_LIGHT_VIEW_PROJECTION_MATRIX}_{this.LightSourceID}", this.lightCamera.projectionMatrix * lightCamera.worldToCameraMatrix);
+        //Shader.SetGlobalFloat($"{Globals.SHADER_PARAM_LIGHT_CAMERA_FAR}_{this.LightSourceID}", 1.0f / lightCamera.farClipPlane);
+        //Shader.SetGlobalVector($"{Globals.SHADER_PARAM_LIGHT_WORLD_POS}_{this.LightSourceID}", lightCamera.transform.position);
 
         if( this.LightCamType == LightCameraType.CAUSTIC_FLUX_2)
         {

@@ -695,12 +695,12 @@ MonoBehaviour:
   Debug_MultiplyIntensity: 1
   Debug_LightColor: {r: 1, g: 1, b: 1, a: 1}
   ShadowFactor: 0.5
-  RenderShadows: 0
+  RenderShadows: 1
   RenderCaustics: 1
-  ShadowThreshold: 0.01
+  ShadowThreshold: 0
   CausticBlurKernalSize: 5
   ShadowBlurKernelSize: 5
-  CausticThreshold: 0
+  CausticThreshold: 0.06
   TestCamera: {fileID: 1390146055}
   TestShader: {fileID: 4800000, guid: 37b05c79fe8022647bdf43e8f8270775, type: 3}
 --- !u!114 &286145854
@@ -2660,7 +2660,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7667900892729430794, guid: 6a3952c5eb23216459424da930d08002, type: 3}
       propertyPath: m_Name
-      value: SpecularObject
+      value: SpecularObjects
       objectReference: {fileID: 0}
     - target: {fileID: 7667900892729430795, guid: 6a3952c5eb23216459424da930d08002, type: 3}
       propertyPath: m_RootOrder

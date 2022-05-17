@@ -165,6 +165,7 @@ public class LightSource : MonoBehaviour
         lightCamLogic.LightCamType = lightCamType;
         lightCamLogic.LightCameraVisibilityType = visibilityType;
         lightCamLogic.LightSourceID = this.dataProperties.LightSourceID;
+        lightCamLogic.ParentLightSource = this;
 
         if (lightCamType == LightCameraType.CAUSTIC_FINAL_LIGHT_COLOR)
         {

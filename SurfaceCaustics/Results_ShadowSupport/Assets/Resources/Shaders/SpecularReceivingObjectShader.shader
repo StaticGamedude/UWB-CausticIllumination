@@ -253,12 +253,6 @@ Shader "Unlit/SpecularReceivingObject"
                 fixed4 shadowColor = BlurTexture(_ShadowFinalTexture_0, causticCamera0TexCoord, _ShadowBlurKernelSize);
 
                 // Check to see if the this spot can be seen by our light source. If not, simply return the color.
-                /*float3 pointToLight = normalize(_LightWorldPosition_0 - i.worldPos);
-                if (dot(pointToLight, i.normal) < 0)
-                {
-                    return col;
-                }*/
-
                 if (!IsPositionVisibleByLightSource(i.worldPos, i.normal))
                 {
                     return col;
@@ -269,9 +263,15 @@ Shader "Unlit/SpecularReceivingObject"
                     return col + finalColor;
                 }
 
+                //if (_RenderShadows == 1)
+                //{
+                //    col = col - shadowColor;
+                //}
+
                 if (_RenderShadows == 1 && IsColorGreaterThanThreshold(shadowColor, _ShadowThreshold, true))
                 {
-                    return fixed4(0, 0, 0, 1);
+                    return col * 0.8;
+                    /*return fixed4(0, 0, 0, 1);*/
                 }
 
                 return col;
