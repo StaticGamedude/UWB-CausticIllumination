@@ -252,31 +252,47 @@ Shader "Unlit/SpecularReceivingObject"
                 
                 fixed4 shadowColor = BlurTexture(_ShadowFinalTexture_0, causticCamera0TexCoord, _ShadowBlurKernelSize);
 
+
                 // Check to see if the this spot can be seen by our light source. If not, simply return the color.
                 if (!IsPositionVisibleByLightSource(i.worldPos, i.normal))
                 {
                     return col;
                 }
 
-                if (_RenderCaustics == 1 && IsColorGreaterThanThreshold(finalColor, _CausticThreshold, true))
+                if (_RenderShadows == 1 && IsColorGreaterThanThreshold(shadowColor, _ShadowThreshold, true))
+                {
+                    col = col * 0.8;
+                }
+
+                if (_RenderCaustics == 1)
                 {
                     return col + finalColor;
                 }
 
-                //if (_RenderShadows == 1)
+                
+
+                //// Check to see if the this spot can be seen by our light source. If not, simply return the color.
+                //if (!IsPositionVisibleByLightSource(i.worldPos, i.normal))
                 //{
-                //    col = col - shadowColor;
+                //    return col;
                 //}
 
-                if (_RenderShadows == 1 && IsColorGreaterThanThreshold(shadowColor, _ShadowThreshold, true))
-                {
-                    return col * 0.8;
-                    /*return fixed4(0, 0, 0, 1);*/
-                }
+                //if (_RenderCaustics == 1 && IsColorGreaterThanThreshold(finalColor, _CausticThreshold, true))
+                //{
+                //    return col + finalColor;
+                //}
+                //
+                //if (_RenderShadows == 1 && IsColorGreaterThanThreshold(shadowColor, _ShadowThreshold, true))
+                //{
+                //    return col * 0.8;
+                //    /*return fixed4(0, 0, 0, 1);*/
+                //}
 
                 return col;
             }
             ENDCG
         }
     }
+
+    Fallback "Standard"
 }

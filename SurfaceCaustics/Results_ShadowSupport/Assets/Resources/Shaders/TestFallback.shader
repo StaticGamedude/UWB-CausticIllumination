@@ -1,20 +1,12 @@
-/*
-* Simpple shader which is used on items that should be considered specular objects.
-* The primary difference between this shader and a basic unlit shader is the use of the 
-* "SpecularObj" tag in the shader.
-*/
-Shader "Unlit/SpecularObjectShader"
+Shader "Unlit/TestFallback"
 {
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
-        _ObjectRefractionIndex ("Refraction Index", Float) = 1.0
-        _AbsorbtionCoefficient ("Absorbtion Coefficient", Float) = 0.00017
-        _SpecularColorFactor ("Specular Color Factor (0-1)", Float) = 1
     }
     SubShader
     {
-        Tags { "RenderType" = "Opaque" "SpecularObj" = "1" }
+        Tags { "RenderType"="Opaque" }
         LOD 100
 
         Pass
@@ -22,6 +14,8 @@ Shader "Unlit/SpecularObjectShader"
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
+            // make fog work
+            #pragma multi_compile_fog
 
             #include "UnityCG.cginc"
 
@@ -34,6 +28,7 @@ Shader "Unlit/SpecularObjectShader"
             struct v2f
             {
                 float2 uv : TEXCOORD0;
+                UNITY_FOG_COORDS(1)
                 float4 vertex : SV_POSITION;
             };
 
@@ -45,6 +40,7 @@ Shader "Unlit/SpecularObjectShader"
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+                UNITY_TRANSFER_FOG(o,o.vertex);
                 return o;
             }
 
@@ -52,11 +48,13 @@ Shader "Unlit/SpecularObjectShader"
             {
                 // sample the texture
                 fixed4 col = tex2D(_MainTex, i.uv);
+                // apply fog
+                UNITY_APPLY_FOG(i.fogCoord, col);
                 return col;
             }
             ENDCG
         }
     }
 
-    Fallback "Standard"
+    FallBack "Diffuse"
 }

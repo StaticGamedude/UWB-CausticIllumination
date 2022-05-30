@@ -1,15 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Contains the logical operations to support the functionality of a camera which acts in place of a light source.
+/// Contains the logical operations to support the functionality of a single caustic camera which acts in place of a light source.
 /// </summary>
 public class LightCamera : MonoBehaviour
 {
-
-    #region Variables Set In The Unity Editor
-
     /// <summary>
     /// Shader that should be used for the camera when rendering specular objects. Specular objects are expected to have the
     /// tag <see cref="Globals.SPECULAR_OBJECT_SHADER_TAG"/>
@@ -33,15 +28,22 @@ public class LightCamera : MonoBehaviour
     /// </summary>
     public LightCameraVisibilityType LightCameraVisibilityType;
 
+    /// <summary>
+    /// A flag used to indicate whether the output texture size should be set upon initialization. Mostly used
+    /// for debugging when adding light camera's from the debugging
+    /// </summary>
     public bool SetTextureSize = true;
 
-    public string finalLightShaderParameter = string.Empty;
-
+    /// <summary>
+    /// Gets/sets the light source ID that this camera is capturing data for
+    /// </summary>
     public int LightSourceID;
 
+    /// <summary>
+    /// Gets/sets the light source object that this camera is capturing data for. The expectation is that
+    /// this light camera object is nested under the light source object
+    /// </summary>
     public LightSource ParentLightSource;
-
-    #endregion
 
     /// <summary>
     /// Camera in which this script is attached to
@@ -51,21 +53,18 @@ public class LightCamera : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
         this.lightCamera = this.GetComponent<Camera>();
 
         Debug.Assert(this.lightCamera != null);
         Debug.Assert(this.SpecularObjectShader != null);
         Debug.Assert(this.DataTexture != null);
 
-        //this.lightCamera.fieldOfView = 5;
         if (this.SetTextureSize)
         {
-            this.DataTexture.width = 2048;
-            this.DataTexture.height = 2048;
+            this.DataTexture.width = 1024;
+            this.DataTexture.height = 1024;
         }
         
-
         switch (this.LightCameraVisibilityType)
         {
             case LightCameraVisibilityType.SPECULAR:
@@ -77,9 +76,12 @@ public class LightCamera : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Every frame, make sure our camera position/rotation match the orientation and position of our light source. Also,
+    /// the shader parameters for the light camera
+    /// </summary>
     private void Update()
     {
-
         if (this.ParentLightSource != null)
         {
             Transform parentLightSourceTransform = this.ParentLightSource.transform;
@@ -87,13 +89,11 @@ public class LightCamera : MonoBehaviour
             this.lightCamera.transform.rotation = parentLightSourceTransform.rotation;
 
             Matrix4x4 lightMatrix = Globals.BIAS * this.lightCamera.projectionMatrix * lightCamera.worldToCameraMatrix;
-            Shader.SetGlobalMatrix($"{Globals.SHADER_PARAM_LIGHT_MATRIX}_{this.LightSourceID}", lightMatrix);
-            Shader.SetGlobalMatrix($"{Globals.SHADER_PARAM_LIGHT_CAMERA_MATRIX}_{this.LightSourceID}", this.lightCamera.worldToCameraMatrix);
-            Shader.SetGlobalMatrix($"{Globals.SHADER_PARAM_LIGHT_VIEW_PROJECTION_MATRIX}_{this.LightSourceID}", this.lightCamera.projectionMatrix * lightCamera.worldToCameraMatrix);
-            Shader.SetGlobalFloat($"{Globals.SHADER_PARAM_LIGHT_CAMERA_FAR}_{this.LightSourceID}", 1.0f / lightCamera.farClipPlane);
-            Shader.SetGlobalVector($"{Globals.SHADER_PARAM_LIGHT_WORLD_POS}_{this.LightSourceID}", lightCamera.transform.position);
-
-            //this.lightCamera.transform.Loo
+            Shader.SetGlobalMatrix($"_LightMatrix_{this.LightSourceID}", lightMatrix);
+            Shader.SetGlobalMatrix($"_LightCamMatrix_{this.LightSourceID}", this.lightCamera.worldToCameraMatrix);
+            Shader.SetGlobalMatrix($"_LightViewProjectionMatrix_{this.LightSourceID}", this.lightCamera.projectionMatrix * lightCamera.worldToCameraMatrix);
+            Shader.SetGlobalFloat($"_LightCam_Far_{this.LightSourceID}", 1.0f / lightCamera.farClipPlane);
+            Shader.SetGlobalVector($"_LightWorldPosition_{this.LightSourceID}", lightCamera.transform.position);
         }
     }
 
@@ -107,34 +107,34 @@ public class LightCamera : MonoBehaviour
         switch(this.LightCamType)
         {
             case LightCameraType.REFRACTIVE_POSITION:
-                shaderTextureParameter = Globals.SHADER_PARAM_REFRACTION_POSITION_TEXTURE;
+                shaderTextureParameter = "_SpecularPosTexture";
                 break;
             case LightCameraType.REFRACTIVE_NORMAL:
-                shaderTextureParameter = Globals.SHADER_PARAM_REFRACTION_NORMAL_TEXTURE;
+                shaderTextureParameter = "_SpecularNormTexture";
                 break;
             case LightCameraType.RECEIVING_POSITION:
-                shaderTextureParameter = Globals.SHADER_PARAM_RECEIVING_POSITION_TEXTURE;
+                shaderTextureParameter = "_ReceivingPosTexture";
                 break;
             case LightCameraType.CAUSTIC:
-                shaderTextureParameter = Globals.SHADER_PARAM_CAUSTIC_MAP_TEXTURE;
+                shaderTextureParameter = "_CausticMapTexture";
                 break;
             case LightCameraType.CAUSTIC_REFRACTION_RAY:
-                shaderTextureParameter = Globals.SHADER_PARAM_CAUSTIC_REFRACTION_RAY_TEXTURE;
+                shaderTextureParameter = "_CausticRefractionRayTexture";
                 break;
             case LightCameraType.CAUSTIC_COLOR:
-                shaderTextureParameter = Globals.SHADER_PARAM_CAUSTIC_COLOR_MAP_TEXTURE;
+                shaderTextureParameter = "_CausticColorMapTexture";
                 break;
             case LightCameraType.CAUSTIC_FLUX:
                 // I have no idea why but...I can't get this option to work like originally expected...
                 // Ended up creating a second enum (CAUSTIC_FLUX_2) to represent the caustic flux shader. It uses a different
                 // render texure and saves the texture under a different shader parameter
-                shaderTextureParameter = Globals.SHADER_PARAM_CAUSTIC_FLUX_TEXTURE;
+                shaderTextureParameter = "_CausticFluxTexture";
                 break;
             case LightCameraType.CAUSTIC_FLUX_2:
                 shaderTextureParameter = "_DrewTest";
                 break;
             case LightCameraType.CAUSTIC_DISTANCE:
-                shaderTextureParameter = Globals.SHADER_PARAM_CAUSTIC_DISTANCE_TEXTURE;
+                shaderTextureParameter = "_CausticDistanceTexture";
                 break;
             case LightCameraType.CAUSTIC_DREW_COLOR:
                 shaderTextureParameter = "_DrewCausticColor";
@@ -154,42 +154,5 @@ public class LightCamera : MonoBehaviour
         }
 
         Shader.SetGlobalTexture($"{shaderTextureParameter}_{this.LightSourceID}", DataTexture);
-        //Shader.SetGlobalMatrix($"{Globals.SHADER_PARAM_LIGHT_MATRIX}_{this.LightSourceID}", lightMatrix);
-        //Shader.SetGlobalMatrix($"{Globals.SHADER_PARAM_LIGHT_CAMERA_MATRIX}_{this.LightSourceID}", this.lightCamera.worldToCameraMatrix);
-        //Shader.SetGlobalMatrix($"{Globals.SHADER_PARAM_LIGHT_VIEW_PROJECTION_MATRIX}_{this.LightSourceID}", this.lightCamera.projectionMatrix * lightCamera.worldToCameraMatrix);
-        //Shader.SetGlobalFloat($"{Globals.SHADER_PARAM_LIGHT_CAMERA_FAR}_{this.LightSourceID}", 1.0f / lightCamera.farClipPlane);
-        //Shader.SetGlobalVector($"{Globals.SHADER_PARAM_LIGHT_WORLD_POS}_{this.LightSourceID}", lightCamera.transform.position);
-
-        if( this.LightCamType == LightCameraType.CAUSTIC_FLUX_2)
-        {
-            //this.CountNumOfNonEmptyPixels(this.DataTexture);
-        }
-        //if (!string.IsNullOrEmpty(this.finalLightShaderParameter))
-        //{
-        //    Shader.SetGlobalTexture(this.finalLightShaderParameter, DataTexture);
-        //}
-    }
-
-    void CountNumOfNonEmptyPixels(RenderTexture rt)
-    {
-        RenderTexture originalRenderTexture = RenderTexture.active;
-        RenderTexture.active = rt;
-        Texture2D texture = new Texture2D(rt.width, rt.height, TextureFormat.RGBAFloat, false);
-        texture.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0);
-
-        Color32[] allPixelValues = texture.GetPixels32();
-
-        int nonEmptyCount = 0;
-        foreach(Color32 col in allPixelValues)
-        {
-            if (col.a > 0)
-            {
-                nonEmptyCount++;
-            }
-        }
-
-        Debug.Log($"Num of non-empty pixels found: {nonEmptyCount}");
-
-        RenderTexture.active = originalRenderTexture;
     }
 }

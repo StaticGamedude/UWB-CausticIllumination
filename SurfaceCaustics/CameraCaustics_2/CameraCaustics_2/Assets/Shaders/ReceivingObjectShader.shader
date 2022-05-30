@@ -1,20 +1,12 @@
-/*
-* Simpple shader which is used on items that should be considered specular objects.
-* The primary difference between this shader and a basic unlit shader is the use of the 
-* "SpecularObj" tag in the shader.
-*/
-Shader "Unlit/SpecularObjectShader"
+Shader "Unlit/ReceivingObjectShader"
 {
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
-        _ObjectRefractionIndex ("Refraction Index", Float) = 1.0
-        _AbsorbtionCoefficient ("Absorbtion Coefficient", Float) = 0.00017
-        _SpecularColorFactor ("Specular Color Factor (0-1)", Float) = 1
     }
     SubShader
     {
-        Tags { "RenderType" = "Opaque" "SpecularObj" = "1" }
+        Tags { "RenderType"="Opaque" "ReceivingObject"="1" }
         LOD 100
 
         Pass
@@ -48,15 +40,11 @@ Shader "Unlit/SpecularObjectShader"
                 return o;
             }
 
-            fixed4 frag (v2f i) : SV_Target
+            fixed4 frag(v2f i) : SV_Target
             {
-                // sample the texture
-                fixed4 col = tex2D(_MainTex, i.uv);
-                return col;
+                return fixed4(0, 0, 0, 1);
             }
             ENDCG
         }
     }
-
-    Fallback "Standard"
 }

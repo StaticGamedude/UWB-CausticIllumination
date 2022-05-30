@@ -9,7 +9,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{78D9AFE7-5246-33F0-88CE-64F2236A7DAB}</ProjectGuid>
+    <ProjectGuid>{E0802F33-2D1A-CEAA-157A-823C3ED3AD91}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -53,77 +53,16 @@
     <UnityVersion>2020.3.25f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Assets\Textures\epyphany\demo\ressources\move.cs" />
-    <Compile Include="Assets\Textures\epyphany\demo\ressources\rotate.cs" />
-    <Compile Include="Assets\GroupResources\Liwen\Source\Script\Matrix3x3.cs" />
-    <Compile Include="Assets\GroupResources\Liwen\Source\RenderPipeline\ExampleRenderPipelineInstance.cs" />
-    <Compile Include="Assets\Objects\AurynSky\Gems Ultimate Pack\Scripts\AnimationScript.cs" />
-    <Compile Include="Assets\GroupResources\Liwen\Source\RenderPipeline\DeferredLightingPass.cs" />
-    <Compile Include="Assets\GroupResources\Liwen\Source\Script\MyMesh_DrawSupport.cs" />
-    <Compile Include="Assets\Resources\Scripts\DebugEstimationStep.cs" />
-    <Compile Include="Assets\Resources\Scripts\DataPrint.cs" />
-    <Compile Include="Assets\GroupResources\Liwen\Source\Script\MyMesh_NormalSupport.cs" />
-    <Compile Include="Assets\GroupResources\Liwen\Source\Script\MyMesh.cs" />
-    <Compile Include="Assets\GroupResources\Liwen\Source\Script\LineSegment.cs" />
-    <Compile Include="Assets\GroupResources\Liwen\Source\Script\MyMesh_TangentSupport.cs" />
-    <Compile Include="Assets\3DTOYS\rotatecamera.cs" />
-    <Compile Include="Assets\GroupResources\Liwen\Source\Script\MyMesh_TextureSupport.cs" />
-    <Compile Include="Assets\Resources\Scripts\QuickTesting.cs" />
-    <Compile Include="Assets\GroupResources\Liwen\Source\Script\Matrix3x3Helpers.cs" />
-    <Compile Include="Assets\GroupResources\Liwen\Source\RenderPipeline\ExampleRenderPipelineAsset.cs" />
-    <Compile Include="Assets\GroupResources\Liwen\Source\Script\MyMesh_CreateMesh.cs" />
-    <Compile Include="Assets\Resources\Scripts\LightCameraType.cs" />
-    <Compile Include="Assets\Resources\Scripts\LightCameraVisibilityType.cs" />
-    <Compile Include="Assets\Resources\Scripts\RenderingPass.cs" />
-    <Compile Include="Assets\Resources\Scripts\MultiOutput.cs" />
-    <Compile Include="Assets\Resources\Scripts\World.cs" />
-    <Compile Include="Assets\Resources\Scripts\SetCausticFlags.cs" />
-    <Compile Include="Assets\Resources\Scripts\Globals.cs" />
-    <Compile Include="Assets\Resources\Scripts\LightSourceDataProperties.cs" />
-    <Compile Include="Assets\Resources\Scripts\LightSource.cs" />
-    <Compile Include="Assets\Resources\Scripts\LightCamera.cs" />
-    <Compile Include="Assets\GroupResources\Liwen\Source\RenderPipeline\RenderObjectPass.cs" />
+    <Compile Include="Assets\Scripts\CausticCameraHandler.cs" />
+    <Compile Include="Assets\Scripts\LightSource.cs" />
+    <Compile Include="Assets\World.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Resources\Shaders\LightNormalShader.shader" />
-    <None Include="Assets\Resources\Shaders\CausticShadowShader_0.shader" />
-    <None Include="Assets\Resources\Shaders\CausticColorShader_0.shader" />
-    <None Include="Assets\Resources\Shaders\SinShader.shader" />
-    <None Include="Assets\Resources\Shaders\CausticColorFunctions.cginc" />
-    <None Include="Assets\Resources\Shaders\ShadowFinalShader_1.shader" />
-    <None Include="Assets\Resources\Shaders\TestTransformShader.shader" />
-    <None Include="Assets\Resources\Shaders\PositionShader.shader" />
-    <None Include="Assets\Resources\Shaders\CausticFluxFunctions.cginc" />
-    <None Include="Assets\Resources\Shaders\ReceivingObjectShader.shader" />
-    <None Include="Assets\Resources\Shaders\SpecularReceivingObjectShader.shader" />
-    <None Include="Assets\GroupResources\Liwen\Resources\WaveShader.shader" />
-    <None Include="Assets\Objects\AurynSky\Gems Ultimate Pack\READ ME.txt" />
-    <None Include="Assets\Resources\Shaders\ConvertToGreenShader.shader" />
-    <None Include="Assets\Resources\Shaders\CausticFluxShader_0.shader" />
-    <None Include="Assets\Resources\Shaders\Tex2DValidationShader.shader" />
-    <None Include="Assets\Resources\Shaders\TestFallback.shader" />
-    <None Include="Assets\Resources\Shaders\CausticResultShader.shader" />
-    <None Include="Assets\Resources\Shaders\CausticMapShader.shader" />
-    <None Include="Assets\Resources\Shaders\DrewCausticColorShader_1.shader" />
-    <None Include="Assets\Resources\Shaders\TestShader.shader" />
-    <None Include="Assets\Resources\Shaders\CommonFunctions.cginc" />
-    <None Include="Assets\Resources\Shaders\GaussianShader_0.shader" />
-    <None Include="Assets\Resources\Shaders\CausticFluxShader_1.shader" />
-    <None Include="Assets\Resources\Shaders\CausticFinalFunctions.cginc" />
-    <None Include="Assets\Resources\Shaders\CausticFinalShader_0.shader" />
-    <None Include="Assets\Resources\Shaders\MultiOutputShader.shader" />
-    <None Include="Assets\Resources\Shaders\ShadowFinalShader_0.shader" />
-    <None Include="Assets\3DTOYS\readme.txt" />
-    <None Include="Assets\Resources\Shaders\ShadowSupport.cginc" />
-    <None Include="Assets\Resources\Shaders\CausticDistanceShader.shader" />
-    <None Include="Assets\Resources\Shaders\CausticRefractionRayShader.shader" />
-    <None Include="Assets\Resources\Shaders\DrewCausticColorShader_0.shader" />
-    <None Include="Assets\Textures\epyphany\ReadMe.txt" />
-    <None Include="Assets\Resources\Shaders\CausticFinalShader_1.shader" />
-    <None Include="Assets\Resources\Shaders\SpecularObjectShader.shader" />
-    <None Include="Assets\Resources\Shaders\SpecularFunctions.cginc" />
-    <None Include="Assets\Resources\Shaders\CausticIntensityShader.shader" />
-    <None Include="Assets\Resources\Shaders\CausticShadowShader_1.shader" />
+    <None Include="Assets\Shaders\CausticPass1DataSupporterShader.shader" />
+    <None Include="Assets\Shaders\ReceivingObjectShader.shader" />
+    <None Include="Assets\Shaders\ReceivingObjectPositionShader.shader" />
+    <None Include="Assets\Shaders\CausticPass1DataShader.shader" />
+    <None Include="Assets\Shaders\SpecularObjectShader.shader" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
