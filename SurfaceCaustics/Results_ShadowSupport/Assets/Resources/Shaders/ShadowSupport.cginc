@@ -1,3 +1,7 @@
+/*
+* WARNING: Deprecated
+*/
+
 struct appdata
 {
 	float4 vertex : POSITION;

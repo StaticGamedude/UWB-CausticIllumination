@@ -1,3 +1,7 @@
+/*
+* Handles the shader logic for catpuring the color of specular objects.
+*/
+
 #include "UnityCG.cginc"
 #include "CommonFunctions.cginc"
 

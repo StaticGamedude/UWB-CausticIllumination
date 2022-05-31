@@ -1,3 +1,7 @@
+/*
+* WARNING: Deprecated
+*/
+
 Shader "Unlit/SinShader"
 {
     Properties

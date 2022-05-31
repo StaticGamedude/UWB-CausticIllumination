@@ -1,3 +1,6 @@
+/*
+* WARNING: This shader is depracated
+*/
 Shader "Unlit/CausticIntensityShader"
 {
     Properties
@@ -44,8 +47,6 @@ Shader "Unlit/CausticIntensityShader"
                 float4 causticIntensity = tex2D(_CausticFluxTexture, tc);
                 return causticIntensity;
             }
-
-            
 
             v2f vert (appdata v)
             {

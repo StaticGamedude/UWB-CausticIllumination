@@ -1,3 +1,6 @@
+/*
+* Computes the flux values for light source 1. The core operational logic for computing flux is handled in CausticFluxFunctions.cginc
+*/
 Shader "Unlit/CausticFluxShader_1"
 {
     Properties

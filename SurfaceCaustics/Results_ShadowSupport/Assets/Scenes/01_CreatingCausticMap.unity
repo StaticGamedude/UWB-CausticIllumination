@@ -790,7 +790,7 @@ MonoBehaviour:
   Debug_MultiplyIntensity: 1
   Debug_LightColor: {r: 1, g: 1, b: 1, a: 1}
   ShadowFactor: 0.5
-  RenderShadows: 1
+  RenderShadows: 0
   RenderCaustics: 1
   ShadowThreshold: 0
   CausticBlurKernalSize: 5

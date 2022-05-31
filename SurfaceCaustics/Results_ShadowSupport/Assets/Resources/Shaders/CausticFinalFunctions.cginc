@@ -1,3 +1,6 @@
+/*
+* Defines the shader logic for computing the final caustic color/result.
+*/
 #include "UnityCG.cginc"
 #include "CommonFunctions.cginc"
 
@@ -18,11 +21,13 @@ struct v2f
 	float3 splatPos : TEXCOORD1;
 };
 
-
 /*
- * Given the world position of the receiving object, get the texture
- * coordinates that can be used to map into a caustic texture.
- */
+* Given the world position of the receiving object, get the texture
+* coordinates that can be used to map into a caustic texture.
+* param: lightViewProjectionMatrix - The light camera's view projection matrix
+* param: worldPos - The vertex world position
+* returns: Texture coordinates used to index into a caustic texture
+*/
 float2 GetCoordinatesForSpecularTexture(float4x4 lightViewProjectionMatrix, float3 worldPos)
 {
     float4 texPt = mul(lightViewProjectionMatrix, float4(worldPos, 1));
@@ -30,6 +35,13 @@ float2 GetCoordinatesForSpecularTexture(float4x4 lightViewProjectionMatrix, floa
     return tc;
 }
 
+/*
+* Get the flux value from a texture for a light source
+* param: lightViewProjectionMatrix - The light camera's view projection matrix
+* param: sourceTexture - The texture containing the flux data
+* param: worldPos - The vertex world position
+* returns: Flux value read from the flux texture
+*/
 float GetFlux(float4x4 lightViewProjectionMatrix, sampler2D sourceTexture, float3 worldPos)
 {
     float2 tc = GetCoordinatesForSpecularTexture(lightViewProjectionMatrix, worldPos);
@@ -37,6 +49,14 @@ float GetFlux(float4x4 lightViewProjectionMatrix, sampler2D sourceTexture, float
     return fluxVals.x;
 }
 
+/*
+* Get the distance value from a texture for a light source. The distance is the distance from the specular vertex
+* to the splat position
+* param: lightViewProjectionMatrix - The light camera's view projection matrix
+* param: sourceTexture - The texture containing the flux data
+* param: worldPos - The vertex world position
+* returns: Distance value read from the flux texture
+*/
 float GetDistance(float4x4 lightViewProjectionMatrix, sampler2D sourceTexture, float3 worldPos)
 {
     float2 tc = GetCoordinatesForSpecularTexture(lightViewProjectionMatrix, worldPos);
@@ -44,6 +64,13 @@ float GetDistance(float4x4 lightViewProjectionMatrix, sampler2D sourceTexture, f
     return distanceVals.y;
 }
 
+/*
+* Determines if the specular vertex position is visible by the caustic camera
+* param: lightViewProjectionMatrix - The light camera's view projection matrix
+* param: sourceTexture - The texture containing the flux data
+* param: worldPos - The vertex world position
+* returns: 1 if the point is visible. 0 otherwise
+*/
 float GetIsVisible(float4x4 lightViewProjectionMatrix, sampler2D sourceTexture, float3 worldPos)
 {
     float2 tc = GetCoordinatesForSpecularTexture(lightViewProjectionMatrix, worldPos);
@@ -51,6 +78,13 @@ float GetIsVisible(float4x4 lightViewProjectionMatrix, sampler2D sourceTexture, 
     return visibleValues.w > 0 ? 1 : 0;
 }
 
+/*
+* Gets the caustic color for a specular vertex
+* param: lightViewProjectionMatrix - The light camera's view projection matrix
+* param: sourceTexture - The texture containing the flux data
+* param: worldPos - The vertex world position
+* returns: The causic color found in the color texture for a specular vertex
+*/
 fixed4 GetCausticColor(float4x4 lightViewProjectionMatrix, sampler2D sourceTexture, float3 worldPos)
 {
     float2 tc = GetCoordinatesForSpecularTexture(lightViewProjectionMatrix, worldPos);
@@ -58,6 +92,11 @@ fixed4 GetCausticColor(float4x4 lightViewProjectionMatrix, sampler2D sourceTextu
     return causticColor;
 }
 
+/*
+* Utility method for making sure our color factor is between 0 and 1
+* param: userFactorValue - Desired factor value
+* returns: Valid factor range between 0 and 1
+*/
 float ClampSpecularColorFactor(float userFactorValue)
 {
     if (userFactorValue > 1)
@@ -100,6 +139,13 @@ v2f
     return o;
 }
 
+/*
+* Shared vertex shader which "transforms" the geometry to the receiving object's geometry. The final color is computed by the following formula:
+* finalcolor = I * e^(-kd) where
+*   I is the incident light intensity
+*   K is the absorption coefficient
+*   d is the distance that light travles through the specular object
+*/
 fixed4 SharedCausticFinalFragmentShader(
     v2f i, 
     float4x4 lightViewProjectionMatrix, 
@@ -117,14 +163,14 @@ fixed4 SharedCausticFinalFragmentShader(
     float finalIntensity = flux * exp((-specularAbsorbtionCoefficient * d));
     fixed4 causticColor = GetCausticColor(lightViewProjectionMatrix, causticColorTexture, i.splatPos) * (ClampSpecularColorFactor(specularColorFactor));
     float computedColorValue = finalIntensity * lightColor * causticColor * lightIntensity;
-        
-    
-    //return finalIntensity * lightColor * causticColor * lightIntensity;
     
     return fixed4(computedColorValue, computedColorValue, computedColorValue, isVisibile);
-
 }
 
+/*
+* Shared fragment shader when computing shadows. This fragment shader is essentially a simplied version of the shader above.
+* TODO: We can probably reduce the duplicate code with the fragment shader above (SharedCausticFinalFragmentShader)
+*/
 fixed4 SharedShadowFragmentShader(
     v2f i,
     float4x4 lightViewProjectionMatrix,

@@ -1,3 +1,7 @@
+/*
+* Handles the final rendering of the specular object. Takes into account the caustic effect textures for each light sources and uses
+* them to determine the final color of each fragment.
+*/
 Shader "Unlit/SpecularReceivingObject"
 {
     Properties
@@ -90,6 +94,8 @@ Shader "Unlit/SpecularReceivingObject"
             /*
             * Given the world position of the receiving object, get the texture
             * coordinates that can be used to map into a caustic texture.
+            * param: lightID - The unique light source ID
+            * param: worldPos - The receiving object vertex world position
             */
             float2 GetCoordinatesForSpecularTexture(int lightID, float3 worldPos)
             {
@@ -102,6 +108,8 @@ Shader "Unlit/SpecularReceivingObject"
             /*
             * Determine if the world position (of the receiving object) is hit by any refracted
             * light ray
+            * param: lightID - The unique light source ID
+            * param: worldPos - The receiving object vertex world position
             */
             bool SpecularSeesPosition(int lightID, float3 worldPos)
             {
@@ -112,6 +120,8 @@ Shader "Unlit/SpecularReceivingObject"
 
             /*
             * Get the amount of flux that has accumulated onto the provided receiving position
+            * param: lightID - The unique light source ID
+            * param: worldPos - The receiving object vertex world position
             */
             float GetFlux(int lightID, float3 worldPos)
             {
@@ -120,6 +130,12 @@ Shader "Unlit/SpecularReceivingObject"
                 return fluxVals.x;
             }
 
+            /*
+            * Get the distance between the corresponding specular vertex to the resulting 
+            * splat position
+            * param: lightID - The unique light source ID
+            * param: worldPos - The receiving object vertex world position
+            */
             float GetDistance(int lightID, float3 worldPos)
             {
                 float2 tc = GetCoordinatesForSpecularTexture(lightID, worldPos);
@@ -127,6 +143,11 @@ Shader "Unlit/SpecularReceivingObject"
                 return distanceVals.y;
             }
 
+            /*
+            * Get the caustic light color from the final caustic texture
+            * param: lightID - The unique light source ID
+            * param: worldPos - The receiving object vertex world position
+            */
             fixed4 GetCausticColor(int lightID, float3 worldPos)
             {
                 float2 tc = GetCoordinatesForSpecularTexture(lightID, worldPos);
@@ -134,6 +155,12 @@ Shader "Unlit/SpecularReceivingObject"
                 return causticColor;
             }
 
+            /*
+            * Get the final caustic light color from the final caustic texture
+            * param: lightID - The unique light source ID
+            * param: worldPos - The receiving object vertex world position
+            * param: lightTexture - The texture containing the final caustic result
+            */
             fixed4 GetFinalCausticColor(int lightID, float3 worldPos, sampler2D lightTexture)
             {
                 float2 tc = GetCoordinatesForSpecularTexture(lightID, worldPos);
@@ -141,6 +168,12 @@ Shader "Unlit/SpecularReceivingObject"
                 return causticColor;
             }
 
+            /*
+            * Determines if the receiver vertex position is within a shadowed area
+            * param: lightID - The unique light source ID
+            * param: worldPos - The receiving object vertex world position
+            * param: shadowTexture - The texture containing the shadow data
+            */
             bool IsShadowPosition(int lightID, float3 worldPos, sampler2D shadowTexture)
             {
                 float2 tc = GetCoordinatesForSpecularTexture(lightID, worldPos);
@@ -153,6 +186,12 @@ Shader "Unlit/SpecularReceivingObject"
                 return false;
             }
 
+            /*
+            * Determines if the provided position is within the shadow generated from any light source
+            * param: lightID - The unique light source ID
+            * param: shadowTexture - The texture containing the shadow data
+            * param: worldPos - The receiving object vertex world position
+            */
             bool IsUnderLightShadowCam(int lightID, sampler2D shadowTexture, float3 worldPos)
             {
                 if (_LightIDs[lightID] == -1)
@@ -163,6 +202,12 @@ Shader "Unlit/SpecularReceivingObject"
                 return IsShadowPosition(lightID, worldPos, shadowTexture);
             }
 
+            /*
+            * Gets a blurred reulst from a colored texture. 
+            * param: tex - The texture to get color from
+            * param: texCoordinate - The texture coordinate used to index into the source texture
+            * param: kernel size - The kernel size used for the Gaussian blur
+            */
             fixed4 BlurTexture(sampler2D tex, float2 texCoordinate, int kernelSize)
             {
                 fixed4 sum = fixed4(0.0, 0.0, 0.0, 0.0);
@@ -189,6 +234,12 @@ Shader "Unlit/SpecularReceivingObject"
                 return sum;
             }
 
+            /*
+            * Utility method to determine if a color exceeds the provided threshold
+            * param: color - Color value to inspect
+            * param: threshold - Desired color value limit/threshold
+            * param: checkAll - A flag used in indicate whether all rgba values should be checked or if just the alpha can be checcked
+            */
             bool IsColorGreaterThanThreshold(fixed4 color, float threshold, bool checkAll)
             {
                 if (checkAll)
@@ -199,6 +250,9 @@ Shader "Unlit/SpecularReceivingObject"
                 return color.a > threshold;
             }
 
+            /*
+            * Utility method to determine if a receiving position is visible by a light source
+            */
             bool IsPositionVisibleByLightSource(float3 worldPos, float3 worldNormal)
             {
                 float3 lightPositions[2];
@@ -259,6 +313,7 @@ Shader "Unlit/SpecularReceivingObject"
                     return col;
                 }
 
+                // My attempt for supporting shadows. If the shadow value within a certain theshold, darken the color. Then add the caustic effect on top
                 if (_RenderShadows == 1 && IsColorGreaterThanThreshold(shadowColor, _ShadowThreshold, true))
                 {
                     col = col * 0.8;
@@ -270,13 +325,9 @@ Shader "Unlit/SpecularReceivingObject"
                 }
 
                 
-
-                //// Check to see if the this spot can be seen by our light source. If not, simply return the color.
-                //if (!IsPositionVisibleByLightSource(i.worldPos, i.normal))
-                //{
-                //    return col;
-                //}
-
+                // Shadow attempt based on the algorithm mentioned here: https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.625.7037&rep=rep1&type=pdf
+                // Check to see if this spot has a caustic effect on it. If so, simply return the normal color plus the caustic effect.
+                // If not, check to see if it has a shadow effect. If so, darken the spot.
                 //if (_RenderCaustics == 1 && IsColorGreaterThanThreshold(finalColor, _CausticThreshold, true))
                 //{
                 //    return col + finalColor;
@@ -294,5 +345,5 @@ Shader "Unlit/SpecularReceivingObject"
         }
     }
 
-    Fallback "Standard"
+    Fallback "Diffuse"
 }

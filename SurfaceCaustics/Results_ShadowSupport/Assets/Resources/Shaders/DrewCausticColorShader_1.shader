@@ -1,3 +1,6 @@
+/*
+* Shader for capturing the color of a specular object for light source 1. Most of the operational logic is handled in CausticColorFunctions.cginc
+*/
 Shader "Unlit/DrewCausticColorShader_1"
 {
     Properties

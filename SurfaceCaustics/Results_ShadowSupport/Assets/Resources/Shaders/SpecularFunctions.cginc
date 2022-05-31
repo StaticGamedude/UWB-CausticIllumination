@@ -1,3 +1,7 @@
+/*
+* WARNING: Deprecated
+*/
+
 #include "CommonFunctions.cginc"
 
 float _DebugFluxMultiplier;

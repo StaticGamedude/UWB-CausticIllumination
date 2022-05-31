@@ -1,3 +1,6 @@
+/*
+* WARNING: This shader is depracated
+*/
 Shader "Unlit/CausticRefractionRayShader"
 {
     Properties

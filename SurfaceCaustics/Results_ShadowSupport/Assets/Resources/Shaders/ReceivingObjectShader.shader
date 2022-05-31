@@ -1,3 +1,6 @@
+/*
+* Shader responsible for capturing the world positions of the receiving object(s)
+*/
 Shader "Unlit/ReceivingObjectShader"
 {
     Properties

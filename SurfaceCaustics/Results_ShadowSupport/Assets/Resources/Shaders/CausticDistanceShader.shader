@@ -1,3 +1,9 @@
+/*
+* !!!!WARNING: This shader is now depricated. The distance value is now calcuated in the Flux shaders (CausticFluxFunctions.cginc)
+* --------------------------------------------------------------------------------------------------------------------------------------------
+* Shader responsible for capturing the distance between each vertex and the splat position
+*/
+
 Shader "Unlit/CausticDistanceShader"
 {
     Properties

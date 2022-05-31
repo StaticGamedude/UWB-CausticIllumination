@@ -1,3 +1,7 @@
+/*
+* Shader responsible for creating the final shadow effect for light source 0. This shader is similar to the CausticFinalShaders except that
+* it forces a refraction index of 1 (allowing light to pass through)
+*/
 Shader "Unlit/ShadowFinalShader_0"
 {
     Properties

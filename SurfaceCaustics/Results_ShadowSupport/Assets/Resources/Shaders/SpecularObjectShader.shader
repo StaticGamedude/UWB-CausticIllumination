@@ -1,5 +1,5 @@
 /*
-* Simpple shader which is used on items that should be considered specular objects.
+* Simple shader which is used on items that should be considered specular objects.
 * The primary difference between this shader and a basic unlit shader is the use of the 
 * "SpecularObj" tag in the shader.
 */
@@ -8,6 +8,11 @@ Shader "Unlit/SpecularObjectShader"
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
+
+        /*
+        * Note: The parameters below are not actually used here. Rather, they are picked up
+        * by the replacement shaders that are rendering the same object.
+        */
         _ObjectRefractionIndex ("Refraction Index", Float) = 1.0
         _AbsorbtionCoefficient ("Absorbtion Coefficient", Float) = 0.00017
         _SpecularColorFactor ("Specular Color Factor (0-1)", Float) = 1
@@ -58,5 +63,5 @@ Shader "Unlit/SpecularObjectShader"
         }
     }
 
-    Fallback "Standard"
+    Fallback "Diffuse"
 }

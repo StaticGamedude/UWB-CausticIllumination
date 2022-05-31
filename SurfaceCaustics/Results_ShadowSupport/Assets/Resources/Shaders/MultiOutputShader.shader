@@ -1,3 +1,6 @@
+/*
+* WARNING: This shader should be deprecated
+*/
 Shader "Unlit/MultiOutputShader"
 {
     SubShader

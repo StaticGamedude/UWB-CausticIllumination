@@ -1,8 +1,14 @@
+/*
+* Computes the final caustic result for light source 1. Most of the operational logic for this shader is found in
+* CausticFinalFunctions.cginc
+*/
 Shader "Unlit/CausticFinalShader_1"
 {
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
+
+        /*Deprecated parameter - not ultimately used*/
         _LightID ("Light ID", Int) = 0
     }
     SubShader

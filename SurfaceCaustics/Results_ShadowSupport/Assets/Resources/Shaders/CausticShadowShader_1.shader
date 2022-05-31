@@ -1,3 +1,8 @@
+/*
+* Computes the flux values to help render shadows for shadows created from light source 1. Shadows are rendered in a similar was to flux with the exception
+* that the shader camera's act with a refraction index of 1 (i.e. no light bending). Most of the operational logic for computing the shadow flux is handling 
+* in CausticFluxFunctions.cginc.
+*/
 Shader "Unlit/CausticShadowShader_1"
 {
     Properties
