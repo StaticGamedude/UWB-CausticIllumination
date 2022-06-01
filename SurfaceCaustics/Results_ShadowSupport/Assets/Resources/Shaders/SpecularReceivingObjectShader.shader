@@ -75,19 +75,6 @@ Shader "Unlit/SpecularReceivingObject"
             }
 
             /*
-            * Get the final caustic light color from the final caustic texture
-            * param: lightID - The unique light source ID
-            * param: worldPos - The receiving object vertex world position
-            * param: lightTexture - The texture containing the final caustic result
-            */
-            fixed4 GetFinalCausticColor(int lightID, float3 worldPos, sampler2D lightTexture)
-            {
-                float2 tc = GetCoordinatesForSpecularTexture(lightID, worldPos);
-                fixed4 causticColor = tex2D(lightTexture, tc);
-                return causticColor;
-            }
-
-            /*
             * Gets a blurred reulst from a colored texture. 
             * param: tex - The texture to get color from
             * param: texCoordinate - The texture coordinate used to index into the source texture

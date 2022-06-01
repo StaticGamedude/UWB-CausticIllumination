@@ -137,6 +137,9 @@ public class LightCamera : MonoBehaviour
                 shaderTextureParameter = "_CausticDistanceTexture";
                 break;
             case LightCameraType.CAUSTIC_DREW_COLOR:
+                // Similar to the comment above - I have no idea why but...I can't get this option to work like originally 
+                // expected...Ended up creating a second enum (CAUSTIC_DREW_COLOR) to represent the caustic color shader. 
+                // It uses a different render texure and saves the texture under a different shader parameter
                 shaderTextureParameter = "_DrewCausticColor";
                 break;
             case LightCameraType.CAUSTIC_FINAL_LIGHT_COLOR:
