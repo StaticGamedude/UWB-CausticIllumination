@@ -40,6 +40,9 @@ public class World : MonoBehaviour
     /// </summary>
     public RenderTexture LightCameraFluxTexture;
 
+    /// <summary>
+    /// The render texture containing the distance values between a specular vertex and splat position
+    /// </summary>
     public RenderTexture LightCausticDistanceTexture;
 
     /// <summary>
@@ -47,10 +50,19 @@ public class World : MonoBehaviour
     /// </summary>
     public RenderTexture LightCameraCausticFinalTexture;
 
+    /// <summary>
+    /// The render texture containing the refracted ray directions
+    /// </summary>
     public RenderTexture LightCameraRefractionRayTexture;
 
+    /// <summary>
+    /// A reference to the diffuse object used for testing/experimenting
+    /// </summary>
     public GameObject DiffuseObject;
 
+    /// <summary>
+    /// The UI text object used to display information to the user
+    /// </summary>
     public Text RenderStatusText;
 
     /// <summary>
@@ -73,8 +85,9 @@ public class World : MonoBehaviour
     /// </summary>
     public float Debug_RefractionIndex = 1; // Defaulting to 1. Equivalent to the speed of light moving in a vacuum. 
 
-    //public float Debug_AbsorbtionCoefficient = 0.00017f;
-
+    /// <summary>
+    /// A flag used to indicate whether we should render spheres at the specular position. Used primarily for debuggin
+    /// </summary>
     public bool Debug_RenderSpecularPositions = true;
 
     public bool Debug_RenderRefractionDirection = true;
@@ -97,20 +110,38 @@ public class World : MonoBehaviour
 
     public bool Debug_MultiplyIntensity = false;
 
-    public Color Debug_LightColor = Color.white;
-
     public float ShadowFactor = 0.5f;
 
+    /// <summary>
+    /// A flag which determines whether shadows are rendered
+    /// </summary>
     public bool RenderShadows = true;
 
+    /// <summary>
+    /// A flag which determines whether the caustic effect is rendered
+    /// </summary>
     public bool RenderCaustics = true;
 
+    /// <summary>
+    /// Gets/sets the shadow theshold. If a value in the final shadow texture is greater than this value,
+    /// we treat that position as being "in a shadow"
+    /// </summary>
     public float ShadowThreshold = 0.01f;
 
+    /// <summary>
+    /// Gets/sets the size of the Gaussian blur kernel that is applied to the caustic effect
+    /// </summary>
     public int CausticBlurKernalSize = 5;
 
+    /// <summary>
+    /// Gets/sets the size of the Gassian blur kernel that is applied to the shadow effect
+    /// </summary>
     public int ShadowBlurKernelSize = 5;
 
+    /// <summary>
+    /// Gets/sets the caustic threshold. If a value in the final caustic texture is greater than this value,
+    /// we treat the position as being in the caustic-receiving position 
+    /// </summary>
     public float CausticThreshold = 0.1f;
 
     /// <summary>
@@ -248,11 +279,6 @@ public class World : MonoBehaviour
 
     private void HandleValidationInputs()
     {
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            this.PrintDiscoveredFluxValue();
-        }
-
         if (Input.GetKeyDown(KeyCode.D))
         {
             this.DeleteValidationObjects();
@@ -270,11 +296,6 @@ public class World : MonoBehaviour
         else if (this.continousValidationRendering || Input.GetKeyDown(KeyCode.S))
         {
             this.RenderRefractionDetails_2(this.LightCameraRefractionPositionTexture, this.LightCameraCausticTexture, this.LightCameraRefractionRayTexture, this.LightCameraCausticColorTexture);
-        }
-
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            this.Test();
         }
 
         this.RenderStatusText.text = $"Continous rendering " + (this.continousValidationRendering ? "enabled" : "disabled");
@@ -411,90 +432,8 @@ public class World : MonoBehaviour
         return new Vector3(color.r, color.g, color.b);
     }
 
-    private int GetNumberOfVisiblePixels(RenderTexture specularPositionTexture)
-    {
-        Texture2D positionTexture = this.ConvertRenderTextureTo2DTexture(specularPositionTexture);
-        int count = 0;
-        for (int row = 0; row < positionTexture.width; row++)
-        {
-            for (int col = 0; col < positionTexture.height; col++)
-            {
-                bool isVisiblePosition = positionTexture.GetPixel(row, col).a > 0; //The alpha channel of the pixel indicates whether the position is valid (i.e. seen by the light camera)
-                if (isVisiblePosition)
-                {
-                    count++;
-                }
-            }
-        }
-
-        return count;
-    }
-
     private bool IsVisiblePosition(Texture2D texture, int row, int col)
     {
         return texture.GetPixel(row, col).a > 0;
     }
-
-    private void PrintDiscoveredFluxValue()
-    {
-        Texture2D fluxTexture = this.ConvertRenderTextureTo2DTexture(this.LightCameraFluxTexture);
-        for (int row = 0; row < fluxTexture.width; row++)
-        {
-            for (int col = 0; col < fluxTexture.height; col++)
-            {
-                Color color = fluxTexture.GetPixel(row, col);
-                if (color.a > 0)
-                {
-                    Debug.Log($"Found color value: {color.r}, {color.g}, {color.b}");
-                    return;
-                }
-            }
-        }
-    }
-
-    private void Test()
-    {
-        //Debug.Log("Checking for nearby points");
-        //Texture2D causticTexture = this.ConvertRenderTextureTo2DTexture(this.LightCameraCausticTexture);
-
-        //List<Vector3> allPositions = new List<Vector3>();
-        //for(int i = 0; i < causticTexture.width; i++)
-        //{
-        //    for (int j = 0; j < causticTexture.height; j++)
-        //    {
-        //        Color color = causticTexture.GetPixel(i, j);
-        //        if (color.a > 0)
-        //        {
-        //            allPositions.Add(this.GetVectorFromColor(causticTexture.GetPixel(i, j)));
-        //        }
-        //    }
-        //}
-
-        //foreach(Vector3 splatPos in allPositions)
-        //{
-        //    var nearbyPositions = allPositions.Where(p => p != splatPos && Vector3.Distance(p, splatPos) < /*this.SeparatingDistance*/float.Epsilon).ToList();
-        //    if (nearbyPositions.Count > 0)
-        //    {
-        //        Debug.Log($"({splatPos.x}, {splatPos.y}, {splatPos.z} has {nearbyPositions.Count} nearby positions");
-        //    }
-        //}
-
-        //Debug.Log("Nearby check complete");
-
-
-        Debug.Log("Checking color in color texture");
-        Texture2D causticTexture = this.ConvertRenderTextureTo2DTexture(this.LightCameraCausticColorTexture);
-
-        for (int i = 0; i < causticTexture.width; i++)
-        {
-            for (int j = 0; j < causticTexture.height; j++)
-            {
-                Color color = causticTexture.GetPixel(i, j);
-                Debug.Log($"found negative value: {color}");
-            }
-        }
-
-        Debug.Log("Color check complete");
-    }
-
 }

@@ -23,6 +23,9 @@ public enum LightCameraType
     /// </summary>
     CAUSTIC,
 
+    /// <summary>
+    /// Value indicates that the camera is expected to store the refracted ray direction
+    /// </summary>
     CAUSTIC_REFRACTION_RAY,
 
     /// <summary>
@@ -35,6 +38,10 @@ public enum LightCameraType
     /// </summary>
     CAUSTIC_FLUX,
 
+    /// <summary>
+    /// Value that indictes that the camera is expected to store caustic flux values. For some reason, when using
+    /// <see cref="CAUSTIC_FLUX"/> the texture is receiving strange values...
+    /// </summary>
     CAUSTIC_FLUX_2,
 
     /// <summary>
@@ -47,6 +54,11 @@ public enum LightCameraType
     /// </summary>
     CAUSTIC_DISTANCE,
 
+    /// <summary>
+    /// Value indicates that the camera is expected to store color information of the specular object. Similar to our 
+    /// flux textures, the color texture generated from <see cref="CAUSTIC_COLOR"/> yielded strange values...This
+    /// enum is prerfered over <see cref="CAUSTIC_COLOR"/>
+    /// </summary>
     CAUSTIC_DREW_COLOR,
 
     /// <summary>
@@ -54,11 +66,23 @@ public enum LightCameraType
     /// </summary>
     OTHER,
 
+    /// <summary>
+    /// Value indicates that the camera is expected to store the final caustic color
+    /// </summary>
     CAUSTIC_FINAL_LIGHT_COLOR,
 
+    /// <summary>
+    /// Value indicates that the camera is expcted to store the shadow flux results
+    /// </summary>
     SHADOW,
 
+    /// <summary>
+    /// Value indicates that the camera is expected to store the final shadow color
+    /// </summary>
     SHADOW_FINAL,
 
+    /// <summary>
+    /// (deprecated)
+    /// </summary>
     GAUSSIAN,
 }
