@@ -37,60 +37,29 @@ Shader "Unlit/SpecularReceivingObject"
             };
 
             sampler2D _MainTex;
-            sampler2D _LightTexture0;
-            sampler2D _LightTexture1;
-
             float4 _MainTex_ST;
+            float2 _MainTex_TexelSize;
 
             // Variables set globally from the CPU
-            sampler2D _DrewCausticColor;
-            sampler2D _CausticTexture;
-            sampler2D _SpecularPosTexture;
-            sampler2D _CausticFluxTexture;
-            sampler2D _DrewTest;
-            sampler2D _CausticMapTexture;
-            sampler2D _CausticDistanceTexture;
-            sampler2D _CausticColorMapTexture;
+            float _LightIDs[8];
+
             sampler2D _FinalLightColorTexture_0;
             sampler2D _FinalLightColorTexture_1;
             sampler2D _CausticShadowTexture_0;
             sampler2D _CausticShadowTexture_1;
             sampler2D _ShadowFinalTexture_0;
             sampler2D _ShadowFinalTexture_1;
-            sampler2D _TestTexture;
-            sampler2D _CausticGaussianTexture_0;
-
             float3 _LightWorldPosition_0;
             float3 _LightWorldPosition_1;
-
             float4x4 _LightViewProjectionMatrix_0;
             float4x4 _LightViewProjectionMatrix_1;
-            float _IlluminationDistance;
-            float _GlobalAbsorbtionCoefficient;
-            float _DebugFlux;
-            float3 _DiffuseObjectPos;
-            float3 _LightWorldPosition;
-            int _Debug_AllowNegativeIntensities;
-            int _Debug_MultiplyIntensity;
-            fixed4 _DebugLightColor;
-            float _LightIntensity;
-            float _AbsorbtionCoefficient;
-            float _ShadowFactor;
             int _RenderShadows;
             int _RenderCaustics;
             float _ShadowThreshold;
-            
-
-            UNITY_DECLARE_TEX2DARRAY(_FinalLightingTextures);
-            //sampler2D _FinalLightingTextures; //This contains an array of textures
-            float _LightIDs[8];
-
-            float2 _MainTex_TexelSize;
-            int _KernelSize;
+            float _CausticThreshold;
             int _CausticBlurKernalSize;
             int _ShadowBlurKernelSize;
-            float _CausticThreshold;
-
+            
             /*
             * Given the world position of the receiving object, get the texture
             * coordinates that can be used to map into a caustic texture.
@@ -106,56 +75,6 @@ Shader "Unlit/SpecularReceivingObject"
             }
 
             /*
-            * Determine if the world position (of the receiving object) is hit by any refracted
-            * light ray
-            * param: lightID - The unique light source ID
-            * param: worldPos - The receiving object vertex world position
-            */
-            bool SpecularSeesPosition(int lightID, float3 worldPos)
-            {
-                float2 tc = GetCoordinatesForSpecularTexture(lightID, worldPos);
-                float4 fluxVals = tex2D(_DrewTest/*_CausticMapTexture*/, tc);
-                return fluxVals.a == 1;
-            }
-
-            /*
-            * Get the amount of flux that has accumulated onto the provided receiving position
-            * param: lightID - The unique light source ID
-            * param: worldPos - The receiving object vertex world position
-            */
-            float GetFlux(int lightID, float3 worldPos)
-            {
-                float2 tc = GetCoordinatesForSpecularTexture(lightID, worldPos);
-                float4 fluxVals = tex2D(_DrewTest, tc);
-                return fluxVals.x;
-            }
-
-            /*
-            * Get the distance between the corresponding specular vertex to the resulting 
-            * splat position
-            * param: lightID - The unique light source ID
-            * param: worldPos - The receiving object vertex world position
-            */
-            float GetDistance(int lightID, float3 worldPos)
-            {
-                float2 tc = GetCoordinatesForSpecularTexture(lightID, worldPos);
-                float4 distanceVals = tex2D(_DrewTest, tc);
-                return distanceVals.y;
-            }
-
-            /*
-            * Get the caustic light color from the final caustic texture
-            * param: lightID - The unique light source ID
-            * param: worldPos - The receiving object vertex world position
-            */
-            fixed4 GetCausticColor(int lightID, float3 worldPos)
-            {
-                float2 tc = GetCoordinatesForSpecularTexture(lightID, worldPos);
-                fixed4 causticColor = tex2D(_DrewCausticColor, tc);
-                return causticColor;
-            }
-
-            /*
             * Get the final caustic light color from the final caustic texture
             * param: lightID - The unique light source ID
             * param: worldPos - The receiving object vertex world position
@@ -166,40 +85,6 @@ Shader "Unlit/SpecularReceivingObject"
                 float2 tc = GetCoordinatesForSpecularTexture(lightID, worldPos);
                 fixed4 causticColor = tex2D(lightTexture, tc);
                 return causticColor;
-            }
-
-            /*
-            * Determines if the receiver vertex position is within a shadowed area
-            * param: lightID - The unique light source ID
-            * param: worldPos - The receiving object vertex world position
-            * param: shadowTexture - The texture containing the shadow data
-            */
-            bool IsShadowPosition(int lightID, float3 worldPos, sampler2D shadowTexture)
-            {
-                float2 tc = GetCoordinatesForSpecularTexture(lightID, worldPos);
-                fixed4 shadowColor = tex2D(shadowTexture, tc);
-                if (shadowColor.r > _ShadowThreshold && shadowColor.g > _ShadowThreshold && shadowColor.b > _ShadowThreshold)
-                {
-                    return true;
-                }
-
-                return false;
-            }
-
-            /*
-            * Determines if the provided position is within the shadow generated from any light source
-            * param: lightID - The unique light source ID
-            * param: shadowTexture - The texture containing the shadow data
-            * param: worldPos - The receiving object vertex world position
-            */
-            bool IsUnderLightShadowCam(int lightID, sampler2D shadowTexture, float3 worldPos)
-            {
-                if (_LightIDs[lightID] == -1)
-                {
-                    return false;
-                }
-
-                return IsShadowPosition(lightID, worldPos, shadowTexture);
             }
 
             /*

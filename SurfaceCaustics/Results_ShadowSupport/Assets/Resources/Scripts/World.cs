@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 using System.Linq;
 
@@ -61,11 +59,6 @@ public class World : MonoBehaviour
     public GameObject DiffuseObject;
 
     /// <summary>
-    /// The UI text object used to display information to the user
-    /// </summary>
-    public Text RenderStatusText;
-
-    /// <summary>
     /// Limits the number of objects created when rendering validation objects in the scene. Only every Xth item will be rendered.
     /// </summary>
     public int Debug_RenderEveryXElement = 20;
@@ -86,31 +79,19 @@ public class World : MonoBehaviour
     public float Debug_RefractionIndex = 1; // Defaulting to 1. Equivalent to the speed of light moving in a vacuum. 
 
     /// <summary>
-    /// A flag used to indicate whether we should render spheres at the specular position. Used primarily for debuggin
+    /// Gets/sets a debug flux value. Used primarily for debugging when needing a constant flux value
     /// </summary>
-    public bool Debug_RenderSpecularPositions = true;
-
-    public bool Debug_RenderRefractionDirection = true;
-
-    public bool Debug_RenderCausticPositions = true;
-
-    public float Debug_IlluminationDistance = 1;
-
     public float Debug_Flux = 0.5f;
 
-    public float Debug_Flux_Multiplier = 500;
+    /// <summary>
+    /// Gets/sets the value multiplied the flux values read in the flux texture
+    /// </summary>
+    public float Flux_Multiplier = 500;
 
+    /// <summary>
+    /// Gets/sets the visible surface area of a specular object seen by a caustic camera
+    /// </summary>
     public int Debug_NumOfVisiblePixels = 600;
-
-    public float SeparatingDistance = 0.5f;
-
-    public int Debug_QuickDistanceTest = 1;
-
-    public bool Debug_AllowNegativeIntensities = true;
-
-    public bool Debug_MultiplyIntensity = false;
-
-    public float ShadowFactor = 0.5f;
 
     /// <summary>
     /// A flag which determines whether shadows are rendered
@@ -145,40 +126,18 @@ public class World : MonoBehaviour
     public float CausticThreshold = 0.1f;
 
     /// <summary>
-    /// Interal list of spheres which represent the positions read from the position texture
+    /// Gets/sets the max number light sources supported in the application
     /// </summary>
-    private List<GameObject> debug_PositionSpheres;
-
-    /// <summary>
-    /// Interal list of cylinders which represents the normals ready from the normals texture
-    /// </summary>
-    private List<GameObject> debug_NormalCylinder;
-
-    /// <summary>
-    /// Interal list of spheres which represent the positions read from the receiving object's position texture
-    /// </summary>
-    private List<GameObject> debug_ReceivingPositionSpheres;
-
-    /// <summary>
-    /// Flag indicating whether to render the validation objects in every frame
-    /// </summary>
-    private bool continousValidationRendering = false;
-
     private int supportedNumberOfLights = 8;
 
+    /// <summary>
+    /// A list of our current light source information
+    /// </summary>
     private LightSourceDataProperties[] allLightSourceData;
-
-    public Camera TestCamera;
-
-    public Shader TestShader;
 
     // Start is called before the first frame update
     void Start()
     {
-        debug_PositionSpheres = new List<GameObject>();
-        debug_NormalCylinder = new List<GameObject>();
-        debug_ReceivingPositionSpheres = new List<GameObject>();
-
         Debug.Assert(LightCameraRefractionPositionTexture != null);
         Debug.Assert(LightCameraRefractionNormalTexture != null);
 
@@ -198,8 +157,6 @@ public class World : MonoBehaviour
                 this.allLightSourceData[i] = foundLightSources[i].dataProperties;
             }
         }
-
-        this.TestCamera.SetReplacementShader(this.TestShader, "SpecularObj");
     }
 
     // Update is called once per frame
@@ -212,31 +169,18 @@ public class World : MonoBehaviour
             this.Debug_RefractionIndex = 1;
         }
 
-        if (this.ShadowFactor > 1)
-        {
-            this.ShadowFactor = 1;
-        }
-        else if (this.ShadowFactor < 0)
-        {
-            this.ShadowFactor = 0;
-        }
-
         if (this.CausticBlurKernalSize < 1)
         {
             this.CausticBlurKernalSize = 1;
         }
 
         Shader.SetGlobalFloat("_RefractiveIndex", this.Debug_RefractionIndex);
-        Shader.SetGlobalFloat("_IlluminationDistance", this.Debug_IlluminationDistance);
         Shader.SetGlobalVector("_DiffuseObjectPos", this.DiffuseObject.transform.position);
         Shader.SetGlobalTexture("_CausticTexture", this.LightCameraCausticFinalTexture);
         Shader.SetGlobalTexture("_CausticFluxTexture", this.LightCameraFluxTexture);
-        Shader.SetGlobalInt("_NumProjectedVerticies", /*this.GetNumberOfVisiblePixels(this.LightCameraRefractionPositionTexture)*/ this.Debug_NumOfVisiblePixels);
+        Shader.SetGlobalInt("_NumProjectedVerticies", this.Debug_NumOfVisiblePixels);
         Shader.SetGlobalFloat("_DebugFlux", this.Debug_Flux);
-        Shader.SetGlobalFloat("_DebugFluxMultiplier", this.Debug_Flux_Multiplier);
-        Shader.SetGlobalInt("_Debug_AllowNegativeIntensities", this.Debug_AllowNegativeIntensities ? 1 : 0);
-        Shader.SetGlobalInt("_Debug_MultiplyIntensity", this.Debug_MultiplyIntensity ? 1 : 0);
-        Shader.SetGlobalFloat("_ShadowFactor", this.ShadowFactor);
+        Shader.SetGlobalFloat("_DebugFluxMultiplier", this.Flux_Multiplier);
         Shader.SetGlobalInt("_RenderShadows", this.RenderShadows ? 1 : 0);
         Shader.SetGlobalInt("_RenderCaustics", this.RenderCaustics ? 1 : 0);
         Shader.SetGlobalFloat("_ShadowThreshold", this.ShadowThreshold);
@@ -245,195 +189,5 @@ public class World : MonoBehaviour
         Shader.SetGlobalInt("_ShadowBlurKernelSize", this.ShadowBlurKernelSize);
 
         Shader.SetGlobalFloatArray("_LightIDs", lightIDs);
-        this.HandleValidationInputs();
-
-
-        Shader.SetGlobalTexture("_TestTexture", this.TestCamera.targetTexture);
-    }
-
-    /// <summary>
-    /// Delete the validation spheres and cylinders in the scene
-    /// </summary>
-    private void DeleteValidationObjects()
-    {
-        this.debug_PositionSpheres.ForEach(gameObject => Destroy(gameObject));
-        this.debug_NormalCylinder.ForEach(gameObject => Destroy(gameObject));
-        this.debug_ReceivingPositionSpheres.ForEach(gameObject => Destroy(gameObject));
-    }
-
-  
-    /// <summary>
-    /// Convert a render texture to a 2D texture
-    /// </summary>
-    /// <param name="rt">Render texture to convert</param>
-    /// <returns>The convereted texture</returns>
-    private Texture2D ConvertRenderTextureTo2DTexture(RenderTexture rt)
-    {
-        RenderTexture.active = rt;
-        Texture2D texture = new Texture2D(rt.width, rt.height, TextureFormat.RGBAFloat, false);
-        texture.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0);
-        texture.Apply();
-
-        return texture;
-    }
-
-    private void HandleValidationInputs()
-    {
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            this.DeleteValidationObjects();
-        }
-
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            this.continousValidationRendering = !this.continousValidationRendering;
-        }
-
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            this.RenderRefractionDetails(this.LightCameraRefractionPositionTexture, this.LightCameraCausticTexture, this.LightCameraRefractionRayTexture, this.LightCameraCausticColorTexture);
-        }
-        else if (this.continousValidationRendering || Input.GetKeyDown(KeyCode.S))
-        {
-            this.RenderRefractionDetails_2(this.LightCameraRefractionPositionTexture, this.LightCameraCausticTexture, this.LightCameraRefractionRayTexture, this.LightCameraCausticColorTexture);
-        }
-
-        this.RenderStatusText.text = $"Continous rendering " + (this.continousValidationRendering ? "enabled" : "disabled");
-    }
-
-    private void RenderRefractionDetails(RenderTexture specularPositionTexture, RenderTexture specularCausticPositionTexture, RenderTexture specularRefractionRayTexture, RenderTexture specularColorTexture)
-    {
-        Texture2D positionTexture = this.ConvertRenderTextureTo2DTexture(specularPositionTexture);
-        Texture2D causticTexture = this.ConvertRenderTextureTo2DTexture(specularCausticPositionTexture);
-        Texture2D refractionRayTexture = this.ConvertRenderTextureTo2DTexture(specularRefractionRayTexture);
-        Texture2D colorTexture = this.ConvertRenderTextureTo2DTexture(specularColorTexture);
-        Texture2D distanceTexture = this.ConvertRenderTextureTo2DTexture(this.LightCausticDistanceTexture);
-        Texture2D fluxTexture = this.ConvertRenderTextureTo2DTexture(this.LightCameraFluxTexture);
-
-        int count = 0;
-
-        this.debug_PositionSpheres.ForEach(sphere => Destroy(sphere));
-        this.debug_PositionSpheres.Clear();
-        this.debug_NormalCylinder?.ForEach(sphere => Destroy(sphere));
-        this.debug_NormalCylinder?.Clear();
-
-        for (int row = 0; row < positionTexture.width; row++)
-        {
-            for (int col = 0; col < positionTexture.height; col++)
-            {
-                bool isVisiblePosition = positionTexture.GetPixel(row, col).a > 0; //The alpha channel of the pixel indicates whether the position is valid (i.e. seen by the light camera)
-                if (!isVisiblePosition)
-                {
-                    continue;
-                }
-
-                if (this.Debug_RenderEveryXElement <= 1 || (count + 1) % this.Debug_RenderEveryXElement == 0)
-                {
-                    Vector3 worldPos = this.GetVectorFromColor(positionTexture.GetPixel(row, col));
-                    Vector3 splatPos = this.GetVectorFromColor(causticTexture.GetPixel(row, col));
-                    Vector3 refractionRay = this.GetVectorFromColor(refractionRayTexture.GetPixel(row, col));
-                    Color refractionColor = colorTexture.GetPixel(row, col);
-                    Vector3 worldToSplat = splatPos - worldPos;
-                    //float distanceFromWorldToSplat = worldToSplat.magnitude;
-                    float distanceFromWorldToSplat = this.GetVectorFromColor(distanceTexture.GetPixel(row, col)).x;
-
-                    if (this.Debug_RenderSpecularPositions)
-                    {
-                        GameObject positionSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                        positionSphere.transform.position = worldPos;
-                        positionSphere.transform.localScale = this.Debug_SpherePositionSize;
-                        positionSphere.name = $"Position Sphere: {name}";
-                        positionSphere.GetComponent<Renderer>().material.SetColor("_Color", refractionColor);
-                        this.debug_PositionSpheres.Add(positionSphere);
-                    }
-                    
-                    if (this.Debug_RenderCausticPositions)
-                    {
-                        GameObject splatPositionSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                        splatPositionSphere.transform.position = splatPos;
-                        splatPositionSphere.transform.localScale = this.Debug_SpherePositionSize;
-                        splatPositionSphere.name = $"Splat Position Sphere: {name}";
-                        splatPositionSphere.GetComponent<Renderer>().material.SetColor("_Color", refractionColor);
-                        this.debug_PositionSpheres.Add(splatPositionSphere);
-                    }
-                    
-                    if (this.Debug_RenderRefractionDirection)
-                    {
-                        GameObject normalDirectionCylinder = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-                        normalDirectionCylinder.transform.position = worldPos + (distanceFromWorldToSplat / 2 * refractionRay.normalized);
-                        normalDirectionCylinder.transform.rotation = Quaternion.FromToRotation(Vector3.up, refractionRay);
-                        normalDirectionCylinder.transform.localScale = new Vector3(0.01f, distanceFromWorldToSplat / 2, 0.01f);
-                        normalDirectionCylinder.name = $"Refraction ray cylinder: {name}";
-                        normalDirectionCylinder.GetComponent<Renderer>().material.SetColor("_Color", refractionColor);
-                        this.debug_NormalCylinder.Add(normalDirectionCylinder);
-                    }
-                }
-
-                count++;
-            }
-        }
-    }
-
-    private void RenderRefractionDetails_2(RenderTexture specularPositionTexture, RenderTexture specularCausticPositionTexture, RenderTexture specularRefractionRayTexture, RenderTexture specularColorTexture)
-    {
-        Texture2D positionTexture = this.ConvertRenderTextureTo2DTexture(specularPositionTexture);
-        Texture2D causticTexture = this.ConvertRenderTextureTo2DTexture(specularCausticPositionTexture);
-        Texture2D refractionRayTexture = this.ConvertRenderTextureTo2DTexture(specularRefractionRayTexture);
-        Texture2D colorTexture = this.ConvertRenderTextureTo2DTexture(specularColorTexture);
-        Texture2D distanceTexture = this.ConvertRenderTextureTo2DTexture(this.LightCausticDistanceTexture);
-        Texture2D fluxTexture = this.ConvertRenderTextureTo2DTexture(this.LightCameraFluxTexture);
-
-        int count = 0;
-
-        this.debug_PositionSpheres.ForEach(sphere => Destroy(sphere));
-        this.debug_PositionSpheres.Clear();
-        this.debug_NormalCylinder?.ForEach(sphere => Destroy(sphere));
-        this.debug_NormalCylinder?.Clear();
-
-        for (int row = 0; row < positionTexture.width; row++)
-        {
-            for (int col = 0; col < positionTexture.height; col++)
-            {
-                bool specularPosVisible = this.IsVisiblePosition(positionTexture, row, col);
-                bool splatPosVisible = this.IsVisiblePosition(causticTexture, row, col);
-
-                if (this.Debug_RenderEveryXElement <= 1 || (count + 1) % this.Debug_RenderEveryXElement == 0)
-                {
-                    if (specularPosVisible && this.Debug_RenderSpecularPositions)
-                    {
-                        Vector3 worldPos = this.GetVectorFromColor(positionTexture.GetPixel(row, col));
-                        GameObject positionSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                        positionSphere.transform.position = worldPos;
-                        positionSphere.transform.localScale = this.Debug_SpherePositionSize;
-                        positionSphere.name = $"Position Sphere: {name}";
-                        positionSphere.GetComponent<Renderer>().material.SetColor("_Color", Color.green/*refractionColor*/);
-                        this.debug_PositionSpheres.Add(positionSphere);
-                    }
-
-                    if (splatPosVisible && this.Debug_RenderCausticPositions)
-                    {
-                        Vector3 splatPos = this.GetVectorFromColor(causticTexture.GetPixel(row, col));
-                        GameObject splatPositionSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                        splatPositionSphere.transform.position = splatPos;
-                        splatPositionSphere.transform.localScale = this.Debug_SpherePositionSize;
-                        splatPositionSphere.name = $"Splat Position Sphere: {name}";
-                        splatPositionSphere.GetComponent<Renderer>().material.SetColor("_Color", Color.blue/*refractionColor*/);
-                        this.debug_PositionSpheres.Add(splatPositionSphere);
-                    }
-                }
-
-                count++;
-            }
-        }
-    }
-
-    private Vector3 GetVectorFromColor(Color color)
-    {
-        return new Vector3(color.r, color.g, color.b);
-    }
-
-    private bool IsVisiblePosition(Texture2D texture, int row, int col)
-    {
-        return texture.GetPixel(row, col).a > 0;
     }
 }
