@@ -52,7 +52,6 @@ Shader "Unlit/CausticPass1DataShader"
             }
 
             float3 VertexEstimateIntersection(
-                float4x4 lightViewProjectMatrix,
                 float3 specularVertexWorldPos,
                 float3 refractedLightRayDirection,
                 sampler2D positionTexture)
@@ -70,6 +69,23 @@ Shader "Unlit/CausticPass1DataShader"
                 texPt = float4(ProjectPointOntoReceiver(barrierPosition, barrierNormal, p2), 1);
                 tc = 0.5 * (texPt.xy / texPt.w) + float2(0.5, 0.5);
                 return tex2Dlod(positionTexture, float4(tc, 1, 1)); //Project P2 position into the light's space
+            }
+
+            float3 VertexEstimateIntersection_2(
+                float3 specularVertexWorldPos,
+                float3 refractedLightRayDirection,
+                sampler2D positionTexture)
+            {
+                float3 barrierNormal = float3(0, 1, 0);
+                float3 barrierPosition = float3(0, 0, 0);
+
+                float3 p1 = specularVertexWorldPos + (1.0 * refractedLightRayDirection); 
+                float3 p1Projected = ProjectPointOntoReceiver(barrierPosition, barrierNormal, p1);
+                float newDistance = distance(specularVertexWorldPos, p1Projected);
+                float3 p2 = specularVertexWorldPos + (newDistance * refractedLightRayDirection); 
+                float3 p2Projected = ProjectPointOntoReceiver(barrierPosition, barrierNormal, p2);
+
+                return p2Projected;
             }
 
             sampler2D _MainTex;
@@ -92,11 +108,12 @@ Shader "Unlit/CausticPass1DataShader"
                 float d = dot(barrierNormal, vertexWorldPos);*/
                 //float3 resultingPosition = vertexWorldPos - ((d - D) * barrierNormal);
                 float3 resultingPosition = ProjectPointOntoReceiver(barrierPosition, barrierNormal, vertexWorldPos);
+                float3 splatPos = VertexEstimateIntersection_2(vertexWorldPos, refractedRayDirection, _ReceiverPositions);
 
                 v2f o;
-                o.vertex = UnityObjectToClipPos(v.vertex);
+                o.vertex = mul(UNITY_MATRIX_VP, float4(splatPos, 1)); /*UnityObjectToClipPos(v.vertex)*/;
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-                o.worldPos = resultingPosition;
+                o.worldPos = splatPos;
                 return o;
             }
 

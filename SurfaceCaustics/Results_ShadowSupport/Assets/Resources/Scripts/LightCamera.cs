@@ -154,6 +154,9 @@ public class LightCamera : MonoBehaviour
             case LightCameraType.GAUSSIAN:
                 shaderTextureParameter = "_CausticGaussianTexture";
                 break;
+            case LightCameraType.DEBUG:
+                shaderTextureParameter = "_CausticDebug";
+                break;
         }
 
         Shader.SetGlobalTexture($"{shaderTextureParameter}_{this.LightSourceID}", DataTexture);

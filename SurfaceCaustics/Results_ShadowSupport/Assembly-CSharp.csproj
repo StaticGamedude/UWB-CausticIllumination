@@ -71,6 +71,7 @@
     <Compile Include="Assets\Resources\Scripts\QuickTesting.cs" />
     <Compile Include="Assets\GroupResources\Liwen\Source\Script\Matrix3x3Helpers.cs" />
     <Compile Include="Assets\GroupResources\Liwen\Source\RenderPipeline\ExampleRenderPipelineAsset.cs" />
+    <Compile Include="Assets\AnimatedFish.cs" />
     <Compile Include="Assets\GroupResources\Liwen\Source\Script\MyMesh_CreateMesh.cs" />
     <Compile Include="Assets\Resources\Scripts\LightCameraType.cs" />
     <Compile Include="Assets\Resources\Scripts\LightCameraVisibilityType.cs" />
@@ -83,6 +84,9 @@
     <Compile Include="Assets\Resources\Scripts\LightSource.cs" />
     <Compile Include="Assets\Resources\Scripts\LightCamera.cs" />
     <Compile Include="Assets\GroupResources\Liwen\Source\RenderPipeline\RenderObjectPass.cs" />
+    <Compile Include="Assets\SimpleWaterAnimation.cs" />
+    <Compile Include="Assets\Fishes\MaterialOffSet.cs" />
+    <Compile Include="Assets\UnderwaterEnvironment.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Resources\Shaders\LightNormalShader.shader" />
@@ -98,6 +102,8 @@
     <None Include="Assets\Resources\Shaders\SpecularReceivingObjectShader.shader" />
     <None Include="Assets\GroupResources\Liwen\Resources\WaveShader.shader" />
     <None Include="Assets\Objects\AurynSky\Gems Ultimate Pack\READ ME.txt" />
+    <None Include="Assets\Resources\Shaders\CausticSplatPositionShader_1.shader" />
+    <None Include="Assets\Great White Shark Model\Read Me.txt" />
     <None Include="Assets\Resources\Shaders\ConvertToGreenShader.shader" />
     <None Include="Assets\Resources\Shaders\CausticFluxShader_0.shader" />
     <None Include="Assets\Resources\Shaders\Tex2DValidationShader.shader" />
@@ -106,6 +112,7 @@
     <None Include="Assets\Resources\Shaders\CausticMapShader.shader" />
     <None Include="Assets\Resources\Shaders\DrewCausticColorShader_1.shader" />
     <None Include="Assets\Resources\Shaders\TestShader.shader" />
+    <None Include="Assets\Resources\Shaders\CausticSplatPositionShader_0.shader" />
     <None Include="Assets\Resources\Shaders\CommonFunctions.cginc" />
     <None Include="Assets\Resources\Shaders\GaussianShader_0.shader" />
     <None Include="Assets\Resources\Shaders\CausticFluxShader_1.shader" />

@@ -18,6 +18,3 @@ This file is responsible for calcluating the flux values for each specular verte
 
 ### Assets\Resources\Shaders\CausticFinalFunctions.cginc
 This file contains the definitions for computing the final caustic effect for light sources. The methods here use data for flux, distance, color to compute the final caustic color.
-
-# Pass 3
-Attempts to follow the algorithm as described in the article [Caustics Mapping: An Image-Space Technique for Real-Time Caustics](https://ieeexplore.ieee.org/document/4069236). Attempts to reproduce the results as described in the third pass of the algorithm which attempts to increase the illumination of the receiving object.

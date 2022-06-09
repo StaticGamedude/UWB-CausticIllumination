@@ -108,12 +108,15 @@ public class LightSource : MonoBehaviour
         Shader refractionFluxShader = Resources.Load<Shader>(Path.Combine(SHADERS_DIRETORY, $"CausticFluxShader_{this.dataProperties.LightSourceID}"));
         Shader refractionColorShader = Resources.Load<Shader>(Path.Combine(SHADERS_DIRETORY, $"DrewCausticColorShader_{this.dataProperties.LightSourceID}"));
         Shader shadowShader = Resources.Load<Shader>(Path.Combine(SHADERS_DIRETORY, $"CausticShadowShader_{this.dataProperties.LightSourceID}"));
+        Shader debugSplatPosShader = Resources.Load<Shader>(Path.Combine(SHADERS_DIRETORY, $"CausticSplatPositionShader_{this.dataProperties.LightSourceID}"));
         RenderTexture refractionFluxTexture = this.InitRenderTexture(false, "RefractionFluxTexture");
         RenderTexture refractionColorTexture = this.InitRenderTexture(true, "RefractionColorTexture");
         RenderTexture refractionShadowTexture = this.InitRenderTexture(false, "RefractionShadowTexture");
+        RenderTexture debugSplatTexture = this.InitRenderTexture(false, "SplatPosTexture");
         Camera refractionFluxCamera = this.InstantiateCausticCamera("SpecularFluxCamera", passTwoCameraContainer, refractionFluxTexture, refractionFluxShader, LightCameraType.CAUSTIC_FLUX_2, LightCameraVisibilityType.SPECULAR);
         Camera refractionColorCamera = this.InstantiateCausticCamera("SpecularColorCamera", passTwoCameraContainer, refractionColorTexture, refractionColorShader, LightCameraType.CAUSTIC_DREW_COLOR, LightCameraVisibilityType.SPECULAR);
         Camera refractionShadowCamera = this.InstantiateCausticCamera("SpecularShadowCamera", passTwoCameraContainer, refractionShadowTexture, shadowShader, LightCameraType.SHADOW, LightCameraVisibilityType.SPECULAR);
+        Camera debugSplatCamera = this.InstantiateCausticCamera("DebugSplatPosCamera", passTwoCameraContainer, debugSplatTexture, debugSplatPosShader, LightCameraType.DEBUG, LightCameraVisibilityType.SPECULAR);
 
         passTwoCameraContainer.transform.parent = this.transform;
         passTwoCameraContainer.transform.localPosition = Vector3.zero;
@@ -122,8 +125,9 @@ public class LightSource : MonoBehaviour
 
         dataProperties.RefractionFluxTexture = refractionFluxTexture;
         dataProperties.RefractionColorTexture = refractionColorTexture;
+        dataProperties.DebugSplatPosTexture = debugSplatTexture;
 
-        return new List<Camera>() { refractionFluxCamera, refractionColorCamera, refractionShadowCamera };
+        return new List<Camera>() { refractionFluxCamera, refractionColorCamera, refractionShadowCamera, debugSplatCamera };
     }
 
     /// <summary>

@@ -12,8 +12,7 @@ Shader "Unlit/ShadowFinalShader_1"
         SubShader
         {
             Tags { "SpecularObj" = "1" }
-            LOD 100
-            Cull Off
+            LOD 100            
 
             Pass
             {

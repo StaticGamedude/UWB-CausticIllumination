@@ -68,6 +68,8 @@ public class CausticCameraHandler : MonoBehaviour
     /// </summary>
     public int RenderingDensity = 50;
 
+    public bool RenderContinuous = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -93,7 +95,7 @@ public class CausticCameraHandler : MonoBehaviour
             this.ShouldDeleteDebugObjects = false;
         }
 
-        if (this.RenderPositionSpheres)
+        if (this.RenderPositionSpheres || this.RenderContinuous)
         {
             Debug.Log("Attempting write positions");
             Texture2D positionTexture = this.ConvertRenderTextureTo2DTexture(this.causticCameraTargetTexture);

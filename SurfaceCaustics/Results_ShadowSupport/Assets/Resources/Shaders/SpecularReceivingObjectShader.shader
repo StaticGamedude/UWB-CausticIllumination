@@ -42,6 +42,7 @@ Shader "Unlit/SpecularReceivingObject"
 
             // Variables set globally from the CPU
             float _LightIDs[8];
+            float _AllLightIds[8];
 
             sampler2D _FinalLightColorTexture_0;
             sampler2D _FinalLightColorTexture_1;
@@ -166,18 +167,17 @@ Shader "Unlit/SpecularReceivingObject"
                 float2 causticCamera0TexCoord = GetCoordinatesForSpecularTexture(0, i.worldPos);
                 float2 causticCamera1TexCoord = GetCoordinatesForSpecularTexture(1, i.worldPos);
                 
-                if (_LightIDs[0] != -1)
+                if (_AllLightIds[0] != -1)
                 {
                     finalColor = finalColor + BlurTexture(_FinalLightColorTexture_0, causticCamera0TexCoord, _CausticBlurKernalSize);
                 }
 
-                if (_LightIDs[1] != -1)
+                if (_AllLightIds[1] != -1)
                 {
                     finalColor = finalColor + BlurTexture(_FinalLightColorTexture_1, causticCamera1TexCoord, _CausticBlurKernalSize);
                 }
                 
                 fixed4 shadowColor = BlurTexture(_ShadowFinalTexture_0, causticCamera0TexCoord, _ShadowBlurKernelSize);
-
 
                 // Check to see if the this spot can be seen by our light source. If not, simply return the color.
                 if (!IsPositionVisibleByLightSource(i.worldPos, i.normal))
@@ -196,7 +196,6 @@ Shader "Unlit/SpecularReceivingObject"
                     return col + finalColor;
                 }
 
-                
                 // Shadow attempt based on the algorithm mentioned here: https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.625.7037&rep=rep1&type=pdf
                 // Check to see if this spot has a caustic effect on it. If so, simply return the normal color plus the caustic effect.
                 // If not, check to see if it has a shadow effect. If so, darken the spot.

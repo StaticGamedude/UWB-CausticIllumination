@@ -300,7 +300,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &103860897
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -703,6 +703,9 @@ MonoBehaviour:
   CausticBlurKernalSize: 5
   ShadowBlurKernelSize: 5
   CausticThreshold: 0.06
+  DebugCameraID: 0
+  TextureToRender: 0
+  DebugDensity: 200
 --- !u!114 &286145854
 MonoBehaviour:
   m_ObjectHideFlags: 0

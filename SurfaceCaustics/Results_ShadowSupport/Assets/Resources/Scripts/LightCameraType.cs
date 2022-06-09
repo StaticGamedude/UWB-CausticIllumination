@@ -85,4 +85,6 @@ public enum LightCameraType
     /// (deprecated)
     /// </summary>
     GAUSSIAN,
+
+    DEBUG,
 }

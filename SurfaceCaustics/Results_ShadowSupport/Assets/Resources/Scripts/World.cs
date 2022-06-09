@@ -1,6 +1,7 @@
 using UnityEngine;
 
 using System.Linq;
+using System.Collections.Generic;
 
 /// <summary>
 /// Handles the overall scene logic. Reads users input and renders debug spheres and cylinders
@@ -8,6 +9,18 @@ using System.Linq;
 /// </summary>
 public class World : MonoBehaviour
 {
+    /// <summary>
+    /// Gets/sets the max number light sources supported in the application
+    /// </summary>
+    private int supportedNumberOfLights = 8;
+
+    /// <summary>
+    /// A list of our current light source information
+    /// </summary>
+    private LightSourceDataProperties[] allLightSourceData;
+
+    private List<GameObject> debugObjects = new List<GameObject>();
+
     /// <summary>
     /// The render texture containing the world positions of the verticies of a refractive object that can be seen from a light source
     /// </summary>
@@ -125,44 +138,35 @@ public class World : MonoBehaviour
     /// </summary>
     public float CausticThreshold = 0.1f;
 
-    /// <summary>
-    /// Gets/sets the max number light sources supported in the application
-    /// </summary>
-    private int supportedNumberOfLights = 8;
+    public int DebugCameraID = 0;
 
-    /// <summary>
-    /// A list of our current light source information
-    /// </summary>
-    private LightSourceDataProperties[] allLightSourceData;
+    public int TextureToRender = 0;
+
+    public int DebugDensity = 20;
 
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Assert(LightCameraRefractionPositionTexture != null);
-        Debug.Assert(LightCameraRefractionNormalTexture != null);
+        //Debug.Assert(LightCameraRefractionPositionTexture != null);
+        //Debug.Assert(LightCameraRefractionNormalTexture != null);
 
-        LightSource[] foundLightSources = FindObjectsOfType<LightSource>();
-
-        this.allLightSourceData = new LightSourceDataProperties[this.supportedNumberOfLights];
-        for(int i = 0; i < this.supportedNumberOfLights; i++)
-        {
-            if (i >= foundLightSources.Length)
-            {
-                LightSourceDataProperties dummyDataProperty = new LightSourceDataProperties();
-                dummyDataProperty.LightSourceID = -1;
-                this.allLightSourceData[i] = dummyDataProperty;
-            }
-            else
-            {
-                this.allLightSourceData[i] = foundLightSources[i].dataProperties;
-            }
-        }
+        List<LightSource> foundLightSources = FindObjectsOfType<LightSource>().ToList();
+        this.allLightSourceData = foundLightSources.Select(lightSource => lightSource.dataProperties).ToArray();
     }
 
     // Update is called once per frame
     void Update()
     {
-        float[] lightIDs = this.allLightSourceData.Select(data => (float)data.LightSourceID).ToArray();
+        float[] lightIDs = new float[this.supportedNumberOfLights];
+        for(int i = 0; i < lightIDs.Length; i++)
+        {
+            lightIDs[i] = -1;
+        }
+
+        for(int i = 0; i < this.allLightSourceData.Length; i++)
+        {
+            lightIDs[i] = 1;
+        }
 
         if (this.Debug_RefractionIndex < 1)
         {
@@ -188,6 +192,80 @@ public class World : MonoBehaviour
         Shader.SetGlobalInt("_CausticBlurKernalSize", this.CausticBlurKernalSize);
         Shader.SetGlobalInt("_ShadowBlurKernelSize", this.ShadowBlurKernelSize);
 
-        Shader.SetGlobalFloatArray("_LightIDs", lightIDs);
+        Shader.SetGlobalFloatArray("_AllLightIds", lightIDs);
+
+        if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.R))
+        {
+            this.debugObjects.ForEach(o => Destroy(o));
+            this.debugObjects.Clear();
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            this.RenderDebugSpheres();
+        }
+    }
+
+    private void RenderDebugSpheres()
+    {
+        LightSourceDataProperties lightSourceData;
+        if (this.DebugCameraID > this.allLightSourceData.Length)
+        {
+            // Invalid camera ID
+            Debug.LogWarning("Invalid camera ID");
+            return;
+        }
+
+        RenderTexture rt = null;
+        lightSourceData = this.allLightSourceData[this.DebugCameraID];
+        if (this.TextureToRender == 0)
+        {
+            Debug.Log("Rendering receiver positions");
+            rt = lightSourceData.ReceivingPositionTexture;
+        }
+        else if (this.TextureToRender == 1)
+        {
+            Debug.Log("Rendering splat positions");
+            rt = lightSourceData.DebugSplatPosTexture;
+        }
+        else
+        {
+            Debug.LogWarning("Invalid texture to render ID");
+            return;
+        }
+
+        Texture2D texture = this.ConvertRenderTextureTo2DTexture(rt);
+        Color[] allColorsInTexture = texture.GetPixels();
+
+        int count = 0;
+        foreach(Color c in allColorsInTexture)
+        {
+            if (c.a == 0)
+            {
+                continue;
+            }
+
+            if (this.DebugDensity <= 1 || (count + 1) % this.DebugDensity == 0)
+            {
+                Vector3 worldPos = new Vector3(c.r, c.g, c.b);
+                GameObject positionSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                positionSphere.transform.position = worldPos;
+                positionSphere.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+                positionSphere.GetComponent<Renderer>().material.SetColor("_Color", Color.green/*refractionColor*/);
+                this.debugObjects.Add(positionSphere);
+            }
+
+            count++;
+        }
+    }
+
+    private Texture2D ConvertRenderTextureTo2DTexture(RenderTexture rt)
+    {
+        RenderTexture.active = rt;
+        Texture2D texture = new Texture2D(rt.width, rt.height, TextureFormat.RGBAFloat, false);
+        texture.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0);
+        texture.Apply();
+
+        return texture;
     }
 }

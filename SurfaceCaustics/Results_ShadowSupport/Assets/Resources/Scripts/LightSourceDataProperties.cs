@@ -18,5 +18,7 @@ public class LightSourceDataProperties
 
     public RenderTexture FinalColorTexture;
 
+    public RenderTexture DebugSplatPosTexture;
+
     public int LightSourceID;
 }

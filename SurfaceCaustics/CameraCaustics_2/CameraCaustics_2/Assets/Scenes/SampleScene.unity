@@ -176,6 +176,7 @@ MonoBehaviour:
   ShouldDeleteDebugObjects: 0
   RenderSupportingDataObjects: 0
   RenderingDensity: 500
+  RenderContinuous: 0
 --- !u!20 &104801827
 Camera:
   m_ObjectHideFlags: 0
@@ -381,7 +382,7 @@ GameObject:
   - component: {fileID: 987331108}
   - component: {fileID: 987331112}
   m_Layer: 0
-  m_Name: Sphere
+  m_Name: Light Source
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -528,6 +529,7 @@ MonoBehaviour:
   ShouldDeleteDebugObjects: 0
   RenderSupportingDataObjects: 0
   RenderingDensity: 50
+  RenderContinuous: 0
 --- !u!20 &1006540697
 Camera:
   m_ObjectHideFlags: 0
@@ -669,6 +671,7 @@ MonoBehaviour:
   ShouldDeleteDebugObjects: 0
   RenderSupportingDataObjects: 0
   RenderingDensity: 50
+  RenderContinuous: 0
 --- !u!20 &1610671864
 Camera:
   m_ObjectHideFlags: 0
@@ -739,7 +742,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1710717044}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 81.3, z: 0}
+  m_LocalPosition: {x: 0, y: 20, z: 0}
   m_LocalScale: {x: 5, y: 5, z: 5}
   m_Children: []
   m_Father: {fileID: 931026205}

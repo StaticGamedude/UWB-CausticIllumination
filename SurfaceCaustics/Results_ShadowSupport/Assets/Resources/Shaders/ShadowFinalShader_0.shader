@@ -13,7 +13,6 @@ Shader "Unlit/ShadowFinalShader_0"
         {
             Tags { "SpecularObj" = "1" }
             LOD 100
-            Cull Off
 
             Pass
             {
