@@ -32,13 +32,23 @@ float3 VertexEstimateIntersection(
 /*
 * Given a specular vertex's position/normal, determine the light refraction direction
 * param: lightPosition - The world position of a light source
+* param: lightForwardDirection - The direction of the light source
+* param: isLightDirectional - A flag indicating whether the light source is a directional light (1 for yes, 0 otherwise)
 * param: specularVertexWorldPos - The specular vertex world position 
 * param: specularVertexWorldNormal - The specular vertex world normal
 * param: refractionIndex - The refraction index of the specular object
 */
-float3 RefractRay(float3 lightPosition, float3 specularVertexWorldPos, float3 specularVertexWorldNormal, float refractionIndex)
+float3 RefractRay(float3 lightPosition, float3 lightForwardDirection, int isLightDirectional, float3 specularVertexWorldPos, float3 specularVertexWorldNormal, float refractionIndex)
 {
     float3 vertexToLight = normalize(lightPosition - specularVertexWorldPos);
+    
+    // If we're supporting a directional light, the vertex to light direction should always be the the light camera's forward direction.
+    // Essentially treating as if all the light rays are parallel
+    if (isLightDirectional == 1)
+    {
+        vertexToLight = -lightForwardDirection;
+    }
+    
     float incidentAngle = acos(dot(vertexToLight, specularVertexWorldNormal));
     float refractionAngle = asin(sin(incidentAngle) / refractionIndex);
     float3 refractedRay = -1 * ((vertexToLight / refractionIndex) + ((cos(refractionAngle) - (cos(incidentAngle) / refractionIndex)) * specularVertexWorldNormal));
@@ -49,6 +59,8 @@ float3 RefractRay(float3 lightPosition, float3 specularVertexWorldPos, float3 sp
 * Converts a vertex position to a splat position.
 * param: lightViewProjectMatrix - The light source's view projection matrix
 * param: lightPosition - The world position of a light source
+* param: lightForwardDirection - The direction of the light source
+* param: isLightDirectional - A flag indicating whether the light source is a directional light (1 for yes, 0 otherwise)
 * param: specularObjectRefractionIndex - The refraction index of the specular object
 * param: specularWorldPos - The specular vertex world position
 * param: specularWorldNormal - The specular vertex world normal
@@ -57,12 +69,14 @@ float3 RefractRay(float3 lightPosition, float3 specularVertexWorldPos, float3 sp
 float3 GetEstimatedSplatPosition(
     float4x4 lightViewProjectMatrix,
     float3 lightPosition,
+    float3 lightForwardDirection, 
+    int isLightDirectional,
     float sepcularObjectRefractionIndex,
     float3 specularWorldPos,
     float3 specularWorldNormal,
     sampler2D receiverPositionTexture
 )
 {
-    float3 refractedDirection = RefractRay(lightPosition, specularWorldPos, specularWorldNormal, sepcularObjectRefractionIndex);
+    float3 refractedDirection = RefractRay(lightPosition, lightForwardDirection, isLightDirectional, specularWorldPos, specularWorldNormal, sepcularObjectRefractionIndex);
     return VertexEstimateIntersection(lightViewProjectMatrix, specularWorldPos, refractedDirection, receiverPositionTexture);
 }

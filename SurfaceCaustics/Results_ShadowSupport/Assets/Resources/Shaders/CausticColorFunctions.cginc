@@ -22,6 +22,8 @@ v2f SharedColorVertexShader(
     appdata v,
     float4x4 lightViewProjectionMatrix,
     float3 lightWorldPos,
+    float3 lightForwardDirection, 
+    int isLightDirectional,
     float specularRefractionIndex,
     float2 uv,
     sampler2D receivingPositionTexture,
@@ -34,6 +36,8 @@ v2f SharedColorVertexShader(
     float3 estimatedPosition = GetEstimatedSplatPosition(
                                     lightViewProjectionMatrix,
                                     lightWorldPos,
+                                    lightForwardDirection,
+                                    isLightDirectional,
                                     specularRefractionIndex,
                                     worldPos,
                                     worldNormal,

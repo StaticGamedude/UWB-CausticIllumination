@@ -3,7 +3,7 @@ Shader "Unlit/TestTransformShader"
     Properties
     {
         _MainTex("Texture", 2D) = "white" {}
-        //_ObjectRefractionIndex("Refraction Index", Float) = 1.0
+        _ObjectRefractionIndex("Refraction Index", Float) = 1.0
     }
     SubShader
     {
@@ -33,9 +33,11 @@ Shader "Unlit/TestTransformShader"
             };
 
             //Light specific parameters
-            sampler2D _ReceivingPosTexture;
-            float4x4 _LightViewProjectionMatrix;
-            float3 _LightWorldPosition;
+            sampler2D _ReceivingPosTexture_0;
+            float4x4 _LightViewProjectionMatrix_0;
+            float3 _LightWorldPosition_0;
+            float3 _LightCam_Forward_0;
+            int _LightIsDirectional_0;
 
             sampler2D _MainTex;
             float4 _MainTex_ST;
@@ -45,10 +47,17 @@ Shader "Unlit/TestTransformShader"
             v2f vert(appdata v)
             {
                 v2f o;
-                float3 specularVertexWorldPos = mul(UNITY_MATRIX_M, v.vertex);
-                float3 specularVertexWorldNormal = normalize(mul(transpose(unity_WorldToObject), v.normal));
-                float3 refractedDirection = RefractRay(_LightWorldPosition, specularVertexWorldPos, specularVertexWorldNormal, _ObjectRefractionIndex);
-                float3 estimatedPosition = VertexEstimateIntersection(_LightViewProjectionMatrix, specularVertexWorldPos, refractedDirection, _ReceivingPosTexture);
+                float3 worldPos = mul(UNITY_MATRIX_M, v.vertex);
+                float3 worldNormal = normalize(mul(transpose(unity_WorldToObject), v.normal));
+                float3 estimatedPosition = GetEstimatedSplatPosition(
+                    _LightViewProjectionMatrix_0,
+                    _LightWorldPosition_0,
+                    _LightCam_Forward_0,
+                    _LightIsDirectional_0,
+                    _ObjectRefractionIndex,
+                    worldPos,
+                    worldNormal,
+                    _ReceivingPosTexture_0);
 
                 o.vertex = mul(UNITY_MATRIX_VP, float4(estimatedPosition, 1));
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
@@ -57,7 +66,7 @@ Shader "Unlit/TestTransformShader"
 
             float4 frag(v2f i) : SV_Target
             {
-                return float4(1, 0, 0, 1);
+                return float4(1, 1, 1, 1);
             }
 
             ENDCG

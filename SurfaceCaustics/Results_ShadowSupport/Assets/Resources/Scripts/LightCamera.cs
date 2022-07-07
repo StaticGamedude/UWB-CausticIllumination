@@ -61,8 +61,8 @@ public class LightCamera : MonoBehaviour
 
         if (this.SetTextureSize)
         {
-            this.DataTexture.width = 1024;
-            this.DataTexture.height = 1024;
+            this.DataTexture.width = 256;
+            this.DataTexture.height = 256;
         }
         
         switch (this.LightCameraVisibilityType)
@@ -94,6 +94,7 @@ public class LightCamera : MonoBehaviour
             Shader.SetGlobalMatrix($"_LightViewProjectionMatrix_{this.LightSourceID}", this.lightCamera.projectionMatrix * lightCamera.worldToCameraMatrix);
             Shader.SetGlobalFloat($"_LightCam_Far_{this.LightSourceID}", 1.0f / lightCamera.farClipPlane);
             Shader.SetGlobalVector($"_LightWorldPosition_{this.LightSourceID}", lightCamera.transform.position);
+            Shader.SetGlobalVector($"_LightCam_Forward_{this.LightSourceID}", lightCamera.transform.forward);
         }
     }
 

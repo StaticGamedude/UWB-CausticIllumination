@@ -35,6 +35,13 @@ public class LightSource : MonoBehaviour
     public Color LightColor = Color.white;
 
     /// <summary>
+    /// Sets the resolution size of the caustic textures
+    /// </summary>
+    public int RenderTextureSize = 1024;
+
+    public bool IsDirectionalLight = false;
+
+    /// <summary>
     /// Contains the caustic data associated with the light source
     /// </summary>
     public LightSourceDataProperties dataProperties;
@@ -68,6 +75,7 @@ public class LightSource : MonoBehaviour
     {
         Shader.SetGlobalColor($"_DebugLightColor_{this.dataProperties.LightSourceID}", this.LightColor);
         Shader.SetGlobalFloat($"_LightIntensity_{this.dataProperties.LightSourceID}", this.LightIntensity);
+        Shader.SetGlobalInt($"_LightIsDirectional_{this.dataProperties.LightSourceID}", this.IsDirectionalLight ? 1 : 0);
     }
 
     /// <summary>
@@ -165,7 +173,7 @@ public class LightSource : MonoBehaviour
     /// <returns>The newly generated render texture</returns>
     private RenderTexture InitRenderTexture(bool isColorTexture, string name)
     {
-        RenderTexture newTexture = new RenderTexture(1024, 1024, 32);
+        RenderTexture newTexture = new RenderTexture(this.RenderTextureSize, this.RenderTextureSize, 32);
         newTexture.name = name;
         newTexture.format = !isColorTexture ? RenderTextureFormat.ARGBFloat : RenderTextureFormat.Default;
         newTexture.antiAliasing = 8;

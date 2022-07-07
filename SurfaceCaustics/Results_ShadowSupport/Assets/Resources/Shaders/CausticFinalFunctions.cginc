@@ -116,6 +116,8 @@ v2f
     appdata v,
     float4x4 lightViewProjectionMatrix,
     float3 lightWorldPos,
+    float3 lightForwardDirection,
+    int isLightDirectional,
     float specularRefractionIndex,
     float2 uv,
     sampler2D receivingPositionTexture)
@@ -123,10 +125,12 @@ v2f
     v2f o;
     float3 worldPos = mul(UNITY_MATRIX_M, v.vertex);
     float3 worldNormal = normalize(mul(transpose(unity_WorldToObject), v.normal));
-    float3 refractedDirection = RefractRay(lightWorldPos, worldPos, worldNormal, specularRefractionIndex);
+    //float3 refractedDirection = RefractRay(lightWorldPos, worldPos, worldNormal, specularRefractionIndex);
     float3 estimatedPosition = GetEstimatedSplatPosition(
                                             lightViewProjectionMatrix,
                                             lightWorldPos,
+                                            lightForwardDirection,
+                                            isLightDirectional,
                                             specularRefractionIndex,
                                             worldPos,
                                             worldNormal,
@@ -162,9 +166,9 @@ fixed4 SharedCausticFinalFragmentShader(
     float isVisibile = GetIsVisible(lightViewProjectionMatrix, fluxDataTexture, i.splatPos);
     float finalIntensity = flux * exp((-specularAbsorbtionCoefficient * d));
     fixed4 causticColor = GetCausticColor(lightViewProjectionMatrix, causticColorTexture, i.splatPos) * (ClampSpecularColorFactor(specularColorFactor));
-    float computedColorValue = finalIntensity * lightColor * causticColor * lightIntensity;
-    
-    return fixed4(computedColorValue, computedColorValue, computedColorValue, isVisibile);
+    fixed4 computedColorValue = finalIntensity * lightColor /** causticColor */* lightIntensity;
+
+    return computedColorValue;
 }
 
 /*

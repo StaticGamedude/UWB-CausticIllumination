@@ -31,6 +31,8 @@ Shader "Unlit/CausticPass1DataShader"
                 float2 uv : TEXCOORD0;
                 float4 vertex : SV_POSITION;
                 float3 worldPos : TEXCOORD1;
+                float flux : TEXCOORD2;
+                float distanceVal : TEXCOORD3;
             };
 
             float3 RefractRay(float3 lightPosition, float3 specularVertexWorldPos, float3 specularVertexWorldNormal, float refractionIndex)
@@ -59,26 +61,6 @@ Shader "Unlit/CausticPass1DataShader"
                 float3 barrierNormal = float3(0, 1, 0);
                 float3 barrierPosition = float3(0, 0, 0);
 
-                float3 p1 = specularVertexWorldPos + (1.0 * refractedLightRayDirection); //P1 - 1 unit along the refracted ray direction from the specular vertex position
-                float4 texPt = float4(ProjectPointOntoReceiver(barrierPosition, barrierNormal, p1), 1);
-                float2 tc = 0.5 * (texPt.xy / texPt.w) + float2(0.5, 0.5);
-                float4 recPos = tex2Dlod(positionTexture, float4(tc, 1, 1)); //Projected P1 position into the light's space;
-                float newDistance = distance(specularVertexWorldPos, recPos.xyz);
-                float3 p2 = specularVertexWorldPos + (newDistance * refractedLightRayDirection); //P2 - D units Point along the refracted ray direction, where D is the distance from the vertex to the p1 projected position
-
-                texPt = float4(ProjectPointOntoReceiver(barrierPosition, barrierNormal, p2), 1);
-                tc = 0.5 * (texPt.xy / texPt.w) + float2(0.5, 0.5);
-                return tex2Dlod(positionTexture, float4(tc, 1, 1)); //Project P2 position into the light's space
-            }
-
-            float3 VertexEstimateIntersection_2(
-                float3 specularVertexWorldPos,
-                float3 refractedLightRayDirection,
-                sampler2D positionTexture)
-            {
-                float3 barrierNormal = float3(0, 1, 0);
-                float3 barrierPosition = float3(0, 0, 0);
-
                 float3 p1 = specularVertexWorldPos + (1.0 * refractedLightRayDirection); 
                 float3 p1Projected = ProjectPointOntoReceiver(barrierPosition, barrierNormal, p1);
                 float newDistance = distance(specularVertexWorldPos, p1Projected);
@@ -88,6 +70,14 @@ Shader "Unlit/CausticPass1DataShader"
                 return p2Projected;
             }
 
+            float GetFluxContribution(float3 lightWorldPos, float visibleSurfaceArea, float3 worldPosition, float3 worldNormal)
+            {
+                float3 incidentLightVector = normalize(lightWorldPos - worldPosition);
+
+                //Because of the possibility of negative angles between the normal and light vector, we clamp the value
+                return (1 / visibleSurfaceArea) * max(dot(worldNormal, incidentLightVector), 0.01);
+            }
+
             sampler2D _MainTex;
             sampler2D _ReceiverPositions;
             float4 _MainTex_ST;
@@ -95,6 +85,7 @@ Shader "Unlit/CausticPass1DataShader"
             float3 _LightPosition;
             float _RefractionIndex;
             int _VisibleSurfaceArea;
+            float _FluxMultiplier;
 
             v2f vert (appdata v)
             {
@@ -103,23 +94,26 @@ Shader "Unlit/CausticPass1DataShader"
                 float3 vertexWorldPos = mul(UNITY_MATRIX_M, v.vertex);
                 float3 worldNorm = mul(transpose(unity_WorldToObject), v.normal);
                 float3 refractedRayDirection = RefractRay(_LightPosition, vertexWorldPos, worldNorm, _RefractionIndex);
-                /*float3 posToFloorVector = vertexWorldPos - barrierPosition;
-                float D = dot(barrierNormal, barrierPosition);
-                float d = dot(barrierNormal, vertexWorldPos);*/
-                //float3 resultingPosition = vertexWorldPos - ((d - D) * barrierNormal);
                 float3 resultingPosition = ProjectPointOntoReceiver(barrierPosition, barrierNormal, vertexWorldPos);
-                float3 splatPos = VertexEstimateIntersection_2(vertexWorldPos, refractedRayDirection, _ReceiverPositions);
+                float3 splatPos = VertexEstimateIntersection(vertexWorldPos, refractedRayDirection, _ReceiverPositions);
+                float flux = GetFluxContribution(_LightPosition, _VisibleSurfaceArea, vertexWorldPos, worldNorm);
+                float distanceVal = distance(vertexWorldPos, splatPos);
+
+
 
                 v2f o;
                 o.vertex = mul(UNITY_MATRIX_VP, float4(splatPos, 1)); /*UnityObjectToClipPos(v.vertex)*/;
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 o.worldPos = splatPos;
+                o.flux = flux * _FluxMultiplier;
+                o.distanceVal = distanceVal;
                 return o;
             }
 
             fixed4 frag(v2f i) : SV_Target
             {
-                return fixed4(i.worldPos, 1);
+                //return fixed4(i.worldPos, 1);
+                return fixed4(i.flux, i.distanceVal, 1, 1);
             }
             ENDCG
         }

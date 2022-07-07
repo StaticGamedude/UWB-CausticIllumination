@@ -15,6 +15,7 @@ Shader "Unlit/CausticFinalShader_1"
     {
         Tags { "SpecularObj" = "1" }
         LOD 100
+        Cull Off
 
         Pass
         {
@@ -42,6 +43,8 @@ Shader "Unlit/CausticFinalShader_1"
             sampler2D _ReceivingPosTexture_1;
             float4x4 _LightViewProjectionMatrix_1;
             float3 _LightWorldPosition_1;
+            float3 _LightCam_Forward_1;
+            int _LightIsDirectional_1;
 
             v2f vert (appdata v)
             {
@@ -50,6 +53,8 @@ Shader "Unlit/CausticFinalShader_1"
                     v,
                     _LightViewProjectionMatrix_1,
                     _LightWorldPosition_1,
+                    _LightCam_Forward_1,
+                    _LightIsDirectional_1,
                     _ObjectRefractionIndex,
                     uv,
                     _ReceivingPosTexture_1

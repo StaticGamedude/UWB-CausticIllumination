@@ -8,6 +8,10 @@ public class World : MonoBehaviour
 
     public int VisibileSurfaceArea = 600;
 
+    public float AbsorbtionCoefficient = 0.00017f;
+
+    public float FluxMultiplier = 500;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -19,5 +23,7 @@ public class World : MonoBehaviour
     {
         Shader.SetGlobalFloat("_RefractionIndex", this.RefractionIndex);
         Shader.SetGlobalInt("_VisibleSurfaceArea", this.VisibileSurfaceArea);
+        Shader.SetGlobalFloat("_AbsorbtionCoefficient", this.AbsorbtionCoefficient);
+        Shader.SetGlobalFloat("_FluxMultiplier", this.FluxMultiplier);
     }
 }

@@ -11,6 +11,7 @@ Shader "Unlit/CausticFluxShader_0"
     {
         Tags { "RenderType"="Opaque" "SpecularObj"="1" }
         LOD 100
+        Cull Off
 
         Pass
         {
@@ -27,6 +28,8 @@ Shader "Unlit/CausticFluxShader_0"
             sampler2D _ReceivingPosTexture_0;
             float4x4 _LightViewProjectionMatrix_0;
             float3 _LightWorldPosition_0;
+            float3 _LightCam_Forward_0;
+            int _LightIsDirectional_0;
 
             sampler2D _MainTex;
             float4 _MainTex_ST;
@@ -43,6 +46,8 @@ Shader "Unlit/CausticFluxShader_0"
                         v,
                         _LightViewProjectionMatrix_0,
                         _LightWorldPosition_0,
+                        _LightCam_Forward_0,
+                        _LightIsDirectional_0,
                         _ObjectRefractionIndex,
                         uv,
                         _ReceivingPosTexture_0,

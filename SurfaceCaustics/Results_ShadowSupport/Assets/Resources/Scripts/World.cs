@@ -179,7 +179,7 @@ public class World : MonoBehaviour
         }
 
         Shader.SetGlobalFloat("_RefractiveIndex", this.Debug_RefractionIndex);
-        Shader.SetGlobalVector("_DiffuseObjectPos", this.DiffuseObject.transform.position);
+        //Shader.SetGlobalVector("_DiffuseObjectPos", this.DiffuseObject.transform.position);
         Shader.SetGlobalTexture("_CausticTexture", this.LightCameraCausticFinalTexture);
         Shader.SetGlobalTexture("_CausticFluxTexture", this.LightCameraFluxTexture);
         Shader.SetGlobalInt("_NumProjectedVerticies", this.Debug_NumOfVisiblePixels);

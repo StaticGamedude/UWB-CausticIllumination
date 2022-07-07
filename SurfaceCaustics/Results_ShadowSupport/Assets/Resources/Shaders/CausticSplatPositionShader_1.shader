@@ -8,6 +8,7 @@ Shader "Unlit/CausticSplatPositionShader_1"
     {
         Tags { "RenderType"="Opaque" "SpecularObj" = "1"}
         LOD 100
+        Cull Off
 
         Pass
         {
@@ -36,6 +37,8 @@ Shader "Unlit/CausticSplatPositionShader_1"
             sampler2D _ReceivingPosTexture_1;
             float4x4 _LightViewProjectionMatrix_1;
             float3 _LightWorldPosition_1;
+            float3 _LightCam_Forward_1;
+            int _LightIsDirectional_1;
 
             sampler2D _MainTex;
             float4 _MainTex_ST;
@@ -49,6 +52,8 @@ Shader "Unlit/CausticSplatPositionShader_1"
                 float3 estimatedPosition = GetEstimatedSplatPosition(
                     _LightViewProjectionMatrix_1,
                     _LightWorldPosition_1,
+                    _LightCam_Forward_1,
+                    _LightIsDirectional_1,
                     _ObjectRefractionIndex,
                     worldPos,
                     worldNormal,

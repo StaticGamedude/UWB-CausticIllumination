@@ -5,13 +5,24 @@ using UnityEngine;
 public class UnderwaterEnvironment : MonoBehaviour
 {
     private Camera currentCamera;
-    public List<Camera> ExtraCameras = new List<Camera>();
+    public List<Camera> AllCameras = new List<Camera>();
 
     // Start is called before the first frame update
     void Start()
     {
         this.currentCamera = Camera.main;
-        this.ExtraCameras.Insert(0, Camera.main);
+
+        for(int i = 0; i < this.AllCameras.Count; i++)
+        {
+            if (i == 0)
+            {
+                this.AllCameras[i].enabled = true;
+            }
+            else
+            {
+                this.AllCameras[i].enabled = false;
+            }
+        }
     }
 
     // Update is called once per frame
@@ -39,13 +50,17 @@ public class UnderwaterEnvironment : MonoBehaviour
             desiredCameraIndex = 4;
         }
         
-        if (desiredCameraIndex >= 0 && desiredCameraIndex < this.ExtraCameras.Count)
+        if (desiredCameraIndex >= 0 && desiredCameraIndex < this.AllCameras.Count)
         {
-            Camera cam = this.ExtraCameras[desiredCameraIndex];
+            Camera cam = this.AllCameras[desiredCameraIndex];
 
+            // "Turn off" the current camera first.
+            currentCamera.enabled = false;
+
+            // "Turn on" the new desired camera
             cam.enabled = true;
 
-            this.currentCamera.enabled = false;
+            // Update the current camera reference
             this.currentCamera = cam;
         }
     }

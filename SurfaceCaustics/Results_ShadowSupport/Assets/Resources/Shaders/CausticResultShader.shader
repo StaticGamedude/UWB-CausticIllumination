@@ -38,6 +38,8 @@ Shader "Unlit/CausticResultShader"
             sampler2D _ReceivingPosTexture;
             float4x4 _LightViewProjectionMatrix;
             float3 _LightWorldPosition;
+            float3 _LightCam_Forward_0;
+            int _LightIsDirectional_0;
 
             sampler2D _MainTex;
             float4 _MainTex_ST;
@@ -48,7 +50,7 @@ Shader "Unlit/CausticResultShader"
                 v2f o;
                 float3 worldPos = mul(UNITY_MATRIX_M, v.vertex);
                 float3 worldNormal = normalize(mul(transpose(unity_WorldToObject), v.normal));
-                float3 refractedDirection = RefractRay(_LightWorldPosition, worldPos, worldNormal, _ObjectRefractionIndex);
+                float3 refractedDirection = RefractRay(_LightWorldPosition, _LightCam_Forward_0, _LightIsDirectional_0, worldPos, worldNormal, _ObjectRefractionIndex);
                 float3 estimatedPosition = VertexEstimateIntersection(_LightViewProjectionMatrix, worldPos, refractedDirection, _ReceivingPosTexture);
 
                 o.vertex = mul(UNITY_MATRIX_VP, float4(estimatedPosition, 1));
