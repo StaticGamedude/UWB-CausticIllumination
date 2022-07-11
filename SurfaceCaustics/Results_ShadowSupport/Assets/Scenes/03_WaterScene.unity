@@ -664,7 +664,7 @@ MonoBehaviour:
   Debug_Flux: 0.5
   Flux_Multiplier: 500
   Debug_NumOfVisiblePixels: 600
-  RenderShadows: 1
+  RenderShadows: 0
   RenderCaustics: 1
   ShadowThreshold: 0.01
   CausticBlurKernalSize: 5
