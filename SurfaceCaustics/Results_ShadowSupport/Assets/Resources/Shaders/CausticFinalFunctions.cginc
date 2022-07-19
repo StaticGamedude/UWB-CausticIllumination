@@ -166,7 +166,7 @@ fixed4 SharedCausticFinalFragmentShader(
     float isVisibile = GetIsVisible(lightViewProjectionMatrix, fluxDataTexture, i.splatPos);
     float finalIntensity = flux * exp((-specularAbsorbtionCoefficient * d));
     fixed4 causticColor = GetCausticColor(lightViewProjectionMatrix, causticColorTexture, i.splatPos) * (ClampSpecularColorFactor(specularColorFactor));
-    fixed4 computedColorValue = finalIntensity * lightColor /** causticColor */* lightIntensity;
+    fixed4 computedColorValue = finalIntensity * lightColor * causticColor * lightIntensity;
 
     return computedColorValue;
 }

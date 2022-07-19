@@ -185,16 +185,7 @@ Shader "Unlit/SpecularReceivingObject"
                     return col;
                 }
 
-                // My attempt for supporting shadows. If the shadow value within a certain theshold, darken the color. Then add the caustic effect on top
-                if (_RenderShadows == 1 && IsColorGreaterThanThreshold(shadowColor, _ShadowThreshold, true))
-                {
-                    col = col * 0.8;
-                }
-
-                if (_RenderCaustics == 1)
-                {
-                    return col + finalColor;
-                }
+                
 
                 // Shadow attempt based on the algorithm mentioned here: https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.625.7037&rep=rep1&type=pdf
                 // Check to see if this spot has a caustic effect on it. If so, simply return the normal color plus the caustic effect.
@@ -209,6 +200,17 @@ Shader "Unlit/SpecularReceivingObject"
                 //    return col * 0.8;
                 //    /*return fixed4(0, 0, 0, 1);*/
                 //}
+
+                // My attempt for supporting shadows. If the shadow value within a certain theshold, darken the color. Then add the caustic effect on top
+                if (_RenderShadows == 1 && IsColorGreaterThanThreshold(shadowColor, _ShadowThreshold, true))
+                {
+                    col = col * 0.8;
+                }
+
+                if (_RenderCaustics == 1)
+                {
+                    return col + finalColor;
+                }
 
                 return col;
             }

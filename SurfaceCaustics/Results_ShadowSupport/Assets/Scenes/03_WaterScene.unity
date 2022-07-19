@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 119ec07f1c7ed204db46bd8465fd5a50, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
+  m_IndirectSpecularColor: {r: 0.38496056, g: 0.60092807, b: 0.6361924, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -406,7 +406,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 523717379}
   m_LocalRotation: {x: 0.113702096, y: -0.8086171, z: 0.1662605, w: 0.5527817}
-  m_LocalPosition: {x: 669.24426, y: 277.46448, z: 315.67972}
+  m_LocalPosition: {x: 405, y: 187, z: 213}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -647,32 +647,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb113ed9c2da1e24b9a6e2f93565de32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LightCameraRefractionPositionTexture: {fileID: 0}
-  LightCameraRefractionNormalTexture: {fileID: 0}
-  LightCameraReceivingPositionTexture: {fileID: 0}
-  LightCameraCausticTexture: {fileID: 0}
-  LightCameraCausticColorTexture: {fileID: 0}
-  LightCameraFluxTexture: {fileID: 0}
-  LightCausticDistanceTexture: {fileID: 0}
-  LightCameraCausticFinalTexture: {fileID: 0}
-  LightCameraRefractionRayTexture: {fileID: 0}
-  DiffuseObject: {fileID: 1765960557}
-  Debug_RenderEveryXElement: 20
-  Debug_SpherePositionSize: {x: 0.01, y: 0.01, z: 0.01}
-  Debug_CylinderNormalSize: {x: 0.003, y: 0.02, z: 0.0003}
-  Debug_RefractionIndex: 1
-  Debug_Flux: 0.5
   Flux_Multiplier: 500
-  Debug_NumOfVisiblePixels: 600
+  NumOfVisiblePixels: 600
   RenderShadows: 0
   RenderCaustics: 1
+  CausticThreshold: 0.1
   ShadowThreshold: 0.01
   CausticBlurKernalSize: 5
   ShadowBlurKernelSize: 5
-  CausticThreshold: 0.1
-  DebugCameraID: 0
-  TextureToRender: 0
-  DebugDensity: 20
 --- !u!4 &958309586
 Transform:
   m_ObjectHideFlags: 0

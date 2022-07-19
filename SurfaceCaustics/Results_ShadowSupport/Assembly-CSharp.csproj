@@ -87,6 +87,7 @@
     <Compile Include="Assets\Resources\Scripts\LightSource.cs" />
     <Compile Include="Assets\Resources\Scripts\LightCamera.cs" />
     <Compile Include="Assets\GroupResources\Liwen\Source\RenderPipeline\RenderObjectPass.cs" />
+    <Compile Include="Assets\Resources\Scripts\DisplayMeshCount.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Resources\Shaders\LightNormalShader.shader" />
@@ -123,6 +124,7 @@
     <None Include="Assets\3DTOYS\readme.txt" />
     <None Include="Assets\Resources\Shaders\ShadowSupport.cginc" />
     <None Include="Assets\Resources\Shaders\CausticDistanceShader.shader" />
+    <None Include="Assets\SkySeries Freebie\Hdri setup.txt" />
     <None Include="Assets\Resources\Shaders\CausticRefractionRayShader.shader" />
     <None Include="Assets\Resources\Shaders\DrewCausticColorShader_0.shader" />
     <None Include="Assets\Textures\epyphany\ReadMe.txt" />
