@@ -25,9 +25,9 @@ public class World : MonoBehaviour
 
     private float fpsTotal = 0;
 
-    private int numOfFramesToTest = 60;
-
     private int frameCount = 0;
+
+    public int NumOfFramesToTest = 60;
 
     /// <summary>
     /// Gets/sets the value multiplied the flux values read in the flux texture
@@ -114,7 +114,7 @@ public class World : MonoBehaviour
             Debug.Log("Analyzing FPS");
         }
 
-        if (this.analyzingFPS && frameCount < this.numOfFramesToTest)
+        if (this.analyzingFPS && frameCount < this.NumOfFramesToTest)
         {
             this.fpsTotal += (1 / Time.deltaTime);
             this.frameCount++;
@@ -122,12 +122,14 @@ public class World : MonoBehaviour
         else if (this.analyzingFPS)
         {
             this.analyzingFPS = false;
-            float averageFPS = this.fpsTotal / this.numOfFramesToTest;
+            float averageFPS = this.fpsTotal / this.NumOfFramesToTest;
             Debug.Log($"Average FPS: {averageFPS}");
             this.fpsTotal = 0;
             this.frameCount = 0;
+
+            //float test = Time.frameCount / Time.time;
+            //Debug.Log($"Test value is: {test}");
         }
-        //Debug.Log(1 / Time.deltaTime);
     }
 
     private Texture2D ConvertRenderTextureTo2DTexture(RenderTexture rt)

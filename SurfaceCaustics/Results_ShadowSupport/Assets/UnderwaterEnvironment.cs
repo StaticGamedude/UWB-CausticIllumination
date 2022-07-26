@@ -49,7 +49,12 @@ public class UnderwaterEnvironment : MonoBehaviour
         {
             desiredCameraIndex = 4;
         }
+        else if (Input.GetKeyDown(KeyCode.Alpha6))
+        {
+            desiredCameraIndex = 5;
+        }
         
+
         if (desiredCameraIndex >= 0 && desiredCameraIndex < this.AllCameras.Count)
         {
             Camera cam = this.AllCameras[desiredCameraIndex];

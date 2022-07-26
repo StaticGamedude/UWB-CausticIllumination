@@ -20,10 +20,12 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: b53f819735ba20c4e8b5420b46703e43, type: 3}
+        m_Texture: {fileID: 2800000, guid: 7eeba2a5c108d184eb386b914f251c91, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
+    - _AbsorbtionCoefficient: 0.00017
     - _ObjectRefractionIndex: 2.5
+    - _SpecularColorFactor: 1
     m_Colors: []
   m_BuildTextureStacks: []

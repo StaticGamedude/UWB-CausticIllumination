@@ -19,7 +19,7 @@ Shader "Unlit/SpecularObjectShader"
     }
     SubShader
     {
-        Tags { "RenderType" = "Opaque" "SpecularObj" = "1" }
+        Tags { "RenderType" = "Transparent" "SpecularObj" = "1" }
         LOD 100
 
         Pass
@@ -90,8 +90,8 @@ Shader "Unlit/SpecularObjectShader"
                 float lightIntensity)
             {
                 float3 pointToLight = normalize(lightWorldPos - worldPos);
-                float3 lightDir = isDirectional == 1 ? lightForward : pointToLight;
-                return dot(lightDir, vertexNormal) * lightIntensity;
+                float3 lightDir = isDirectional == 1 ? -lightForward : pointToLight;
+                return dot(lightDir, vertexNormal);
             }
 
             v2f vert (appdata v)
@@ -125,9 +125,10 @@ Shader "Unlit/SpecularObjectShader"
 
                 float lightMultiplier_2;
 
+
                 return col + (col * lightMultiplier);
-                /*
-                return col * dot(lightDir, i.normal) * _LightIntensity_0;*/
+                //return col + (col * lightMultiplier);
+
             }
             ENDCG
         }
