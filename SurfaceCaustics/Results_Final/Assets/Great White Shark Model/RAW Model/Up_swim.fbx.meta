@@ -1,0 +1,310 @@
+fileFormatVersion: 2
+guid: 40b73ca70a5682d4883fb3d2b9150a58
+ModelImporter:
+  serializedVersion: 23
+  fileIDToRecycleName:
+    100000: Chin1
+    100002: Chin2
+    100004: Chin3
+    100006: Chin4
+    100008: Eye_LowPoly_OBJ
+    100010: Great_White_Shark_Model
+    100012: HEAD
+    100014: Joints
+    100016: L_Eye
+    100018: L_Fin
+    100020: L_Fin1
+    100022: L_Fin2
+    100024: L_Fin3
+    100026: L_Lower_lip1
+    100028: L_Lower_lip2
+    100030: L_Lower_lip3
+    100032: L_Lower_teeth1
+    100034: L_Lower_teeth2
+    100036: L_rear_fin
+    100038: L_rear_fin2
+    100040: L_Upper_lip1
+    100042: L_Upper_lip2
+    100044: L_Upper_lip3
+    100046: L_Upper_teeth2
+    100048: L_Upper_teeth3
+    100050: Lower_lip
+    100052: Lower_teeth
+    100054: Lowerback_fin
+    100056: Lowerback_fin1
+    100058: Lowerteeth_lowpoly_OBJ
+    100060: Neck1
+    100062: R_Eye
+    100064: R_Fin
+    100066: R_Fin1
+    100068: R_Fin2
+    100070: R_Fin3
+    100072: R_Lower_lip1
+    100074: R_Lower_lip2
+    100076: R_Lower_lip3
+    100078: R_Lower_teeth1
+    100080: R_Lower_teeth2
+    100082: R_rear_fin
+    100084: R_rear_fin2
+    100086: R_Upper_lip1
+    100088: R_Upper_lip2
+    100090: R_Upper_lip3
+    100092: R_Upper_teeth1
+    100094: R_Upper_teeth2
+    100096: Root
+    100098: Shark_body
+    100100: Spine1
+    100102: Spine2
+    100104: Spine3
+    100106: Spine4
+    100108: Tail
+    100110: Tail1
+    100112: Tail10
+    100114: Tail2
+    100116: Tail3
+    100118: Tail4
+    100120: Tail5
+    100122: Tail6
+    100124: Tail7
+    100126: Tail8
+    100128: Tail9
+    100130: //RootNode
+    100132: Upper_fin
+    100134: Upper_fin3
+    100136: Upper_fin4
+    100138: Upper_lip
+    100140: Upper_Teeth
+    100142: Upper_Teethmeat_Lowpoly_OBJ
+    100144: upperback_fin
+    100146: upperback_fin1
+    100148: Upperhead
+    100150: Upperhead1
+    100152: Upperhead2
+    100154: Upperhead3
+    400000: Chin1
+    400002: Chin2
+    400004: Chin3
+    400006: Chin4
+    400008: Eye_LowPoly_OBJ
+    400010: Great_White_Shark_Model
+    400012: HEAD
+    400014: Joints
+    400016: L_Eye
+    400018: L_Fin
+    400020: L_Fin1
+    400022: L_Fin2
+    400024: L_Fin3
+    400026: L_Lower_lip1
+    400028: L_Lower_lip2
+    400030: L_Lower_lip3
+    400032: L_Lower_teeth1
+    400034: L_Lower_teeth2
+    400036: L_rear_fin
+    400038: L_rear_fin2
+    400040: L_Upper_lip1
+    400042: L_Upper_lip2
+    400044: L_Upper_lip3
+    400046: L_Upper_teeth2
+    400048: L_Upper_teeth3
+    400050: Lower_lip
+    400052: Lower_teeth
+    400054: Lowerback_fin
+    400056: Lowerback_fin1
+    400058: Lowerteeth_lowpoly_OBJ
+    400060: Neck1
+    400062: R_Eye
+    400064: R_Fin
+    400066: R_Fin1
+    400068: R_Fin2
+    400070: R_Fin3
+    400072: R_Lower_lip1
+    400074: R_Lower_lip2
+    400076: R_Lower_lip3
+    400078: R_Lower_teeth1
+    400080: R_Lower_teeth2
+    400082: R_rear_fin
+    400084: R_rear_fin2
+    400086: R_Upper_lip1
+    400088: R_Upper_lip2
+    400090: R_Upper_lip3
+    400092: R_Upper_teeth1
+    400094: R_Upper_teeth2
+    400096: Root
+    400098: Shark_body
+    400100: Spine1
+    400102: Spine2
+    400104: Spine3
+    400106: Spine4
+    400108: Tail
+    400110: Tail1
+    400112: Tail10
+    400114: Tail2
+    400116: Tail3
+    400118: Tail4
+    400120: Tail5
+    400122: Tail6
+    400124: Tail7
+    400126: Tail8
+    400128: Tail9
+    400130: //RootNode
+    400132: Upper_fin
+    400134: Upper_fin3
+    400136: Upper_fin4
+    400138: Upper_lip
+    400140: Upper_Teeth
+    400142: Upper_Teethmeat_Lowpoly_OBJ
+    400144: upperback_fin
+    400146: upperback_fin1
+    400148: Upperhead
+    400150: Upperhead1
+    400152: Upperhead2
+    400154: Upperhead3
+    2100000: aiStandardSurface3
+    2100002: aiStandardSurface2
+    2100004: aiStandardSurface5
+    2100006: aiStandardSurface4
+    4300000: Lowerteeth_lowpoly_OBJ
+    4300002: Upper_Teethmeat_Lowpoly_OBJ
+    4300004: Shark_body
+    4300006: Eye_LowPoly_OBJ
+    7400000: Take 001
+    9500000: //RootNode
+    11100000: //RootNode
+    13700000: Eye_LowPoly_OBJ
+    13700002: Lowerteeth_lowpoly_OBJ
+    13700004: Shark_body
+    13700006: Upper_Teethmeat_Lowpoly_OBJ
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: aiStandardSurface2
+    second: {fileID: 2100000, guid: 894b7a0eb25304642aee46410a242141, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: aiStandardSurface3
+    second: {fileID: 2100000, guid: dbe3d4129a806e3478fbbb2d80c8ddd1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: aiStandardSurface4
+    second: {fileID: 2100000, guid: 6d829c19405d93744ba33d855be74d25, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: aiStandardSurface5
+    second: {fileID: 2100000, guid: 5d772d6abdaccee4dac13a51f439e06c, type: 2}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Take 001
+      takeName: Take 001
+      firstFrame: 1
+      lastFrame: 41
+      wrapMode: 2
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 1
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    previousCalculatedGlobalScale: 0.01
+    hasPreviousCalculatedGlobalScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 1
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 1
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

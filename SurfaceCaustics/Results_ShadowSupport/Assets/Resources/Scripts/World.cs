@@ -71,6 +71,8 @@ public class World : MonoBehaviour
     /// </summary>
     public int ShadowBlurKernelSize = 5;
 
+    public float DistanceTest = 1.0f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -105,6 +107,7 @@ public class World : MonoBehaviour
         Shader.SetGlobalFloat("_CausticThreshold", this.CausticThreshold);
         Shader.SetGlobalInt("_CausticBlurKernalSize", this.CausticBlurKernalSize);
         Shader.SetGlobalInt("_ShadowBlurKernelSize", this.ShadowBlurKernelSize);
+        Shader.SetGlobalFloat("_DrewDistanceTest", this.DistanceTest);
 
         Shader.SetGlobalFloatArray("_AllLightIds", lightIDs);
 

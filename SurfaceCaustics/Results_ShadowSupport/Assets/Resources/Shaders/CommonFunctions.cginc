@@ -1,3 +1,6 @@
+
+float _DrewDistanceTest;
+
 /*
 * Defines the "common" functions used by most shaders in the applications. Helps with determining the refraction ray direction
 * and the vertex estimated (splat) positions.
@@ -17,7 +20,7 @@ float3 VertexEstimateIntersection(
     float3 refractedLightRayDirection, 
     sampler2D positionTexture)
 {
-    float3 p1 = specularVertexWorldPos + (1.0 * refractedLightRayDirection); //P1 - 1 unit along the refracted ray direction from the specular vertex position
+    float3 p1 = specularVertexWorldPos + (_DrewDistanceTest * refractedLightRayDirection); //P1 - 1 unit along the refracted ray direction from the specular vertex position
     float4 texPt = mul(lightViewProjectMatrix, float4(p1, 1));
     float2 tc = 0.5 * (texPt.xy / texPt.w) + float2(0.5, 0.5);
     float4 recPos = tex2Dlod(positionTexture, float4(tc, 1, 1)); //Projected P1 position into the light's space;
