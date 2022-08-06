@@ -83,28 +83,31 @@ Shader "Unlit/SpecularReceivingObject"
             */
             fixed4 BlurTexture(sampler2D tex, float2 texCoordinate, int kernelSize)
             {
-                fixed4 sum = fixed4(0.0, 0.0, 0.0, 0.0);
+                return tex2D(tex, texCoordinate);
 
-                // upper and low define our range. We got left by X pixels, and right by the same X pixels.
-                // Likewise for up and down.
-                int upperBound = ((kernelSize - 1) / 2);
-                int lowBound = -upperBound;
 
-                for (int x = lowBound; x <= upperBound; ++x)
-                {
-                    for (int y = lowBound; y <= upperBound; ++y)
-                    {
-                        // _MainTex_TexelSize is populated by Unity
-                        fixed2 offset = fixed2(_MainTex_TexelSize.x * x, _MainTex_TexelSize.y * y);
+                //fixed4 sum = fixed4(0.0, 0.0, 0.0, 0.0);
 
-                        // Accumulate the total color
-                        sum += tex2D(tex, texCoordinate + offset);
-                    }
-                }
+                //// upper and low define our range. We got left by X pixels, and right by the same X pixels.
+                //// Likewise for up and down.
+                //int upperBound = ((kernelSize - 1) / 2);
+                //int lowBound = -upperBound;
 
-                // Divide the size 
-                sum /= (kernelSize * kernelSize);
-                return sum;
+                //for (int x = lowBound; x <= upperBound; ++x)
+                //{
+                //    for (int y = lowBound; y <= upperBound; ++y)
+                //    {
+                //        // _MainTex_TexelSize is populated by Unity
+                //        fixed2 offset = fixed2(_MainTex_TexelSize.x * x, _MainTex_TexelSize.y * y);
+
+                //        // Accumulate the total color
+                //        sum += tex2D(tex, texCoordinate + offset);
+                //    }
+                //}
+
+                //// Divide the size 
+                //sum /= (kernelSize * kernelSize);
+                //return sum;
             }
 
             /*
@@ -184,8 +187,6 @@ Shader "Unlit/SpecularReceivingObject"
                 {
                     return col;
                 }
-
-                
 
                 // Shadow attempt based on the algorithm mentioned here: https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.625.7037&rep=rep1&type=pdf
                 // Check to see if this spot has a caustic effect on it. If so, simply return the normal color plus the caustic effect.

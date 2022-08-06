@@ -132,9 +132,6 @@ public class World : MonoBehaviour
             Debug.Log($"Average FPS: {averageFPS}");
             this.fpsTotal = 0;
             this.frameCount = 0;
-
-            //float test = Time.frameCount / Time.time;
-            //Debug.Log($"Test value is: {test}");
         }
     }
 

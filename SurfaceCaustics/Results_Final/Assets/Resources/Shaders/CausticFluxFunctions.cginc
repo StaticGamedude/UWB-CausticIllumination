@@ -30,23 +30,21 @@ struct v2f
 *   Ni is the vertex normal
 *   Li is the incident light vector
 * 
-* param: lightWorldPos - The world position of the light source
+* param: incidentLightVector - If a point light, this is the vector from the vertex pos the light source. Otherwise it's the light source's forward direction
 * param: visibleSurfaceArea - The number of pixels occupying the render texture
 * param: worldPosition: The specular vertex world position
 * param: worldNormal: the specular vertex world normal
 * returns: Calculated flux value
 */
-float GetFluxContribution(float3 lightWorldPos, float visibleSurfaceArea, float3 worldPosition, float3 worldNormal)
+float GetFluxContribution(float3 incidentLightVector, float visibleSurfaceArea, float3 worldPosition, float3 worldNormal)
 {
-    float3 incidentLightVector = normalize(lightWorldPos - worldPosition);
-
     //Because of the possibility of negative angles between the normal and light vector, we clamp the value
     if (dot(worldNormal, incidentLightVector) <= 0)
     {
         return 0;
     }
     
-    return (1 / visibleSurfaceArea) * dot(worldNormal, incidentLightVector); //max(dot(worldNormal, incidentLightVector), 0.01);
+    return (1 / visibleSurfaceArea) * dot(worldNormal, incidentLightVector);
 }
 
 v2f SharedFluxVertexShader(
@@ -73,8 +71,15 @@ v2f SharedFluxVertexShader(
                                     worldPos,
                                     worldNormal,
                                     receivingPositionTexture);
-    float3 flux = GetFluxContribution(lightWorldPos, numOfProjectedVerticies, worldPos, worldNormal);
-
+    
+    float3 vertexToLight = normalize(lightWorldPos - worldPos);
+    if (isLightDirectional == 1)
+    {
+        vertexToLight = -lightForwardDirection;
+    }
+    
+    float3 flux = GetFluxContribution(vertexToLight, numOfProjectedVerticies, worldPos, worldNormal);
+    
     o.vertex = mul(UNITY_MATRIX_VP, float4(estimatedPosition, 1));
     o.uv = uv;
     o.flux = flux;
@@ -85,15 +90,8 @@ v2f SharedFluxVertexShader(
 
 float4 SharedFluxFragmentShader(v2f i, sampler2D specularMainTexture, float debugFluxMultiplier, float absorptionCoefficient)
 {
-    fixed4 col = tex2D(specularMainTexture, i.uv);
-    float isVisible = 0;
     float resultingFluxValue = (i.flux * debugFluxMultiplier);
     float causticCoefficient = resultingFluxValue * exp((-absorptionCoefficient * i.distance));
-    
-    if (col.r != 0 || col.g != 0 || col.b != 0)
-    {
-        isVisible = 1;
-    }
 
-    return float4(resultingFluxValue, i.distance, causticCoefficient, isVisible);
+    return float4(resultingFluxValue, i.distance, causticCoefficient, 1);
 }

@@ -19,6 +19,8 @@ struct v2f
 	float2 uv : TEXCOORD0;
 	float4 vertex : SV_POSITION;
 	float3 splatPos : TEXCOORD1;
+    float3 worldPos : TEXCOORD2;
+    float3 worldNormal : TEXCOORD3;
 };
 
 /*
@@ -146,6 +148,8 @@ v2f
     o.vertex = mul(UNITY_MATRIX_VP, float4(estimatedPosition, 1));
     o.uv = uv;
     o.splatPos = estimatedPosition;
+    o.worldPos = worldPos;
+    o.worldNormal = worldNormal;
     
     return o;
 }
@@ -175,6 +179,13 @@ fixed4 SharedCausticFinalFragmentShader(
     fixed4 causticColor = GetCausticColor(lightViewProjectionMatrix, causticColorTexture, i.splatPos) * (ClampSpecularColorFactor(specularColorFactor));
     fixed4 computedColorValue = /*_DebugFlux */finalIntensity * lightColor * causticColor * lightIntensity;
 
+    
+    float3 vertexToLight = normalize(lightWorldPos - i.worldPos);
+    //if (dot(i.worldNormal, vertexToLight) < 0)
+    //{
+    //    return 0;
+    //}
+    
     return computedColorValue;
 }
 
