@@ -21,6 +21,7 @@ Shader "Unlit/SpecularObjectShader"
     {
         Tags { "RenderType" = "Transparent" "SpecularObj" = "1" }
         LOD 100
+        //Blend SrcAlpha OneMinusSrcAlpha
 
         Pass
         {
@@ -106,11 +107,11 @@ Shader "Unlit/SpecularObjectShader"
                 return o;
             }
 
-            fixed4 frag(v2f i) : SV_Target
+            float4 frag(v2f i) : SV_Target
             {
                 float3 pointToLight1 = normalize(_LightWorldPosition_0 - i.worldPos);
                 float3 lightDir = _LightIsDirectional_0 ? _LightCam_Forward_0 : pointToLight1;
-                fixed4 col = tex2D(_MainTex, i.uv);
+                float4 col = tex2D(_MainTex, i.uv);
                 float lightMultiplier = 0;
 
                 if (_AllLightIds[0] != -1)
@@ -123,12 +124,12 @@ Shader "Unlit/SpecularObjectShader"
                     lightMultiplier += GetLightMultiplier(_LightIsDirectional_1, _LightWorldPosition_1, i.worldPos, _LightCam_Forward_1, i.normal, _LightIntensity_1);
                 }
 
-                float lightMultiplier_2;
+                float4 resultingColor = col + (col * lightMultiplier);
+
+                return float4(resultingColor.xyz, 0.5);
 
 
-                return col + (col * lightMultiplier);
                 //return col + (col * lightMultiplier);
-
             }
             ENDCG
         }

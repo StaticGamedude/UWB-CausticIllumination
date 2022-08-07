@@ -65,14 +65,14 @@ Shader "Unlit/CausticDistanceShader"
 
             float4 frag(v2f i) : SV_Target
             {
-                fixed4 col = tex2D(_MainTex, i.uv);
+                float4 col = tex2D(_MainTex, i.uv);
                 float isVisible = 0;
                 if (col.r != 0 || col.g != 0 || col.b != 0)
                 {
-                    return fixed4(i.distance, i.distance, i.distance, 1);
+                    return float4(i.distance, i.distance, i.distance, 1);
                 }
 
-                return fixed4(0, 0, 0, 0);
+                return float4(0, 0, 0, 0);
             }
             ENDCG
         }

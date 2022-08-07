@@ -118,7 +118,7 @@ public class LightSource : MonoBehaviour
         Shader shadowShader = Resources.Load<Shader>(Path.Combine(SHADERS_DIRETORY, $"CausticShadowShader_{this.dataProperties.LightSourceID}"));
         Shader debugSplatPosShader = Resources.Load<Shader>(Path.Combine(SHADERS_DIRETORY, $"CausticSplatPositionShader_{this.dataProperties.LightSourceID}"));
         RenderTexture refractionFluxTexture = this.InitRenderTexture(false, "RefractionFluxTexture");
-        RenderTexture refractionColorTexture = this.InitRenderTexture(true, "RefractionColorTexture");
+        RenderTexture refractionColorTexture = this.InitRenderTexture(false, "RefractionColorTexture");
         RenderTexture refractionShadowTexture = this.InitRenderTexture(false, "RefractionShadowTexture");
         RenderTexture debugSplatTexture = this.InitRenderTexture(false, "SplatPosTexture");
         Camera refractionFluxCamera = this.InstantiateCausticCamera("SpecularFluxCamera", passTwoCameraContainer, refractionFluxTexture, refractionFluxShader, LightCameraType.CAUSTIC_FLUX_2, LightCameraVisibilityType.SPECULAR);
@@ -150,8 +150,8 @@ public class LightSource : MonoBehaviour
 
         Shader refractionFinalShader = Resources.Load<Shader>(Path.Combine(SHADERS_DIRETORY, $"CausticFinalShader_{this.dataProperties.LightSourceID}"));
         Shader shadowFinalShader = Resources.Load<Shader>(Path.Combine(SHADERS_DIRETORY, $"ShadowFinalShader_{this.dataProperties.LightSourceID}"));
-        RenderTexture refractionFinalTexture = this.InitRenderTexture(true, "RefractionFinalTexture");
-        RenderTexture shadowFinalTexture = this.InitRenderTexture(true, "ShadowFinalTexture");
+        RenderTexture refractionFinalTexture = this.InitRenderTexture(false, "RefractionFinalTexture");
+        RenderTexture shadowFinalTexture = this.InitRenderTexture(false, "ShadowFinalTexture");
         Camera refractionResultCamera = this.InstantiateCausticCamera("SpecularResultCamera", passThreeCameraContainer, refractionFinalTexture, refractionFinalShader, LightCameraType.CAUSTIC_FINAL_LIGHT_COLOR, LightCameraVisibilityType.SPECULAR);
         Camera shadowFinalCamera = this.InstantiateCausticCamera("ShadowFinalCamera", passThreeCameraContainer, shadowFinalTexture, shadowFinalShader, LightCameraType.SHADOW_FINAL, LightCameraVisibilityType.SPECULAR);
 

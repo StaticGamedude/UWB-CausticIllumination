@@ -50,7 +50,7 @@ Shader "Unlit/ReceivingObjectShader"
             {
                 // Sample the texture to determine whether or not this fragment is trying to actually render something to the screen.
                 // If the sample is completely black (i.e. r,g,b == 0), then we'll set the alpha channel to 0, otherwise we'll set it to 1.
-                fixed4 col = tex2D(_MainTex, i.uv);
+                float4 col = tex2D(_MainTex, i.uv);
                 float isVisible = 0;
 
                 if (col.r != 0 || col.g != 0 && col.b != 0)

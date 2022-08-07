@@ -49,9 +49,9 @@ v2f SharedColorVertexShader(
     return o;
 }
 
-fixed4 SharedColorFragmentShader(v2f i, sampler2D specularMainTexture)
+float4 SharedColorFragmentShader(v2f i, sampler2D specularMainTexture)
 {
     // sample the texture
-    fixed4 col = tex2D(specularMainTexture, i.uv);
+    float4 col = tex2D(specularMainTexture, i.uv);
     return col;
 }

@@ -52,7 +52,13 @@ float3 RefractRay(float3 lightPosition, float3 lightForwardDirection, int isLigh
         vertexToLight = -lightForwardDirection;
     }
     
-    float incidentAngle = acos(dot(vertexToLight, specularVertexWorldNormal));
+    float angleBetween = dot(vertexToLight, specularVertexWorldNormal);
+    if (angleBetween < 0)
+    {
+        return 0;
+    }
+    
+    float incidentAngle = acos(angleBetween);
     float refractionAngle = asin(sin(incidentAngle) / refractionIndex);
     float3 refractedRay = -1 * ((vertexToLight / refractionIndex) + ((cos(refractionAngle) - (cos(incidentAngle) / refractionIndex)) * specularVertexWorldNormal));
 

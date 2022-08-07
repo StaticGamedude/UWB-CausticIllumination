@@ -75,6 +75,8 @@ public class World : MonoBehaviour
 
     public float DebugFlux = 1.0f;
 
+    public float AngleLimit = 0;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -111,6 +113,7 @@ public class World : MonoBehaviour
         Shader.SetGlobalInt("_ShadowBlurKernelSize", this.ShadowBlurKernelSize);
         Shader.SetGlobalFloat("_DrewDistanceTest", this.DistanceTest);
         Shader.SetGlobalFloat("_DebugFlux", this.DebugFlux);
+        Shader.SetGlobalFloat("_AngleLimit", this.AngleLimit);
 
         Shader.SetGlobalFloatArray("_AllLightIds", lightIDs);
 

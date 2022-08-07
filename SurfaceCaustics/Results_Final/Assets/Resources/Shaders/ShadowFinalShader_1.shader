@@ -32,7 +32,7 @@ Shader "Unlit/ShadowFinalShader_1"
                 sampler2D _CausticShadowTexture_1; // This contains the caustic flux and distance information
 
                 float _GlobalAbsorbtionCoefficient;
-                fixed4 _DebugLightColor_1;
+                float4 _DebugLightColor_1;
                 float _LightIntensity_1;
                 float _AbsorbtionCoefficient;
                 int _LightID;
@@ -59,13 +59,13 @@ Shader "Unlit/ShadowFinalShader_1"
                     );
                 }
 
-                fixed4 frag(v2f i) : SV_Target
+                float4 frag(v2f i) : SV_Target
                 {
                     return SharedShadowFragmentShader(
                         i,
                         _LightViewProjectionMatrix_1,
                         _LightWorldPosition_1,
-                        fixed4(0.8, 0.8, 0.8, 0.8),
+                        float4(0.8, 0.8, 0.8, 0.8),
                         _LightIntensity_1,
                         _CausticShadowTexture_1,
                         _AbsorbtionCoefficient,

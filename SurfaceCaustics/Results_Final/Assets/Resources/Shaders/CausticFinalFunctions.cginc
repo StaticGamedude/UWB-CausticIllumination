@@ -94,10 +94,10 @@ float GetIsVisible(float4x4 lightViewProjectionMatrix, sampler2D sourceTexture, 
 * param: worldPos - The vertex world position
 * returns: The causic color found in the color texture for a specular vertex
 */
-fixed4 GetCausticColor(float4x4 lightViewProjectionMatrix, sampler2D sourceTexture, float3 worldPos)
+float4 GetCausticColor(float4x4 lightViewProjectionMatrix, sampler2D sourceTexture, float3 worldPos)
 {
     float2 tc = GetCoordinatesForSpecularTexture(lightViewProjectionMatrix, worldPos);
-    fixed4 causticColor = tex2D(sourceTexture, tc);
+    float4 causticColor = tex2D(sourceTexture, tc);
     return causticColor;
 }
 
@@ -161,11 +161,11 @@ v2f
 *   K is the absorption coefficient
 *   d is the distance that light travles through the specular object
 */
-fixed4 SharedCausticFinalFragmentShader(
+float4 SharedCausticFinalFragmentShader(
     v2f i, 
     float4x4 lightViewProjectionMatrix, 
     float3 lightWorldPos,
-    fixed4 lightColor,
+    float4 lightColor,
     float lightIntensity, 
     sampler2D fluxDataTexture, 
     sampler2D causticColorTexture, 
@@ -176,12 +176,12 @@ fixed4 SharedCausticFinalFragmentShader(
     float d = GetDistance(lightViewProjectionMatrix, fluxDataTexture, i.splatPos);
     float isVisibile = GetIsVisible(lightViewProjectionMatrix, fluxDataTexture, i.splatPos);
     float finalIntensity = GetCausticCoefficient(lightViewProjectionMatrix, fluxDataTexture, i.splatPos); //flux * exp((-specularAbsorbtionCoefficient * d));
-    fixed4 causticColor = GetCausticColor(lightViewProjectionMatrix, causticColorTexture, i.splatPos) * (ClampSpecularColorFactor(specularColorFactor));
-    fixed4 computedColorValue = /*_DebugFlux */finalIntensity * lightColor * causticColor * lightIntensity;
+    float4 causticColor = GetCausticColor(lightViewProjectionMatrix, causticColorTexture, i.splatPos) * (ClampSpecularColorFactor(specularColorFactor));
+    float4 computedColorValue = /*_DebugFlux */finalIntensity * lightColor * causticColor * lightIntensity;
 
     
     float3 vertexToLight = normalize(lightWorldPos - i.worldPos);
-    //if (dot(i.worldNormal, vertexToLight) < 0)
+    //if (dot(normalize(i.worldNormal), vertexToLight) < 0)
     //{
     //    return 0;
     //}
@@ -193,11 +193,11 @@ fixed4 SharedCausticFinalFragmentShader(
 * Shared fragment shader when computing shadows. This fragment shader is essentially a simplied version of the shader above.
 * TODO: We can probably reduce the duplicate code with the fragment shader above (SharedCausticFinalFragmentShader)
 */
-fixed4 SharedShadowFragmentShader(
+float4 SharedShadowFragmentShader(
     v2f i,
     float4x4 lightViewProjectionMatrix,
     float3 lightWorldPos,
-    fixed4 lightColor,
+    float4 lightColor,
     float lightIntensity,
     sampler2D fluxDataTexture,
     float specularAbsorbtionCoefficient,

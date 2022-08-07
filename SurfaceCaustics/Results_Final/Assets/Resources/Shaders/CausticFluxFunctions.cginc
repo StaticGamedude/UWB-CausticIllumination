@@ -7,6 +7,7 @@
 #include "CommonFunctions.cginc"
 
 float _DebugFlux;
+float _AngleLimit;
 
 struct appdata
 {
@@ -39,7 +40,7 @@ struct v2f
 float GetFluxContribution(float3 incidentLightVector, float visibleSurfaceArea, float3 worldPosition, float3 worldNormal)
 {
     //Because of the possibility of negative angles between the normal and light vector, we clamp the value
-    if (dot(worldNormal, incidentLightVector) <= 0)
+    if (dot(worldNormal, incidentLightVector) <= _AngleLimit)
     {
         return 0;
     }

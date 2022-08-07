@@ -15,7 +15,7 @@ Shader "Unlit/CausticFinalShader_1"
     {
         Tags { "SpecularObj" = "1" }
         LOD 100
-        Cull Off
+        
 
         Pass
         {
@@ -34,7 +34,7 @@ Shader "Unlit/CausticFinalShader_1"
             sampler2D _DrewTest_1; // This contains the caustic flux and distance information
 
             float _GlobalAbsorbtionCoefficient;
-            fixed4 _DebugLightColor_1;
+            float4 _DebugLightColor_1;
             float _LightIntensity_1;
             float _AbsorbtionCoefficient;
             int _LightID;
@@ -61,7 +61,7 @@ Shader "Unlit/CausticFinalShader_1"
                 );
             }
 
-            fixed4 frag(v2f i) : SV_Target
+            float4 frag(v2f i) : SV_Target
             {
                 return SharedCausticFinalFragmentShader(
                     i,

@@ -45,10 +45,10 @@ Shader "Unlit/Tex2DValidationShader"
                 return o;
             }
 
-            fixed4 frag(v2f i) : SV_Target
+            float4 frag(v2f i) : SV_Target
             {
                 // sample the texture
-                fixed4 col = tex2D(_ReceivingPosTexture, i.uv);
+                float4 col = tex2D(_ReceivingPosTexture, i.uv);
                 return float4(col.xyzw);
                 //return fixed4(1, 0, 0, 1);
             }

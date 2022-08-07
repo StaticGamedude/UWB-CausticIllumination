@@ -81,33 +81,33 @@ Shader "Unlit/SpecularReceivingObject"
             * param: texCoordinate - The texture coordinate used to index into the source texture
             * param: kernel size - The kernel size used for the Gaussian blur
             */
-            fixed4 BlurTexture(sampler2D tex, float2 texCoordinate, int kernelSize)
+            float4 BlurTexture(sampler2D tex, float2 texCoordinate, int kernelSize)
             {
-                return tex2D(tex, texCoordinate);
+                //return tex2D(tex, texCoordinate);
 
 
-                //fixed4 sum = fixed4(0.0, 0.0, 0.0, 0.0);
+                fixed4 sum = fixed4(0.0, 0.0, 0.0, 0.0);
 
-                //// upper and low define our range. We got left by X pixels, and right by the same X pixels.
-                //// Likewise for up and down.
-                //int upperBound = ((kernelSize - 1) / 2);
-                //int lowBound = -upperBound;
+                // upper and low define our range. We got left by X pixels, and right by the same X pixels.
+                // Likewise for up and down.
+                int upperBound = ((kernelSize - 1) / 2);
+                int lowBound = -upperBound;
 
-                //for (int x = lowBound; x <= upperBound; ++x)
-                //{
-                //    for (int y = lowBound; y <= upperBound; ++y)
-                //    {
-                //        // _MainTex_TexelSize is populated by Unity
-                //        fixed2 offset = fixed2(_MainTex_TexelSize.x * x, _MainTex_TexelSize.y * y);
+                for (int x = lowBound; x <= upperBound; ++x)
+                {
+                    for (int y = lowBound; y <= upperBound; ++y)
+                    {
+                        // _MainTex_TexelSize is populated by Unity
+                        fixed2 offset = fixed2(_MainTex_TexelSize.x * x, _MainTex_TexelSize.y * y);
 
-                //        // Accumulate the total color
-                //        sum += tex2D(tex, texCoordinate + offset);
-                //    }
-                //}
+                        // Accumulate the total color
+                        sum += tex2D(tex, texCoordinate + offset);
+                    }
+                }
 
-                //// Divide the size 
-                //sum /= (kernelSize * kernelSize);
-                //return sum;
+                // Divide the size 
+                sum /= (kernelSize * kernelSize);
+                return sum;
             }
 
             /*
@@ -116,7 +116,7 @@ Shader "Unlit/SpecularReceivingObject"
             * param: threshold - Desired color value limit/threshold
             * param: checkAll - A flag used in indicate whether all rgba values should be checked or if just the alpha can be checcked
             */
-            bool IsColorGreaterThanThreshold(fixed4 color, float threshold, bool checkAll)
+            bool IsColorGreaterThanThreshold(float4 color, float threshold, bool checkAll)
             {
                 if (checkAll)
                 {
@@ -162,10 +162,10 @@ Shader "Unlit/SpecularReceivingObject"
                 return o;
             }
 
-            fixed4 frag (v2f i) : SV_Target
+            float4 frag (v2f i) : SV_Target
             {
-                fixed4 col = tex2D(_MainTex, i.uv);
-                fixed4 finalColor = fixed4(0, 0, 0, 0);
+                float4 col = tex2D(_MainTex, i.uv);
+                float4 finalColor = fixed4(0, 0, 0, 0);
 
                 float2 causticCamera0TexCoord = GetCoordinatesForSpecularTexture(0, i.worldPos);
                 float2 causticCamera1TexCoord = GetCoordinatesForSpecularTexture(1, i.worldPos);
@@ -180,7 +180,7 @@ Shader "Unlit/SpecularReceivingObject"
                     finalColor = finalColor + BlurTexture(_FinalLightColorTexture_1, causticCamera1TexCoord, _CausticBlurKernalSize);
                 }
                 
-                fixed4 shadowColor = BlurTexture(_ShadowFinalTexture_0, causticCamera0TexCoord, _ShadowBlurKernelSize);
+                float4 shadowColor = BlurTexture(_ShadowFinalTexture_0, causticCamera0TexCoord, _ShadowBlurKernelSize);
 
                 // Check to see if the this spot can be seen by our light source. If not, simply return the color.
                 if (!IsPositionVisibleByLightSource(i.worldPos, i.normal))

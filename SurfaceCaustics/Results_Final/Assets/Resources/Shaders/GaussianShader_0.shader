@@ -78,7 +78,7 @@ Shader "Unlit/GaussianShader_0"
                 return o;
             }
 
-            fixed4 frag (v2f i) : SV_Target
+            float4 frag (v2f i) : SV_Target
             {
                 float4 sum = float4(0.0, 0.0, 0.0, 0.0);
                 float radius = 15;
@@ -104,7 +104,7 @@ Shader "Unlit/GaussianShader_0"
                 sum += tex2D(_FinalLightColorTexture_0, float2(tc.x + 4.0 * blur * _hstep, tc.y + 4.0 * blur * _vstep)) * 0.0162162162;
 
                 // sample the texture
-                fixed4 col = tex2D(_FinalLightColorTexture_0, tc);
+                float4 col = tex2D(_FinalLightColorTexture_0, tc);
                 return col;
             }
             ENDCG

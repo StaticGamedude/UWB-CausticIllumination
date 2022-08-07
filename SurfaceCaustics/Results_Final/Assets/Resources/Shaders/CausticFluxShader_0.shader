@@ -11,7 +11,7 @@ Shader "Unlit/CausticFluxShader_0"
     {
         Tags { "RenderType"="Opaque" "SpecularObj"="1" }
         LOD 100
-        Cull Off
+        ZWrite On
 
         Pass
         {

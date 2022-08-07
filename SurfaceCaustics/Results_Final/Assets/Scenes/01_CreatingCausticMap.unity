@@ -767,6 +767,8 @@ MonoBehaviour:
   CausticBlurKernalSize: 5
   ShadowBlurKernelSize: 5
   DistanceTest: 1
+  DebugFlux: 1
+  AngleLimit: 0
 --- !u!1001 &388556614
 PrefabInstance:
   m_ObjectHideFlags: 0
